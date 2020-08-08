@@ -57,6 +57,23 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/",
+    component: Layout,
+    redirect: "/index",
+    children: [
+      {
+        path: "/demo",
+        name: "Demo",
+        component: () => import("@/views/project/demo"),
+        meta: {
+          title: "测试",
+          icon: "home",
+          noKeepAlive: true,
+        },
+      },
+    ],
+  },
+  {
     path: "/personalCenter",
     component: Layout,
     hidden: true,
