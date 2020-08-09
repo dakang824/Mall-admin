@@ -60,10 +60,11 @@ module.exports = {
       warnings: true,
       errors: true,
     },
+    disableHostCheck: true,
     after: mockServer(),
     // proxy: {
-    //   "/": {
-    //     target: "http://www.baidu.com",
+    //   "/api": {
+    //     target: "http://weixin.kongzikeji.com/",
     //     changeOrigin: true,
     //   },
     // },

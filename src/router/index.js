@@ -57,9 +57,8 @@ export const asyncRoutes = [
     ],
   },
   {
-    path: "/",
+    path: "/demo",
     component: Layout,
-    redirect: "/index",
     children: [
       {
         path: "/demo",
@@ -67,6 +66,22 @@ export const asyncRoutes = [
         component: () => import("@/views/project/demo"),
         meta: {
           title: "测试",
+          icon: "home",
+          noKeepAlive: true,
+        },
+      },
+    ],
+  },
+  {
+    path: "/curd",
+    component: Layout,
+    children: [
+      {
+        path: "/curd",
+        name: "Curd",
+        component: () => import("@/views/project/curd"),
+        meta: {
+          title: "增删改查",
           icon: "home",
           noKeepAlive: true,
         },
