@@ -57,34 +57,61 @@ export const asyncRoutes = [
     ],
   },
   {
-    path: "/demo",
+    path: "/article",
     component: Layout,
+    redirect: "noRedirect",
+    name: "Article",
+    meta: { title: "文章管理", icon: "users-cog" },
     children: [
       {
-        path: "/demo",
-        name: "Demo",
-        component: () => import("@/views/project/demo"),
+        path: "/curd",
+        name: "Curd",
+        component: () => import("@/views/project/article/curd"),
         meta: {
-          title: "测试",
-          icon: "home",
+          title: "文章列表",
+          icon: "list-ul",
+          noKeepAlive: true,
+        },
+      },
+      {
+        path: "/editor",
+        name: "Editor",
+        component: () => import("@/views/project/article/editor"),
+        meta: {
+          title: "编辑文章",
+          icon: "edit",
           noKeepAlive: true,
         },
       },
     ],
   },
   {
-    path: "/curd",
+    path: "/personnelManagement",
     component: Layout,
+    redirect: "noRedirect",
+    name: "PersonnelManagement",
+    meta: { title: "权限管理", icon: "users-cog", permissions: ["admin"] },
     children: [
       {
-        path: "/curd",
-        name: "Curd",
-        component: () => import("@/views/project/curd"),
-        meta: {
-          title: "增删改查",
-          icon: "home",
-          noKeepAlive: true,
-        },
+        path: "userManagement",
+        name: "UserManagement",
+        component: () =>
+          import("@/views/project/personnelManagement/userManagement/index"),
+        meta: { title: "用户管理" },
+      },
+      {
+        path: "roleManagement",
+        name: "RoleManagement",
+        component: () =>
+          import("@/views/project/personnelManagement/roleManagement/index"),
+        meta: { title: "角色管理" },
+      },
+      {
+        path: "menuManagement",
+        name: "MenuManagement",
+        component: () =>
+          import("@/views/project/personnelManagement/menuManagement/index"),
+        meta: { title: "菜单管理" },
       },
     ],
   },
