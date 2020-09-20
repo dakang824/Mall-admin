@@ -61,7 +61,11 @@ export const asyncRoutes = [
     component: Layout,
     redirect: "noRedirect",
     name: "Article",
-    meta: { title: "文章管理", icon: "users-cog" },
+    meta: {
+      title: "文章管理",
+      icon: "users-cog",
+      permissions: ["editor"],
+    },
     children: [
       {
         path: "/curd",
