@@ -5,7 +5,7 @@
         <el-card>
           <div slot="header">
             开源版本
-            <el-button style="float: right; padding: 3px 0;" type="text">
+            <el-button style="float: right; padding: 3px 0" type="text">
               永久免费 个人/商业使用
             </el-button>
           </div>
@@ -22,9 +22,7 @@
                   支持白嫖，也请给个star
                 </a>
               </li>
-              <li>
-                提供讨论群专属文档，QQ群 972435319
-              </li>
+              <li>提供讨论群专属文档，QQ群 972435319</li>
             </ul>
             <img src="@/assets/ewm.png" alt="" />
           </div>
@@ -34,7 +32,7 @@
         <el-card>
           <div slot="header">
             VIP群
-            <el-button style="float: right; padding: 3px 0;" type="text">
+            <el-button style="float: right; padding: 3px 0" type="text">
               ￥100
             </el-button>
           </div>
@@ -53,7 +51,7 @@
         <el-card>
           <div slot="header">
             商业用途 完全自定义版权
-            <el-button style="float: right; padding: 3px 0;" type="text">
+            <el-button style="float: right; padding: 3px 0" type="text">
               ￥299
             </el-button>
           </div>

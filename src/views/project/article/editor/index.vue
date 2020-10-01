@@ -13,7 +13,7 @@
       <!-- <el-form-item  prop="content" class="vab-quill-content">
         <vab-quill v-model="form.content" :min-height="400"></vab-quill>
       </el-form-item> -->
-      <el-form-item label="内容" prop="content" style="margin-bottom: 30px;">
+      <el-form-item label="内容" prop="content" style="margin-bottom: 30px">
         <Tinymce ref="editor" v-model="form.content" :height="400" />
       </el-form-item>
       <el-form-item>
@@ -21,7 +21,7 @@
       </el-form-item>
     </el-form>
     <el-dialog title="预览效果" :visible.sync="dialogTableVisible">
-      <div style="min-height: 60vh;">
+      <div style="min-height: 60vh">
         <h1 class="news-title">{{ form.title }}</h1>
         <div class="news-content" v-html="form.content"></div>
       </div>

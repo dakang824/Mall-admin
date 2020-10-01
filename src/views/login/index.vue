@@ -2,28 +2,27 @@
   <div class="login-container">
     <el-alert
       v-if="nodeEnv !== 'development'"
-      title="beautiful boys and girls欢迎加入vue-admin-beautifulQQ群：972435319"
+      :title="'欢迎使用' + title + '管理系统'"
       type="success"
       :closable="false"
-      style="position: fixed;"
     ></el-alert>
+    <el-carousel height="100vh" indicator-position="none" arrow="never">
+      <el-carousel-item v-for="(item, index) in bgs" :key="index">
+        <el-image :src="item" fit="cover"></el-image>
+      </el-carousel-item>
+    </el-carousel>
     <el-row>
-      <el-col :xs="24" :sm="24" :md="12" :lg="16" :xl="16">
-        <div style="color: transparent;">占位符</div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
-        <el-form
-          ref="form"
-          :model="form"
-          :rules="rules"
-          class="login-form"
-          label-position="left"
-        >
-          <div class="title">
-            hello !
-          </div>
-          <div class="title-tips">欢迎来到{{ title }}！</div>
-          <el-form-item style="margin-top: 40px;" prop="username">
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        class="login-form"
+        label-position="left"
+      >
+        <div class="header">{{ title }}管理系统界面</div>
+        <div class="box">
+          <div class="title">管理系统界面</div>
+          <el-form-item prop="username">
             <span class="svg-container svg-container-admin">
               <vab-icon :icon="['fas', 'user']" />
             </span>
@@ -37,7 +36,7 @@
           </el-form-item>
           <el-form-item prop="password">
             <span class="svg-container">
-              <vab-icon :icon="['fas', 'lock']" />
+              <vab-icon :icon="['fas', 'key']" />
             </span>
             <el-input
               :key="passwordType"
@@ -59,28 +58,51 @@
               <vab-icon :icon="['fas', 'eye']"></vab-icon>
             </span>
           </el-form-item>
+          <el-form-item prop="code">
+            <span class="svg-container">
+              <vab-icon :icon="['fas', 'qrcode']" />
+            </span>
+            <el-input
+              ref="code"
+              v-model.trim="form.code"
+              type="text"
+              tabindex="3"
+              placeholder="请输入验证码"
+              @keyup.enter.native="handleLogin"
+            />
+
+            <span class="show-code" @click="handleRefreshCode">
+              <identifyCode
+                :content-height="39"
+                :identify-code="identifyCode"
+              ></identifyCode>
+            </span>
+          </el-form-item>
           <el-button
             :loading="loading"
             class="login-btn"
-            type="primary"
+            type="danger"
             @click="handleLogin"
           >
             登录
           </el-button>
-          <router-link to="/register">
-            <div style="margin-top: 20px;">注册</div>
-          </router-link>
-        </el-form>
-      </el-col>
+        </div>
+        <div class="footer">
+          Copyright © 2020-2023 技术支持：{{ copyright }}
+        </div>
+      </el-form>
     </el-row>
   </div>
 </template>
 
 <script>
   import { isPassword } from "@/utils/validate";
-
+  import { random } from "@/utils";
+  import identifyCode from "@/components/identify-code";
+  import { copyright, title } from "@/config/settings";
   export default {
     name: "Login",
+    components: { identifyCode },
     directives: {
       focus: {
         inserted(el) {
@@ -103,13 +125,30 @@
           callback();
         }
       };
+      const validateCode = (rule, value, callback) => {
+        if ("" == value) {
+          callback(new Error("验证码不能为空"));
+        } else {
+          callback();
+        }
+      };
       return {
         nodeEnv: process.env.NODE_ENV,
-        title: this.$baseTitle,
+        copyright,
+        title,
+        identifyCode: "",
+        loading: false,
+        passwordType: "password",
+        redirect: undefined,
         form: {
           username: "",
           password: "",
+          code: "",
         },
+        bgs: [
+          require("@/assets/login_images/login_bg1.jpg"),
+          require("@/assets/login_images/login_bg2.jpg"),
+        ],
         rules: {
           username: [
             {
@@ -125,10 +164,14 @@
               validator: validatePassword,
             },
           ],
+          code: [
+            {
+              required: true,
+              trigger: "blur",
+              validator: validateCode,
+            },
+          ],
         },
-        loading: false,
-        passwordType: "password",
-        redirect: undefined,
       };
     },
     watch: {
@@ -141,6 +184,7 @@
     },
     created() {
       document.body.style.overflow = "hidden";
+      this.handleRefreshCode();
     },
     beforeDestroy() {
       document.body.style.overflow = "auto";
@@ -185,36 +229,45 @@
           window.open("https://github.com/chuzhixin/vue-admin-beautiful");
         }, 100000);
       },
+      handleRefreshCode() {
+        this.identifyCode = "";
+        for (let i = 0; i < 4; i++) {
+          this.identifyCode += random(0, 9);
+        }
+      },
     },
   };
 </script>
 
 <style lang="scss" scoped>
   .login-container {
+    position: relative;
     height: 100vh;
-    background: url("~@/assets/login_images/background.jpg") center center fixed
-      no-repeat;
-    background-size: cover;
 
-    .title {
-      font-size: 54px;
-      font-weight: 500;
-      color: rgba(14, 18, 26, 1);
+    .el-alert {
+      position: relative;
     }
 
-    .title-tips {
-      margin-top: 29px;
-      font-size: 26px;
-      font-weight: 400;
-      color: rgba(14, 18, 26, 1);
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    .el-alert,
+    .el-row {
+      z-index: 3;
+    }
+
+    .el-carousel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+
+      .el-image {
+        width: 100%;
+        height: 100%;
+      }
     }
 
     .login-btn {
-      display: inherit;
-      width: 220px;
-      height: 60px;
+      width: 100%;
+      height: 50px;
       margin-top: 5px;
       border: 0;
 
@@ -224,10 +277,35 @@
     }
 
     .login-form {
-      position: relative;
-      max-width: 100%;
-      margin: calc((100vh - 425px) / 2) 10% 10%;
+      position: absolute;
+      top: 200px;
+      right: 0;
+      left: 0;
+      width: 600px;
+      margin: 0 auto;
       overflow: hidden;
+      background: #fff;
+      border-radius: 8px;
+
+      .header,
+      .footer {
+        padding: 15px;
+        font-size: 15px;
+        color: #fff;
+        text-align: center;
+        background: #3c4658;
+      }
+
+      .box {
+        width: 300px;
+        margin: 0 auto 50px;
+
+        .title {
+          padding: 20px 0;
+          font-size: 30px;
+          text-align: center;
+        }
+      }
 
       .forget-password {
         width: 100%;
@@ -244,44 +322,30 @@
       }
     }
 
-    .tips {
-      margin-bottom: 10px;
-      font-size: $base-font-size-default;
-      color: $base-color-white;
-
-      span {
-        &:first-of-type {
-          margin-right: 16px;
-        }
-      }
-    }
-
-    .title-container {
-      position: relative;
-
-      .title {
-        margin: 0 auto 40px auto;
-        font-size: 34px;
-        font-weight: bold;
-        color: $base-color-blue;
-        text-align: center;
-      }
-    }
-
     .svg-container {
       position: absolute;
-      top: 14px;
+      top: 5px;
       left: 15px;
       z-index: $base-z-index;
       font-size: 16px;
-      color: #d7dee3;
+      color: #ccc;
       cursor: pointer;
       user-select: none;
     }
 
+    .show-code {
+      position: absolute;
+      top: 0;
+      right: 1px;
+      bottom: 0;
+      height: 38px;
+      margin: auto;
+      overflow: hidden;
+    }
+
     .show-password {
       position: absolute;
-      top: 14px;
+      top: 5px;
       right: 25px;
       font-size: 16px;
       color: #d7dee3;
@@ -292,7 +356,6 @@
     ::v-deep {
       .el-form-item {
         padding-right: 0;
-        margin: 20px 0;
         color: #454545;
         background: transparent;
         border: 1px solid transparent;
@@ -317,13 +380,10 @@
         box-sizing: border-box;
 
         input {
-          height: 58px;
+          height: 40px;
           padding-left: 45px;
           font-size: $base-font-size-default;
-          line-height: 58px;
           color: $base-font-color;
-          background: #f6f4fc;
-          border: 0;
           caret-color: $base-font-color;
         }
       }
