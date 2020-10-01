@@ -64,7 +64,7 @@ export const asyncRoutes = [
     meta: {
       title: "文章管理",
       icon: "users-cog",
-      permissions: ["editor"],
+      permissions: ["admin"],
     },
     children: [
       {

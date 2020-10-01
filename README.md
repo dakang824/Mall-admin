@@ -129,7 +129,7 @@ module.exports = {
   //是否开启主题配置按钮
   themeBar: true,
   //是否显示多标签页
-  tagsBar: true,
+  tabsBar: true,
   //是否显示骨架屏
   skeleton: false,
   //配后端数据的接收方式application/json;charset=UTF-8或者application/x-www-form-urlencoded;charset=UTF-8
@@ -235,7 +235,7 @@ $base-menu-item-height: 50px;
 //app-main的高度
 $base-app-main-height: calc(
   100vh - #{$base-nav-bar-height} - #{$base-tags-bar-height} -
-  #{$base-padding} - #{$base-padding} - 55px - 30px
+    #{$base-padding} - #{$base-padding} - 55px - 30px
 );
 //纵向布局时左侧导航未折叠时的宽度
 $base-left-menu-width: 230px;
