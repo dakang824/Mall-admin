@@ -73,6 +73,22 @@ export const asyncRoutes = [
       },
     ],
   },
+  {
+    path: "/category",
+    component: Layout,
+    redirect: "/category",
+    children: [
+      {
+        path: "/category",
+        name: "Category",
+        component: () => import("@/views/project/category/index"),
+        meta: {
+          title: "分类管理",
+          icon: "puzzle-piece",
+        },
+      },
+    ],
+  },
 
   {
     path: "/article",

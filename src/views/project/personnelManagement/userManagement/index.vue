@@ -75,7 +75,11 @@
       :element-loading-text="elementLoadingText"
       @selection-change="setSelectRows"
     >
-      <el-table-column show-overflow-tooltip type="selection"></el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        type="selection"
+        align="center"
+      ></el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="id"
@@ -123,8 +127,10 @@
         align="center"
       >
         <template v-slot="scope">
-          <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button type="text" @click="handleDelete(scope.row)">
+          <el-button type="primary" @click="handleEdit(scope.row)">
+            编辑
+          </el-button>
+          <el-button type="danger" @click="handleDelete(scope.row)">
             删除
           </el-button>
         </template>
