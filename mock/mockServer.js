@@ -6,6 +6,13 @@ const Mock = require("mockjs");
 const { baseURL } = require("../src/config/settings");
 const mockDir = path.join(process.cwd(), "mock");
 
+Mock.Random.extend({
+  phone: function () {
+    var phonePrefixs = ["132", "135", "189"]; // 自己写前缀哈
+    return this.pick(phonePrefixs) + Mock.mock(/\d{8}/); //Number()
+  },
+});
+
 /**
  *
  * @param app

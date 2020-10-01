@@ -57,6 +57,24 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/userManagement",
+    component: Layout,
+    redirect: "/userManagement",
+    children: [
+      {
+        path: "/userManagement",
+        name: "UserManagement",
+        component: () =>
+          import("@/views/project/personnelManagement/userManagement/index"),
+        meta: {
+          title: "用户管理",
+          icon: "user-cog",
+        },
+      },
+    ],
+  },
+
+  {
     path: "/article",
     component: Layout,
     redirect: "noRedirect",
@@ -96,13 +114,6 @@ export const asyncRoutes = [
     name: "PersonnelManagement",
     meta: { title: "权限管理", icon: "users-cog", permissions: ["admin"] },
     children: [
-      {
-        path: "userManagement",
-        name: "UserManagement",
-        component: () =>
-          import("@/views/project/personnelManagement/userManagement/index"),
-        meta: { title: "用户管理" },
-      },
       {
         path: "roleManagement",
         name: "RoleManagement",
