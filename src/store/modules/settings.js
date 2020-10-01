@@ -58,6 +58,9 @@ const actions = {
   changeHeader({ commit }, header) {
     commit("changeHeader", header);
   },
+  changetabsBar({ commit }, tabsBar) {
+    commit("changeTabsBar", tabsBar);
+  },
   changeTabsBar({ commit }, tabsBar) {
     commit("changeTabsBar", tabsBar);
   },
