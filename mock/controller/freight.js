@@ -13,6 +13,12 @@ export default [
           "data|10": [
             {
               id: "@id",
+              name: "江浙沪皖包邮",
+              area: ["北京市", "天津市", "河北省", "山西省"],
+              weight: "4",
+              freight: "5",
+              kg: "8",
+              money: "8",
             },
           ],
         }).data,

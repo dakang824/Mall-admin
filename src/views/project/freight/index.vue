@@ -41,40 +41,44 @@
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="id"
+        prop="name"
         label="名称"
         align="center"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="id"
+        prop="area"
         label="可配送区域"
         align="center"
-      />
+      >
+        <template slot-scope="scope">
+          {{ scope.row.area.join(",") }}
+        </template>
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="id"
+        prop="weight"
         label="首重（KG）"
         align="center"
         width="100"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="id"
+        prop="freight"
         label="运费（元）"
         align="center"
         width="100"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="id"
+        prop="kg"
         label="续重（KG）"
         align="center"
         width="100"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="id"
+        prop="money"
         label="运费（元）"
         width="100"
         align="center"
