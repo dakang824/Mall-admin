@@ -89,6 +89,22 @@ export const asyncRoutes = [
       },
     ],
   },
+  {
+    path: "/freight",
+    component: Layout,
+    redirect: "/freight",
+    children: [
+      {
+        path: "/freight",
+        name: "Freight",
+        component: () => import("@/views/project/freight/index"),
+        meta: {
+          title: "运费管理",
+          icon: "donate",
+        },
+      },
+    ],
+  },
 
   {
     path: "/article",

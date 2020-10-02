@@ -26,13 +26,12 @@
           </div>
         </el-form-item>
         <el-tag
-          v-for="tag in options"
+          v-for="(tag, index) in copyOptions"
           :key="tag.value"
           class="tag"
-          type="success"
           closable
           :disable-transitions="false"
-          @close="handleClose(tag)"
+          @close="handleDelTag(index)"
         >
           {{ tag.value }}
         </el-tag>
@@ -72,6 +71,7 @@
       return {
         inputValue: "",
         inputVisible: false,
+        copyOptions: [],
         options: [
           {
             value: "叶菜类",
@@ -116,15 +116,30 @@
         dialogFormVisible: false,
       };
     },
-    created() {},
+    created() {
+      this.copyOptions = JSON.parse(JSON.stringify(this.options));
+    },
     methods: {
+      handleDelTag(e) {
+        this.copyOptions.splice(e, 1);
+      },
       handleInputConfirm() {
         let inputValue = this.inputValue;
         if (inputValue) {
-          this.options.push({
-            value: inputValue,
-            label: inputValue,
+          const isRepeat = this.copyOptions.some((item) => {
+            return item.value === inputValue;
           });
+          if (isRepeat) {
+            this.$message({
+              message: "禁止重复添加",
+              type: "warning",
+            });
+          } else {
+            this.copyOptions.push({
+              value: inputValue,
+              label: inputValue,
+            });
+          }
         }
         this.inputVisible = false;
         this.inputValue = "";
