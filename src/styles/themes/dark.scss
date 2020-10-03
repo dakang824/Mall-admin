@@ -1,28 +1,29 @@
-/**
- * @copyright chuzhixin 1204505056@qq.com
- * @description 暗黑之子主题（VIP群专享）
- */
 @charset "utf-8";
 
 .vue-admin-beautiful-theme-dark {
-  $base-menu-background: #2e2f34;
-  $base-menu-background-active: #000;
-  $base-color-blue: #000;
+  $base-menu-background: #00b19d;
+  $base-menu-background-active: #2f9688;
+  $base-color-blue: #00b19d;
 
   color: #fff !important;
-  background-color: #2e2f34 !important;
+  background-color: #fafafa !important;
 
-  *:not(a):not([class*="svg"]):not(.el-drawer__wrapper):not(.el-drawer__container) {
-    color: #fff !important;
-    background-color: #2e2f34 !important;
-    border-color: #999 !important;
-    box-shadow: none !important;
+  .el-button--primary {
+    background-color: $base-menu-background-active;
+    border-color: $base-menu-background-active;
   }
-
+  .el-button:active {
+    color: $base-color-blue;
+    border-color: $base-color-blue;
+  }
+  .el-radio-button__inner:hover {
+    color: $base-menu-background-active;
+  }
+  .el-tabs__header {
+    border-color: $base-menu-background;
+  }
   .is-active:not(li) {
     *:not(a):not([class*="svg"]) {
-      color: #fff !important;
-      background-color: #000 !important;
       border-color: #999 !important;
     }
   }
@@ -101,17 +102,41 @@
       }
     }
   }
+  .el-dropdown-menu__item:not(.is-disabled):hover,
+  .el-dropdown-menu__item:focus {
+    background-color: rgba(0, 177, 157, 0.2);
+    color: $base-menu-background-active;
+  }
+  .el-pagination.is-background .el-pager li:not(.disabled) {
+    &.active {
+      background-color: $base-color-blue;
+    }
+    &:hover {
+      color: $base-color-blue;
+    }
+  }
 
+  .el-loading-spinner {
+    .path {
+      stroke: $base-color-blue;
+    }
+    .el-loading-text {
+      color: $base-color-blue;
+    }
+  }
   .tabs-bar-container {
     background: $base-color-white;
     border-top: 1px solid #f6f6f6;
 
-    .tags-content {
+    .tabs-content {
       .el-tabs__header {
         .el-tabs__item {
+          &:hover {
+            color: $base-color-blue;
+          }
           &.is-active {
-            background: $base-color-blue !important;
             border: 1px solid $base-color-blue !important;
+            color: $base-color-blue;
           }
         }
       }
