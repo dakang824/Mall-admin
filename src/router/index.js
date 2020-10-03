@@ -154,10 +154,27 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/setting",
+    component: Layout,
+    redirect: "/setting",
+    children: [
+      {
+        path: "/setting",
+        name: "Setting",
+        component: () => import("@/views/project/storeSet/index"),
+        meta: {
+          title: "店铺设置",
+          icon: "cog",
+        },
+      },
+    ],
+  },
+  {
     path: "/article",
     component: Layout,
     redirect: "noRedirect",
     name: "Article",
+    hidden: true,
     meta: {
       title: "文章管理",
       icon: "users-cog",
@@ -189,6 +206,7 @@ export const asyncRoutes = [
   {
     path: "/personnelManagement",
     component: Layout,
+    hidden: true,
     redirect: "noRedirect",
     name: "PersonnelManagement",
     meta: { title: "权限管理", icon: "users-cog", permissions: ["admin"] },
