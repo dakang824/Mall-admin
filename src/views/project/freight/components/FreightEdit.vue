@@ -69,7 +69,7 @@
 
 <script>
   import { doEdit } from "@/api/freight";
-  import { provinceAndCityDataPlus } from "element-china-area-data";
+  import { provinceAndCityData } from "element-china-area-data";
   export default {
     name: "FreightEdit",
     data() {
@@ -90,7 +90,7 @@
     },
     computed: {},
     created() {
-      this.cities = provinceAndCityDataPlus.map((item) => item.label).slice(1);
+      this.cities = provinceAndCityData.map((item) => item.label);
     },
     methods: {
       handleCheckAllChange(val) {

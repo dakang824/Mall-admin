@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-10-03 10:36:32
+ * @LastEditTime: 2020-10-03 14:32:49
 -->
 
 <template>
@@ -41,7 +41,6 @@
         <el-cascader
           v-model="selectedOptions"
           style="width: 100%"
-          size="large"
           :options="options"
           @change="handleAddress"
         ></el-cascader>
