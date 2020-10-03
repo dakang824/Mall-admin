@@ -20,7 +20,6 @@
     "update": "ncu -u --concurrency 10 --timeout 80000&&cnpm i",
     "update:globle": "ncu -g --concurrency 10 --timeout 80000",
     "svgo": "svgo -f src/remixIcon/svg --config=svgo.yml",
-    "push": "start ./push.sh",
     "deploy": "start ./deploy.sh",
     "increase-memory-limit": "increase-memory-limit"
   },
