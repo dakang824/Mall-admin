@@ -27,6 +27,9 @@
       border-color: #999 !important;
     }
   }
+  #nprogress .bar {
+    background: $base-color-blue !important;
+  }
 
   .svg-external-icon {
     color: #fff !important;
@@ -102,6 +105,7 @@
       }
     }
   }
+
   .el-dropdown-menu__item:not(.is-disabled):hover,
   .el-dropdown-menu__item:focus {
     background-color: rgba(0, 177, 157, 0.2);
@@ -123,6 +127,11 @@
     .el-loading-text {
       color: $base-color-blue;
     }
+  }
+  .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+    background-color: $base-color-blue;
+    border-color: $base-color-blue !important;
+    box-shadow: -1px 0 0 0 $base-color-blue;
   }
   .tabs-bar-container {
     background: $base-color-white;

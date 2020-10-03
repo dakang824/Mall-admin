@@ -1,3 +1,9 @@
+/*
+ * @Author: yukang 1172248038@qq.com
+ * @Description:
+ * @Date: 2020-08-07 22:33:30
+ * @LastEditTime: 2020-10-04 01:37:40
+ */
 /**
  * @copyright chuzhixin 1204505056@qq.com
  * @description 路由守卫，目前两种模式：all模式与intelligence模式
