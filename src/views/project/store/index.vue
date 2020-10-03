@@ -168,16 +168,20 @@
       return {
         roleOptions: [
           {
-            value: "餐厅",
-            label: "餐厅",
+            value: "菜品",
+            label: "菜品",
           },
           {
-            value: "加盟商",
-            label: "加盟商",
+            value: "菜盒",
+            label: "菜盒",
           },
           {
-            value: "城市合伙人",
-            label: "餐城市合伙人",
+            value: "菜谱",
+            label: "菜谱",
+          },
+          {
+            value: "设备",
+            label: "设备",
           },
         ],
         statusOptions: [

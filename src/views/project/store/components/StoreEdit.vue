@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-10-03 10:30:28
+ * @LastEditTime: 2020-10-03 10:36:32
 -->
 
 <template>
@@ -121,6 +121,14 @@
           {
             value: "菜盒",
             label: "菜盒",
+          },
+          {
+            value: "菜谱",
+            label: "菜谱",
+          },
+          {
+            value: "设备",
+            label: "设备",
           },
         ],
         statusOptions: [
