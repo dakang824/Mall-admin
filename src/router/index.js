@@ -106,6 +106,22 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/goods",
+    component: Layout,
+    redirect: "/goods",
+    children: [
+      {
+        path: "/goods",
+        name: "Goods",
+        component: () => import("@/views/project/goods/index"),
+        meta: {
+          title: "商品管理",
+          icon: "gifts",
+        },
+      },
+    ],
+  },
+  {
     path: "/produce",
     component: Layout,
     redirect: "/produce",
