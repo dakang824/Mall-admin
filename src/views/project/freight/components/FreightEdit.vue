@@ -2,7 +2,7 @@
   <el-dialog
     :title="title"
     :visible.sync="dialogFormVisible"
-    width="650px"
+    width="620px"
     lock-scroll
     @close="close"
   >

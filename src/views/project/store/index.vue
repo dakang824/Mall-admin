@@ -1,5 +1,5 @@
 <template>
-  <div class="userManagement-container">
+  <div class="store-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="24">
         <el-form
@@ -9,7 +9,11 @@
           @submit.native.prevent
         >
           <el-form-item prop="role">
-            <el-select v-model="queryForm.role" placeholder="请选择角色">
+            <el-select
+              v-model="queryForm.role"
+              placeholder="请选择权限"
+              multiple
+            >
               <el-option
                 v-for="item in roleOptions"
                 :key="item.value"
@@ -21,14 +25,14 @@
           <el-form-item prop="userName">
             <el-input
               v-model.trim="queryForm.userName"
-              placeholder="请输入用户名称"
+              placeholder="请输入店铺名称"
               clearable
             />
           </el-form-item>
           <el-form-item prop="account">
             <el-input
               v-model.trim="queryForm.account"
-              placeholder="请输入账号"
+              placeholder="请输入店铺账号"
               clearable
             />
           </el-form-item>
@@ -40,7 +44,7 @@
             />
           </el-form-item>
           <el-form-item prop="state">
-            <el-select v-model="queryForm.state" placeholder="请选择用户状态">
+            <el-select v-model="queryForm.state" placeholder="请选择店铺状态">
               <el-option
                 v-for="item in statusOptions"
                 :key="item.value"
@@ -59,7 +63,7 @@
       </vab-query-form-left-panel>
       <vab-query-form-left-panel :span="12">
         <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
-          添加用户
+          添加
         </el-button>
         <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
           批量删除
@@ -69,9 +73,8 @@
 
     <el-table
       v-loading="listLoading"
-      border
-      :default-sort="{ prop: 'id' }"
       :data="list"
+      border
       :element-loading-text="elementLoadingText"
       @selection-change="setSelectRows"
     >
@@ -83,49 +86,54 @@
       <el-table-column
         show-overflow-tooltip
         prop="id"
-        sortable
         label="序号"
-        width="80"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         show-overflow-tooltip
-        prop="userName"
-        label="名称"
+        prop="storeName"
+        label="店铺名称"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         show-overflow-tooltip
         prop="account"
-        label="账号"
+        label="店铺账号"
         align="center"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="mobile"
-        label="手机号"
-        align="center"
-      ></el-table-column>
+      />
       <el-table-column
         show-overflow-tooltip
         prop="role"
-        label="角色"
+        label="店铺权限"
         align="center"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">
+          <div>{{ scope.row.role.join() }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="collec"
+        label="收藏数"
+        align="center"
+      />
       <el-table-column
         show-overflow-tooltip
         prop="state"
         label="状态"
         align="center"
-      ></el-table-column>
-
-      <el-table-column
-        show-overflow-tooltip
-        fixed="right"
-        label="操作"
-        width="200"
-        align="center"
       >
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.state === 1 ? 'success' : 'danger'"
+            disable-transitions
+          >
+            {{ scope.row.state === 1 ? "启用" : "禁用" }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column fixed="right" label="操作" width="200" align="center">
         <template v-slot="scope">
           <el-button type="primary" @click="handleEdit(scope.row)">
             编辑
@@ -150,24 +158,14 @@
 </template>
 
 <script>
-  import { getList, doDelete } from "@/api/userManagement";
-  import Edit from "./components/UserManagementEdit";
+  import { getList, doDelete } from "@/api/store";
+  import Edit from "./components/StoreEdit";
 
   export default {
-    name: "UserManagement",
+    name: "Store",
     components: { Edit },
     data() {
       return {
-        statusOptions: [
-          {
-            value: "启用",
-            label: "启用",
-          },
-          {
-            value: "禁用",
-            label: "禁用",
-          },
-        ],
         roleOptions: [
           {
             value: "餐厅",
@@ -182,6 +180,16 @@
             label: "餐城市合伙人",
           },
         ],
+        statusOptions: [
+          {
+            value: "启用",
+            label: "启用",
+          },
+          {
+            value: "禁用",
+            label: "禁用",
+          },
+        ],
         list: null,
         listLoading: true,
         layout: "total, sizes, prev, pager, next, jumper",
@@ -191,11 +199,7 @@
         queryForm: {
           pageNo: 1,
           pageSize: 10,
-          userName: "",
-          role: "",
-          state: "",
-          account: "",
-          mobile: "",
+          id: "",
         },
       };
     },
@@ -205,6 +209,9 @@
     methods: {
       setSelectRows(val) {
         this.selectRows = val;
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
       },
       handleEdit(row) {
         if (row.id) {
@@ -241,9 +248,6 @@
       handleCurrentChange(val) {
         this.queryForm.pageNo = val;
         this.fetchData();
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
       },
       queryData() {
         this.queryForm.pageNo = 1;

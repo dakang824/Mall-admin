@@ -231,10 +231,6 @@ html {
     .el-message-box {
       &__body {
         border-top: 1px solid $base-border-color;
-
-        .el-form {
-          padding-right: 30px;
-        }
       }
 
       &__footer {

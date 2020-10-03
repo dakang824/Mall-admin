@@ -25,34 +25,35 @@
             </el-select>
           </div>
         </el-form-item>
-        <el-tag
-          v-for="(tag, index) in copyOptions"
-          :key="tag.value"
-          class="tag"
-          closable
-          :disable-transitions="false"
-          @close="handleDelTag(index)"
-        >
-          {{ tag.value }}
-        </el-tag>
-
-        <el-input
-          v-if="inputVisible"
-          ref="saveTagInput"
-          v-model="inputValue"
-          class="input-new-tag"
-          size="small"
-          @keyup.enter.native="handleInputConfirm"
-          @blur="handleInputConfirm"
-        ></el-input>
-        <el-button
-          v-else
-          class="button-new-tag"
-          size="small"
-          @click="showInput"
-        >
-          + 添加小分类
-        </el-button>
+        <div style="padding-left: 80px">
+          <el-tag
+            v-for="(tag, index) in copyOptions"
+            :key="tag.value"
+            class="tag"
+            closable
+            :disable-transitions="false"
+            @close="handleDelTag(index)"
+          >
+            {{ tag.value }}
+          </el-tag>
+          <el-input
+            v-if="inputVisible"
+            ref="saveTagInput"
+            v-model="inputValue"
+            class="input-new-tag"
+            size="small"
+            @keyup.enter.native="handleInputConfirm"
+            @blur="handleInputConfirm"
+          ></el-input>
+          <el-button
+            v-else
+            class="button-new-tag"
+            size="small"
+            @click="showInput"
+          >
+            + 添加小分类
+          </el-button>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="close">取 消</el-button>
@@ -149,9 +150,9 @@
       },
       showEdit(row) {
         if (!row) {
-          this.title = "添加";
+          this.title = "添加分类";
         } else {
-          this.title = "编辑";
+          this.title = "编辑分类";
           this.form = Object.assign({}, row);
         }
         this.dialogFormVisible = true;
@@ -181,9 +182,12 @@
     width: 100%;
   }
 
+  .el-tag + .el-tag {
+    margin-left: 0 !important;
+  }
+
   .tag {
-    margin-right: 10px;
-    margin-bottom: 10px;
+    margin: 0 10px 10px 0;
   }
 
   .button-new-tag {
