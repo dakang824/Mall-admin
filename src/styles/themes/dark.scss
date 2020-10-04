@@ -12,12 +12,22 @@
     background-color: $base-menu-background-active;
     border-color: $base-menu-background-active;
   }
-  .el-button:active {
+  .el-button:active,
+  .el-button--default:hover {
     color: $base-color-blue;
     border-color: $base-color-blue;
   }
   .el-radio-button__inner:hover {
     color: $base-menu-background-active;
+  }
+  .el-tag {
+    color: $base-menu-background-active;
+    background-color: rgba(0, 177, 157, 0.1);
+    .el-tag__close {
+      &:hover {
+        background-color: $base-color-blue;
+      }
+    }
   }
   .el-tabs__header {
     border-color: $base-menu-background;
@@ -26,6 +36,27 @@
     *:not(a):not([class*="svg"]) {
       border-color: #999 !important;
     }
+  }
+  .el-select-dropdown__item.selected {
+    color: $base-color-blue;
+  }
+  .el-radio__input.is-checked,
+  .el-checkbox__input.is-checked,
+  .el-checkbox__input.is-indeterminate,
+  .el-select-dropdown.is-multiple {
+    + .el-radio__label,
+    + .el-checkbox__label,
+    .el-select-dropdown__item.selected {
+      color: $base-color-blue;
+    }
+    .el-radio__inner,
+    .el-checkbox__inner {
+      border-color: $base-color-blue;
+      background: $base-menu-background;
+    }
+  }
+  :focus {
+    border-color: $base-menu-background !important;
   }
   #nprogress .bar {
     background: $base-color-blue !important;
