@@ -20,7 +20,8 @@
   .el-radio-button__inner:hover {
     color: $base-menu-background-active;
   }
-  .el-tag {
+  .el-tag.el-tag--success,
+  .el-tag.el-tag--info {
     color: $base-menu-background-active;
     background-color: rgba(0, 177, 157, 0.1);
     .el-tag__close {

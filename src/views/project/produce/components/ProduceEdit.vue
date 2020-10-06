@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:00:21
- * @LastEditTime: 2020-10-03 11:19:00
+ * @LastEditTime: 2020-10-06 17:03:03
 -->
 <template>
   <el-dialog
@@ -12,11 +12,11 @@
     @close="close"
   >
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="排序" prop="id">
-        <el-input v-model="form.id" autocomplete="off"></el-input>
+      <el-form-item label="排序" prop="pos">
+        <el-input v-model="form.pos" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="产地" prop="area">
-        <el-input v-model="form.area" autocomplete="off"></el-input>
+      <el-form-item label="产地" prop="address">
+        <el-input v-model="form.address" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import { doEdit } from "@/api/produce";
+  import { addProdAddress, modifyProdAddress } from "@/api/produce";
 
   export default {
     name: "ProduceEdit",
@@ -37,7 +37,8 @@
           id: "",
         },
         rules: {
-          id: [{ required: true, trigger: "blur", message: "请输入id" }],
+          pos: [{ required: true, trigger: "blur", message: "请输入排序" }],
+          address: [{ required: true, trigger: "blur", message: "请输入产地" }],
         },
         title: "",
         dialogFormVisible: false,
@@ -62,8 +63,13 @@
       save() {
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
-            const { msg } = await doEdit(this.form);
-            this.$baseMessage(msg, "success");
+            if (this.title.includes("添加")) {
+              const { msg } = await addProdAddress(this.form);
+              this.$baseMessage(msg, "success");
+            } else {
+              const { msg } = await modifyProdAddress(this.form);
+              this.$baseMessage(msg, "success");
+            }
             this.$emit("fetchData");
             this.close();
           } else {

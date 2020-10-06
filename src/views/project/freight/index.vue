@@ -50,35 +50,31 @@
         prop="area"
         label="可配送区域"
         align="center"
-      >
-        <template slot-scope="scope">
-          {{ scope.row.area.join(",") }}
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         show-overflow-tooltip
-        prop="weight"
+        prop="baseWeight"
         label="首重（KG）"
         align="center"
         width="100"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="freight"
+        prop="basePrice"
         label="运费（元）"
         align="center"
         width="100"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="kg"
+        prop="moreWeight"
         label="续重（KG）"
         align="center"
         width="100"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="money"
+        prop="morePrice"
         label="运费（元）"
         width="100"
         align="center"
@@ -109,7 +105,7 @@
 </template>
 
 <script>
-  import { getList, doDelete } from "@/api/freight";
+  import { findAllPostTemplate, deletePostTemplate } from "@/api/freight";
   import Edit from "./components/FreightEdit";
 
   export default {
@@ -147,7 +143,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await doDelete({ ids: row.id });
+            const { msg } = await deletePostTemplate({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.fetchData();
           });
@@ -155,7 +151,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await doDelete({ ids });
+              const { msg } = await deletePostTemplate({ ids });
               this.$baseMessage(msg, "success");
               this.fetchData();
             });
@@ -179,9 +175,9 @@
       },
       async fetchData() {
         this.listLoading = true;
-        const { data, totalCount } = await getList(this.queryForm);
-        this.list = data;
-        this.total = totalCount;
+        const { data, totalCount } = await findAllPostTemplate(this.queryForm);
+        this.list = data.postTemps;
+        this.total = data.postTemps.length;
         setTimeout(() => {
           this.listLoading = false;
         }, 300);

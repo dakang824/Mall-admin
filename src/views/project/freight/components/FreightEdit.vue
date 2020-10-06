@@ -6,24 +6,24 @@
     lock-scroll
     @close="close"
   >
-    <el-form ref="form" :model="form" :rules="rules" label-width="89px">
+    <el-form ref="form" :model="form" :rules="rules" label-width="120px">
       <el-form-item label="模板名称" prop="name">
         <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>
 
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="首重（KG）" prop="weight" label-width="89px">
+          <el-form-item label="首重（KG）" prop="baseWeight">
             <el-input
-              v-model.number="form.weight"
+              v-model.number="form.baseWeight"
               autocomplete="off"
             ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="运费（元）" prop="freight" label-width="89px">
+          <el-form-item label="首重金额（元）" prop="basePrice">
             <el-input
-              v-model.number="form.freight"
+              v-model.number="form.basePrice"
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -31,17 +31,23 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="续重（KG）" prop="kg" label-width="89px">
-            <el-input v-model.number="form.kg" autocomplete="off"></el-input>
+          <el-form-item label="续重（KG）" prop="moreWeight">
+            <el-input
+              v-model.number="form.moreWeight"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="运费（元）" prop="money" label-width="89px">
-            <el-input v-model.number="form.money" autocomplete="off"></el-input>
+          <el-form-item label="额外金额（元）" prop="morePrice">
+            <el-input
+              v-model.number="form.morePrice"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="可配送区域" prop="area" label-width="89px">
+      <el-form-item label="可配送区域" prop="area">
         <el-checkbox
           v-model="checkAll"
           :indeterminate="isIndeterminate"
@@ -50,7 +56,7 @@
           全选
         </el-checkbox>
         <el-checkbox-group
-          v-model="checkedCities"
+          v-model="form.area"
           @change="handleCheckedCitiesChange"
         >
           <el-checkbox v-for="city in cities" :key="city" :label="city">
@@ -68,21 +74,47 @@
 </template>
 
 <script>
-  import { doEdit } from "@/api/freight";
+  import { addPostTemplate, modifyPostTemplate } from "@/api/freight";
   import { provinceAndCityData } from "element-china-area-data";
   export default {
     name: "FreightEdit",
     data() {
       return {
         checkAll: false,
-        checkedCities: [],
         cities: [],
         isIndeterminate: true,
         form: {
-          id: "",
+          name: "",
+          area: [],
+          baseWeight: "",
+          basePrice: "",
+          moreWeight: "",
+          morePrice: "",
         },
         rules: {
-          id: [{ required: true, trigger: "blur", message: "请输入id" }],
+          name: [
+            { required: true, trigger: "blur", message: "请输入模板名称" },
+          ],
+          basePrice: [
+            { required: true, trigger: "blur", message: "请输入首重金额" },
+          ],
+          baseWeight: [
+            { required: true, trigger: "blur", message: "请输入首重" },
+          ],
+          moreWeight: [
+            { required: true, trigger: "blur", message: "请输入额外重量" },
+          ],
+          morePrice: [
+            { required: true, trigger: "blur", message: "请输入额外金额" },
+          ],
+          area: [
+            {
+              type: "array",
+              required: true,
+              message: "请至少选择一个配送区域",
+              trigger: "change",
+            },
+          ],
         },
         title: "",
         dialogFormVisible: false,
@@ -94,7 +126,7 @@
     },
     methods: {
       handleCheckAllChange(val) {
-        this.checkedCities = val ? this.cities : [];
+        this.form.area = val ? this.cities : [];
         this.isIndeterminate = false;
       },
       handleCheckedCitiesChange(value) {
@@ -106,11 +138,11 @@
       showEdit(row) {
         if (!row) {
           this.title = "添加运费模板";
-          this.checkedCities = [];
         } else {
           this.title = "编辑运费模板";
+          var row = JSON.parse(JSON.stringify(row));
+          row.area = row.area.split(",");
           this.form = Object.assign({}, row);
-          this.checkedCities = row.area;
         }
         this.dialogFormVisible = true;
       },
@@ -122,8 +154,14 @@
       save() {
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
-            const { msg } = await doEdit(this.form);
-            this.$baseMessage(msg, "success");
+            this.form.area = this.form.area.join();
+            if (this.title.includes("添加")) {
+              const { msg } = await addPostTemplate(this.form);
+              this.$baseMessage(msg, "success");
+            } else {
+              const { msg } = await modifyPostTemplate(this.form);
+              this.$baseMessage(msg, "success");
+            }
             this.$emit("fetchData");
             this.close();
           } else {

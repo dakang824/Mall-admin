@@ -11,16 +11,16 @@
           <el-form-item prop="role">
             <el-select v-model="queryForm.role" placeholder="请选择角色">
               <el-option
-                v-for="item in roleOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in roles"
+                :key="item.id"
+                :label="item.name"
+                :value="item.no"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="userName">
+          <el-form-item prop="name">
             <el-input
-              v-model.trim="queryForm.userName"
+              v-model.trim="queryForm.name"
               placeholder="请输入用户名称"
               clearable
             />
@@ -39,10 +39,10 @@
               clearable
             />
           </el-form-item>
-          <el-form-item prop="state">
-            <el-select v-model="queryForm.state" placeholder="请选择用户状态">
+          <el-form-item prop="status">
+            <el-select v-model="queryForm.status" placeholder="请选择用户状态">
               <el-option
-                v-for="item in statusOptions"
+                v-for="item in status"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -90,7 +90,7 @@
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="userName"
+        prop="name"
         label="名称"
         align="center"
       ></el-table-column>
@@ -108,16 +108,27 @@
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="role"
+        prop="roles"
         label="角色"
         align="center"
-      ></el-table-column>
+      >
+        <template v-slot="scope">{{ getRoles(scope.row.roles) }}</template>
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="state"
+        prop="status"
         label="状态"
         align="center"
-      ></el-table-column>
+      >
+        <template v-slot="scope">
+          <el-tag
+            :type="scope.row.status === 1 ? 'success' : 'danger'"
+            disable-transitions
+          >
+            {{ scope.row.status === 1 ? "启用" : "禁用" }}
+          </el-tag>
+        </template>
+      </el-table-column>
 
       <el-table-column
         show-overflow-tooltip
@@ -145,12 +156,21 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <edit ref="edit" @fetchData="fetchData"></edit>
+    <edit
+      ref="edit"
+      :roles="roles"
+      :status="status"
+      @fetchData="fetchData"
+    ></edit>
   </div>
 </template>
 
 <script>
-  import { getList, doDelete } from "@/api/userManagement";
+  import {
+    queryUsers,
+    deleteUser,
+    findAllUserRoles,
+  } from "@/api/userManagement";
   import Edit from "./components/UserManagementEdit";
 
   export default {
@@ -158,30 +178,17 @@
     components: { Edit },
     data() {
       return {
-        statusOptions: [
+        status: [
           {
-            value: "启用",
+            value: 1,
             label: "启用",
           },
           {
-            value: "禁用",
+            value: 0,
             label: "禁用",
           },
         ],
-        roleOptions: [
-          {
-            value: "餐厅",
-            label: "餐厅",
-          },
-          {
-            value: "加盟商",
-            label: "加盟商",
-          },
-          {
-            value: "城市合伙人",
-            label: "餐城市合伙人",
-          },
-        ],
+        roles: [],
         list: null,
         listLoading: true,
         layout: "total, sizes, prev, pager, next, jumper",
@@ -189,18 +196,28 @@
         selectRows: "",
         elementLoadingText: "正在加载...",
         queryForm: {
-          pageNo: 1,
+          pageNum: 1,
           pageSize: 10,
-          userName: "",
-          role: "",
+          name: "",
+          roles: "",
           state: "",
           account: "",
           mobile: "",
+          status: "",
         },
       };
     },
+    computed: {
+      getRoles() {
+        return (e) => {
+          let arr = this.roles.filter((item) => item.no === e);
+          return arr.length ? arr[0].name : "";
+        };
+      },
+    },
     created() {
       this.fetchData();
+      this.queryUsers();
     },
     methods: {
       setSelectRows(val) {
@@ -216,7 +233,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await doDelete({ ids: row.id });
+            const { msg } = await deleteUser({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.fetchData();
           });
@@ -224,7 +241,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await doDelete({ ids });
+              const { msg } = await deleteUser({ ids });
               this.$baseMessage(msg, "success");
               this.fetchData();
             });
@@ -239,21 +256,27 @@
         this.fetchData();
       },
       handleCurrentChange(val) {
-        this.queryForm.pageNo = val;
+        this.queryForm.pageNum = val;
         this.fetchData();
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
       queryData() {
-        this.queryForm.pageNo = 1;
+        this.queryForm.pageNum = 1;
         this.fetchData();
+      },
+      async queryUsers() {
+        const { data } = await findAllUserRoles();
+        this.roles = data.roles;
       },
       async fetchData() {
         this.listLoading = true;
-        const { data, totalCount } = await getList(this.queryForm);
-        this.list = data;
-        this.total = totalCount;
+        const {
+          data: { users },
+        } = await queryUsers(this.queryForm);
+        this.list = users.list;
+        this.total = users.total;
         setTimeout(() => {
           this.listLoading = false;
         }, 300);

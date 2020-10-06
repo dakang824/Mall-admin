@@ -41,13 +41,13 @@
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="id"
+        prop="pos"
         label="排序"
         align="center"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="area"
+        prop="address"
         label="产地"
         align="center"
       />
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-  import { getList, doDelete } from "@/api/produce";
+  import { findAllProdAddress, deleteProdAddress } from "@/api/produce";
   import Edit from "./components/ProduceEdit";
 
   export default {
@@ -114,7 +114,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await doDelete({ ids: row.id });
+            const { msg } = await deleteProdAddress({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.fetchData();
           });
@@ -122,7 +122,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await doDelete({ ids });
+              const { msg } = await deleteProdAddress({ ids });
               this.$baseMessage(msg, "success");
               this.fetchData();
             });
@@ -146,9 +146,9 @@
       },
       async fetchData() {
         this.listLoading = true;
-        const { data, totalCount } = await getList(this.queryForm);
-        this.list = data;
-        this.total = totalCount;
+        const { data, totalCount } = await findAllProdAddress(this.queryForm);
+        this.list = data.prodAddress;
+        this.total = data.prodAddress.length;
         setTimeout(() => {
           this.listLoading = false;
         }, 300);

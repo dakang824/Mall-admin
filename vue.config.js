@@ -62,12 +62,12 @@ module.exports = {
     },
     disableHostCheck: true,
     after: mockServer(),
-    // proxy: {
-    //   "/api": {
-    //     target: "http://weixin.kongzikeji.com/",
-    //     changeOrigin: true,
-    //   },
-    // },
+    proxy: {
+      "/service": {
+        target: "http://47.101.210.167/",
+        changeOrigin: true,
+      },
+    },
   },
   configureWebpack() {
     return {

@@ -6,8 +6,8 @@
     @close="close"
   >
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="用户名称" prop="userName">
-        <el-input v-model.trim="form.userName" autocomplete="off"></el-input>
+      <el-form-item label="用户名称" prop="name">
+        <el-input v-model.trim="form.name" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="账号" prop="account">
         <el-input v-model.trim="form.account" autocomplete="off"></el-input>
@@ -15,23 +15,23 @@
       <el-form-item label="手机号" prop="mobile">
         <el-input v-model.trim="form.mobile" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model.trim="form.password" autocomplete="off"></el-input>
+      <el-form-item label="密码" prop="pwd">
+        <el-input v-model.trim="form.pwd" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="角色" prop="role">
-        <el-select v-model="form.role">
+      <el-form-item label="角色" prop="roles">
+        <el-select v-model="form.roles" style="width: 100%">
           <el-option
-            v-for="item in roleOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in roles"
+            :key="item.id"
+            :label="item.name"
+            :value="item.no"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="state">
-        <el-select v-model="form.state">
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="form.status" style="width: 100%">
           <el-option
-            v-for="item in statusOptions"
+            v-for="item in status"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -47,51 +47,43 @@
 </template>
 
 <script>
-  import { doEdit } from "@/api/userManagement";
+  import { addUser, doEdit, modifyUser } from "@/api/userManagement";
 
   export default {
     name: "UserManagementEdit",
+    props: {
+      roles: {
+        type: Array,
+        default: () => {
+          return [];
+        },
+      },
+      status: {
+        type: Array,
+        default: () => {
+          return [];
+        },
+      },
+    },
     data() {
       return {
-        statusOptions: [
-          {
-            value: "启用",
-            label: "启用",
-          },
-          {
-            value: "禁用",
-            label: "禁用",
-          },
-        ],
-        roleOptions: [
-          {
-            value: "餐厅",
-            label: "餐厅",
-          },
-          {
-            value: "加盟商",
-            label: "加盟商",
-          },
-          {
-            value: "城市合伙人",
-            label: "餐城市合伙人",
-          },
-        ],
         form: {
-          userName: "",
-          password: "",
-          email: "",
-          permissions: [],
+          name: "",
+          mobile: "",
+          account: "",
+          pwd: "",
+          roles: "",
+          status: [],
         },
         rules: {
-          userName: [
-            { required: true, trigger: "blur", message: "请输入用户名" },
+          name: [{ required: true, trigger: "blur", message: "请输入用户名" }],
+          account: [{ required: true, trigger: "blur", message: "请输入账号" }],
+          mobile: [
+            { required: true, trigger: "blur", message: "请输入手机号" },
           ],
-          password: [{ trigger: "blur", message: "请输入密码" }],
+          pwd: [{ required: true, trigger: "blur", message: "请输入密码" }],
           email: [{ required: true, trigger: "blur", message: "请输入邮箱" }],
-          permissions: [
-            { required: true, trigger: "blur", message: "请选择权限" },
-          ],
+          roles: [{ required: true, trigger: "blur", message: "请选择角色" }],
         },
         title: "",
         dialogFormVisible: false,
@@ -102,9 +94,11 @@
       showEdit(row) {
         if (!row) {
           this.title = "添加";
+          this.form.status = 1;
         } else {
           this.title = "编辑";
           this.form = Object.assign({}, row);
+          console.log(this.form);
         }
         this.dialogFormVisible = true;
       },
@@ -116,10 +110,17 @@
       save() {
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
-            const { msg } = await doEdit(this.form);
-            this.$baseMessage(msg, "success");
-            this.$emit("fetchData");
-            this.close();
+            if (this.title.includes("添加")) {
+              const { msg } = await addUser(this.form);
+              this.$baseMessage(msg, "success");
+              this.$emit("fetchData");
+              this.close();
+            } else {
+              const { msg } = await modifyUser(this.form);
+              this.$baseMessage(msg, "success");
+              this.$emit("fetchData");
+              this.close();
+            }
           } else {
             return false;
           }

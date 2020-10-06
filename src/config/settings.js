@@ -1,3 +1,9 @@
+/*
+ * @Author: yukang 1172248038@qq.com
+ * @Description:
+ * @Date: 2020-09-13 15:34:56
+ * @LastEditTime: 2020-10-06 13:02:50
+ */
 /**
  * @copyright chuzhixin 1204505056@qq.com
  * @description 全局变量配置
@@ -14,10 +20,7 @@ module.exports = {
   // 进行编译的依赖
   transpileDependencies: ["vue-echarts", "resize-detector", "zx-layouts"],
   // 默认的接口地址 如果是开发环境和生产环境走vab-mock-server，当然你也可以选择自己配置成需要的接口地址
-  baseURL:
-    process.env.NODE_ENV === "development" || process.env.NODE_ENV === "preview"
-      ? "vab-mock-server"
-      : "vab-mock-server",
+  baseURL: process.env.NODE_ENV === "development" ? "/" : "vab-mock-server",
   //标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）
   title: "嗨厨玩味",
   //简写
@@ -63,7 +66,7 @@ module.exports = {
   //是否显示骨架屏
   skeleton: false,
   //配后端数据的接收方式application/json;charset=UTF-8或者application/x-www-form-urlencoded;charset=UTF-8
-  contentType: "application/json;charset=UTF-8",
+  contentType: "application/x-www-form-urlencoded;charset=UTF-8",
   //消息框消失时间
   messageDuration: 3000,
   //最长请求时间
@@ -77,7 +80,7 @@ module.exports = {
   //是否显示在页面高亮错误
   errorLog: ["development", "test", "production"],
   //是否开启登录拦截
-  loginInterception: true,
+  loginInterception: false,
   //是否开启登录RSA加密
   loginRSA: true,
   //是否依据mock数据生成webstorm HTTP Request请求文件

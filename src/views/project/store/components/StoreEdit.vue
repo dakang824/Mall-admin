@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-10-03 14:32:49
+ * @LastEditTime: 2020-10-06 18:15:57
 -->
 
 <template>
@@ -13,46 +13,52 @@
     @close="close"
   >
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="店铺名称" prop="storeName">
-        <el-input v-model="form.storeName" autocomplete="off"></el-input>
+      <el-form-item label="店铺名称" prop="name">
+        <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="店铺账号" prop="account">
         <el-input v-model="form.account" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model="form.password" autocomplete="off"></el-input>
+      <el-form-item label="密码" prop="pwd">
+        <el-input v-model="form.pwd" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item prop="role" label="店铺权限">
+      <el-form-item prop="prodPri" label="店铺权限">
         <el-select
-          v-model="form.role"
+          v-model="form.prodPri"
           placeholder="请选择权限"
           multiple
           style="width: 100%"
         >
           <el-option
-            v-for="item in roleOptions"
+            v-for="item in roles"
             :key="item.value"
             :label="item.label"
             :value="item.value"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="地址" prop="password">
+      <el-form-item label="地址" prop="address">
         <el-cascader
-          v-model="selectedOptions"
+          v-model="form.address"
           style="width: 100%"
           :options="options"
           @change="handleAddress"
         ></el-cascader>
       </el-form-item>
-      <el-form-item prop="state" label="状态">
+      <el-form-item label="电话" prop="mobile">
+        <el-input v-model="form.mobile" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="联系人" prop="contact">
+        <el-input v-model="form.contact" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item prop="status" label="状态">
         <el-select
-          v-model="form.state"
+          v-model="form.status"
           placeholder="请选择店铺状态"
           style="width: 100%"
         >
           <el-option
-            v-for="item in statusOptions"
+            v-for="item in status"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -61,37 +67,67 @@
       </el-form-item>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="描述相符" prop="kg" label-width="89px">
-            <el-input v-model.number="form.kg" autocomplete="off"></el-input>
+          <el-form-item label="描述相符" prop="desScore" label-width="89px">
+            <el-input
+              v-model.number="form.desScore"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="与同行业相比" prop="money" label-width="100px">
-            <el-input v-model.number="form.money" autocomplete="off"></el-input>
+          <el-form-item
+            label="与同行业相比"
+            prop="desCompare"
+            label-width="100px"
+          >
+            <el-input
+              v-model.number="form.desCompare"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="服务态度" prop="kg" label-width="89px">
-            <el-input v-model.number="form.kg" autocomplete="off"></el-input>
+          <el-form-item label="服务态度" prop="serScore" label-width="89px">
+            <el-input
+              v-model.number="form.serScore"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="与同行业相比" prop="money" label-width="100px">
-            <el-input v-model.number="form.money" autocomplete="off"></el-input>
+          <el-form-item
+            label="与同行业相比"
+            prop="serCompare"
+            label-width="100px"
+          >
+            <el-input
+              v-model.number="form.serCompare"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="物流服务" prop="kg" label-width="89px">
-            <el-input v-model.number="form.kg" autocomplete="off"></el-input>
+          <el-form-item label="物流服务" prop="postStore" label-width="89px">
+            <el-input
+              v-model.number="form.postStore"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="与同行业相比" prop="money" label-width="100px">
-            <el-input v-model.number="form.money" autocomplete="off"></el-input>
+          <el-form-item
+            label="与同行业相比"
+            prop="postCompare"
+            label-width="100px"
+          >
+            <el-input
+              v-model.number="form.postCompare"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -104,47 +140,65 @@
 </template>
 
 <script>
-  import { doEdit } from "@/api/store";
-  import { provinceAndCityDataPlus, CodeToText } from "element-china-area-data";
+  import { addStore, modifyStore } from "@/api/store";
+  import {
+    provinceAndCityData,
+    CodeToText,
+    TextToCode,
+  } from "element-china-area-data";
   export default {
     name: "StoreEdit",
+    props: {
+      roles: {
+        type: Array,
+        default: () => {
+          return [];
+        },
+      },
+      status: {
+        type: Array,
+        default: () => {
+          return [];
+        },
+      },
+    },
     data() {
       return {
-        options: provinceAndCityDataPlus,
-        selectedOptions: [],
-        roleOptions: [
-          {
-            value: "菜品",
-            label: "菜品",
-          },
-          {
-            value: "菜盒",
-            label: "菜盒",
-          },
-          {
-            value: "菜谱",
-            label: "菜谱",
-          },
-          {
-            value: "设备",
-            label: "设备",
-          },
-        ],
-        statusOptions: [
-          {
-            value: 1,
-            label: "启用",
-          },
-          {
-            value: 0,
-            label: "禁用",
-          },
-        ],
+        options: provinceAndCityData,
         form: {
-          id: "",
+          name: "",
+          account: "",
+          pwd: "",
+          address: "",
+          mobile: "",
+          contact: "",
+          prodPri: [],
+          status: "",
+          desScore: "",
+          serStore: "",
+          postStore: "",
+          desCompare: "",
+          serCompare: "",
+          postCompare: "",
+          province: "",
+          city: "",
         },
         rules: {
-          id: [{ required: true, trigger: "blur", message: "请输入id" }],
+          name: [
+            { required: true, trigger: "blur", message: "请输入店铺名称" },
+          ],
+          account: [
+            { required: true, trigger: "blur", message: "请输入店铺账号" },
+          ],
+          pwd: [{ required: true, trigger: "blur", message: "请输入密码" }],
+          address: [{ required: true, trigger: "blur", message: "请输入地址" }],
+          mobile: [{ required: true, trigger: "blur", message: "请输入电话" }],
+          contact: [
+            { required: true, trigger: "blur", message: "请输入联系人" },
+          ],
+          prodPri: [
+            { required: true, trigger: "blur", message: "请选择店铺权限" },
+          ],
         },
         title: "",
         dialogFormVisible: false,
@@ -153,14 +207,22 @@
     created() {},
     methods: {
       handleAddress(value) {
-        let address = value.map((item) => CodeToText[`${item}`]).join();
-        console.log(address);
+        let address = value.map((item) => CodeToText[`${item}`]);
+        this.form.province = address[0];
+        this.form.city = address[1];
       },
       showEdit(row) {
         if (!row) {
           this.title = "添加";
+          this.form.status = 1;
         } else {
           this.title = "编辑";
+          var row = JSON.parse(JSON.stringify(row));
+          row.address = [
+            TextToCode[row.province].code,
+            TextToCode[row.province][row.city].code,
+          ];
+          row.prodPri = row.prodPri.split(",").map((item) => item * 1);
           this.form = Object.assign({}, row);
         }
         this.dialogFormVisible = true;
@@ -173,8 +235,16 @@
       save() {
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
-            const { msg } = await doEdit(this.form);
-            this.$baseMessage(msg, "success");
+            this.form.prodPri = this.form.prodPri.join();
+            this.form.address = this.form.province + " " + this.form.city;
+            if (this.title.includes("添加")) {
+              const { msg } = await addStore(this.form);
+              this.$baseMessage(msg, "success");
+            } else {
+              const { msg } = await modifyStore(this.form);
+              this.$baseMessage(msg, "success");
+            }
+
             this.$emit("fetchData");
             this.close();
           } else {

@@ -15,16 +15,16 @@
               multiple
             >
               <el-option
-                v-for="item in roleOptions"
+                v-for="item in roles"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="userName">
+          <el-form-item prop="name">
             <el-input
-              v-model.trim="queryForm.userName"
+              v-model.trim="queryForm.name"
               placeholder="请输入店铺名称"
               clearable
             />
@@ -43,10 +43,10 @@
               clearable
             />
           </el-form-item>
-          <el-form-item prop="state">
-            <el-select v-model="queryForm.state" placeholder="请选择店铺状态">
+          <el-form-item prop="status">
+            <el-select v-model="queryForm.status" placeholder="请选择店铺状态">
               <el-option
-                v-for="item in statusOptions"
+                v-for="item in status"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -91,7 +91,7 @@
       />
       <el-table-column
         show-overflow-tooltip
-        prop="storeName"
+        prop="name"
         label="店铺名称"
         align="center"
       />
@@ -103,12 +103,12 @@
       />
       <el-table-column
         show-overflow-tooltip
-        prop="role"
+        prop="prodPri"
         label="店铺权限"
         align="center"
       >
         <template slot-scope="scope">
-          <div>{{ scope.row.role.join() }}</div>
+          {{ getProdPri(scope.row.prodPri) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -119,16 +119,16 @@
       />
       <el-table-column
         show-overflow-tooltip
-        prop="state"
+        prop="status"
         label="状态"
         align="center"
       >
         <template slot-scope="scope">
           <el-tag
-            :type="scope.row.state === 1 ? 'success' : 'danger'"
+            :type="scope.row.status === 1 ? 'success' : 'danger'"
             disable-transitions
           >
-            {{ scope.row.state === 1 ? "启用" : "禁用" }}
+            {{ scope.row.status === 1 ? "启用" : "禁用" }}
           </el-tag>
         </template>
       </el-table-column>
@@ -153,12 +153,17 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <edit ref="edit" @fetchData="fetchData"></edit>
+    <edit
+      ref="edit"
+      :status="status"
+      :roles="roles"
+      @fetchData="fetchData"
+    ></edit>
   </div>
 </template>
 
 <script>
-  import { getList, doDelete } from "@/api/store";
+  import { findStore, deleteStore } from "@/api/store";
   import Edit from "./components/StoreEdit";
 
   export default {
@@ -166,31 +171,31 @@
     components: { Edit },
     data() {
       return {
-        roleOptions: [
+        roles: [
           {
-            value: "菜品",
+            value: 1,
             label: "菜品",
           },
           {
-            value: "菜盒",
+            value: 2,
             label: "菜盒",
           },
           {
-            value: "菜谱",
+            value: 4,
             label: "菜谱",
           },
           {
-            value: "设备",
+            value: 8,
             label: "设备",
           },
         ],
-        statusOptions: [
+        status: [
           {
-            value: "启用",
+            value: 1,
             label: "启用",
           },
           {
-            value: "禁用",
+            value: 0,
             label: "禁用",
           },
         ],
@@ -203,9 +208,27 @@
         queryForm: {
           pageNo: 1,
           pageSize: 10,
-          id: "",
+          name: "",
+          account: "",
+          mobile: "",
+          prodPri: "",
+          status: "",
         },
       };
+    },
+    computed: {
+      getProdPri() {
+        return (e) => {
+          const roles = e.split(","),
+            arr = [];
+
+          for (let key of roles) {
+            let item = this.roles.filter((item) => item.value == key);
+            item.length ? arr.push(item[0]) : "";
+          }
+          return arr.map((item) => item.label).join();
+        };
+      },
     },
     created() {
       this.fetchData();
@@ -227,7 +250,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await doDelete({ ids: row.id });
+            const { msg } = await deleteStore({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.fetchData();
           });
@@ -235,7 +258,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await doDelete({ ids });
+              const { msg } = await deleteStore({ ids });
               this.$baseMessage(msg, "success");
               this.fetchData();
             });
@@ -259,9 +282,11 @@
       },
       async fetchData() {
         this.listLoading = true;
-        const { data, totalCount } = await getList(this.queryForm);
-        this.list = data;
-        this.total = totalCount;
+        const {
+          data: { storeList },
+        } = await findStore(this.queryForm);
+        this.list = storeList.list;
+        this.total = storeList.total;
         setTimeout(() => {
           this.listLoading = false;
         }, 300);

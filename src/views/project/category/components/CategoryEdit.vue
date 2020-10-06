@@ -31,6 +31,7 @@
             :key="tag.value"
             class="tag"
             closable
+            type="success"
             :disable-transitions="false"
             @close="handleDelTag(index)"
           >
