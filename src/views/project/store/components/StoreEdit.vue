@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-10-06 18:15:57
+ * @LastEditTime: 2020-10-06 19:25:07
 -->
 
 <template>
@@ -111,9 +111,9 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="物流服务" prop="postStore" label-width="89px">
+          <el-form-item label="物流服务" prop="postScore" label-width="89px">
             <el-input
-              v-model.number="form.postStore"
+              v-model.number="form.postScore"
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -175,8 +175,8 @@
           prodPri: [],
           status: "",
           desScore: "",
-          serStore: "",
-          postStore: "",
+          serScore: "",
+          postScore: "",
           desCompare: "",
           serCompare: "",
           postCompare: "",
@@ -218,10 +218,12 @@
         } else {
           this.title = "编辑";
           var row = JSON.parse(JSON.stringify(row));
+
           row.address = [
             TextToCode[row.province].code,
             TextToCode[row.province][row.city].code,
           ];
+
           row.prodPri = row.prodPri.split(",").map((item) => item * 1);
           this.form = Object.assign({}, row);
         }

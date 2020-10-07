@@ -1,7 +1,69 @@
 <template>
   <div class="goods-container">
     <vab-query-form>
-      <vab-query-form-left-panel :span="12">
+      <vab-query-form-left-panel :span="24">
+        <el-form
+          ref="queryForm"
+          :inline="true"
+          :model="queryForm"
+          @submit.native.prevent
+        >
+          <el-form-item prop="name">
+            <el-input
+              v-model.trim="queryForm.name"
+              placeholder="请输入商品名称"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item prop="type">
+            <el-select v-model="queryForm.type" placeholder="请选择商品类型">
+              <el-option
+                v-for="item in goodsType"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="cateId">
+            <el-cascader
+              v-model="queryForm.cateId"
+              :options="category"
+              :props="categoryProps"
+              :style="{ width: '100%' }"
+              placeholder="请选择商品类目"
+              clearable
+            ></el-cascader>
+          </el-form-item>
+
+          <el-form-item prop="storeId">
+            <el-input
+              v-model.trim="queryForm.storeId"
+              placeholder="请输入商铺id"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item prop="status">
+            <el-select v-model="queryForm.status" placeholder="请选择状态">
+              <el-option
+                v-for="item in statusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button icon="el-icon-search" type="primary" @click="queryData">
+              查询
+            </el-button>
+            <el-button @click="handleReset">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-left-panel>
+    </vab-query-form>
+    <vab-query-form>
+      <vab-query-form-left-panel :span="24">
         <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
           添加商品
         </el-button>
@@ -9,22 +71,6 @@
           批量删除
         </el-button>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel :span="12">
-        <el-form :inline="true" :model="queryForm" @submit.native.prevent>
-          <el-form-item>
-            <el-input
-              v-model.trim="queryForm.id"
-              placeholder="请输入查询条件"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button icon="el-icon-search" type="primary" @click="queryData">
-              查询
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </vab-query-form-right-panel>
     </vab-query-form>
 
     <el-table
@@ -47,7 +93,7 @@
       />
       <el-table-column
         show-overflow-tooltip
-        prop="title"
+        prop="name"
         label="商品名称"
         align="center"
         min-width="150"
@@ -57,22 +103,30 @@
         prop="price"
         label="价格"
         align="center"
-      />
+      >
+        <template v-slot="scope">
+          {{ scope.row.specList | minPrice }}
+        </template>
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="total"
         label="总库存"
         align="center"
-      />
+      >
+        <template v-slot="scope">
+          {{ scope.row.specList | totalStock }}
+        </template>
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="sales"
+        prop="sell_count"
         label="实际销量"
         align="center"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="collec"
+        prop="collect_count"
         label="收藏数"
         align="center"
       />
@@ -93,7 +147,10 @@
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.state"
+            :active-value="1"
+            :inactive-value="0"
             active-color="#13ce66"
+            @change="handleChange(scope.row)"
           ></el-switch>
         </template>
       </el-table-column>
@@ -122,14 +179,52 @@
 </template>
 
 <script>
-  import { getList, doDelete } from "@/api/goods";
+  import { findProduct, deleteProduct, modifyProduct } from "@/api/goods";
   import Edit from "./components/GoodsEdit";
-
+  import { mapState } from "vuex";
   export default {
     name: "Goods",
     components: { Edit },
+    filters: {
+      minPrice: (value) => {
+        if (value.length) {
+          return JSON.parse(JSON.stringify(value)).sort((a, b) => {
+            return a.sellPrice - b.sellPrice;
+          })[0].sellPrice;
+        }
+      },
+      totalStock: (value) => {
+        if (value.length) {
+          let total = 0;
+          value.map((item) => {
+            total += item.stock;
+          });
+          return total;
+        }
+      },
+    },
     data() {
       return {
+        statusOptions: [
+          {
+            label: "未发布",
+            value: 0,
+          },
+          {
+            label: "已发布",
+            value: 1,
+          },
+          {
+            label: "已下架",
+            value: 2,
+          },
+        ],
+        categoryProps: {
+          multiple: false,
+          label: "name",
+          value: "id",
+          children: "subCategoryList",
+        },
         list: null,
         listLoading: true,
         layout: "total, sizes, prev, pager, next, jumper",
@@ -139,14 +234,32 @@
         queryForm: {
           pageNo: 1,
           pageSize: 10,
-          id: "",
+          storeId: "",
+          status: "",
+          subCateId: "",
+          cateId: "",
+          type: "",
+          name: "",
         },
       };
     },
-    created() {
+    computed: mapState({
+      goodsType: (state) => state.goods.goodsType,
+      category: (state) => state.goods.category,
+    }),
+    async created() {
       this.fetchData();
+      await this.$store.dispatch("goods/findAllCategory");
     },
     methods: {
+      handleChange(e) {
+        e.status = e.state === 1 ? 1 : 2;
+        modifyProduct(e);
+      },
+      handleReset() {
+        this.queryForm.subCateId = "";
+        this.$refs["queryForm"].resetFields();
+      },
       setSelectRows(val) {
         this.selectRows = val;
       },
@@ -160,7 +273,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await doDelete({ ids: row.id });
+            const { msg } = await deleteProduct({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.fetchData();
           });
@@ -168,7 +281,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await doDelete({ ids });
+              const { msg } = await deleteProduct({ ids });
               this.$baseMessage(msg, "success");
               this.fetchData();
             });
@@ -188,13 +301,25 @@
       },
       queryData() {
         this.queryForm.pageNo = 1;
+        let category = this.queryForm.cateId;
+        if (category.length) {
+          this.queryForm.cateId = category[0];
+          this.queryForm.subCateId = category[1];
+        }
+
         this.fetchData();
       },
       async fetchData() {
         this.listLoading = true;
-        const { data, totalCount } = await getList(this.queryForm);
-        this.list = data;
-        this.total = totalCount;
+        const {
+          data: { product },
+          totalCount,
+        } = await findProduct(this.queryForm);
+        product.list.forEach((item) => {
+          item.state = item.status === 0 || item.status === 2 ? 0 : 1;
+        });
+        this.list = product.list;
+        this.total = product.total;
         setTimeout(() => {
           this.listLoading = false;
         }, 300);

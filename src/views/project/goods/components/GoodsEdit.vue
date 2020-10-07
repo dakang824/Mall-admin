@@ -2,16 +2,16 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-10-03 14:30:43
+ * @LastEditTime: 2020-10-07 22:55:36
 -->
 <template>
   <el-drawer
     :title="title"
     :visible.sync="dialogFormVisible"
     :before-close="close"
-    size="600px"
+    size="700px"
   >
-    <div class="form">
+    <div v-if="dialogFormVisible" class="form">
       <el-form
         ref="form"
         :model="form"
@@ -28,7 +28,7 @@
             :style="{ width: '100%' }"
           >
             <el-option
-              v-for="(item, index) in typeOptions"
+              v-for="(item, index) in goodsType"
               :key="index"
               :label="item.label"
               :value="item.value"
@@ -46,9 +46,18 @@
             :style="{ width: '100%' }"
           ></el-input>
         </el-form-item>
-        <el-form-item label="商品简述" prop="desc">
+        <el-form-item v-if="form.type === 1" label="所属菜谱" prop="menuId">
           <el-input
-            v-model="form.desc"
+            v-model="form.menuId"
+            placeholder="所属菜谱必须是已经上架的菜谱"
+            show-word-limit
+            clearable
+            :style="{ width: '100%' }"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="商品简述" prop="summary">
+          <el-input
+            v-model="form.summary"
             placeholder=" 显示在商品标题下面的一行小字"
             :maxlength="60"
             show-word-limit
@@ -56,19 +65,19 @@
             :style="{ width: '100%' }"
           ></el-input>
         </el-form-item>
-        <el-form-item label="商品类目" prop="category">
+        <el-form-item label="商品类目" prop="cateId">
           <el-cascader
-            v-model="form.category"
-            :options="categoryOptions"
+            v-model="form.cateId"
+            :options="category"
             :props="categoryProps"
             :style="{ width: '100%' }"
             placeholder="请选择商品类目"
             clearable
           ></el-cascader>
         </el-form-item>
-        <el-form-item label="商品产地" prop="area">
+        <el-form-item label="商品产地" prop="address_id">
           <el-select
-            v-model="form.area"
+            v-model="form.address_id"
             placeholder="请选择商品产地"
             clearable
             :style="{ width: '100%' }"
@@ -76,64 +85,45 @@
             <el-option
               v-for="(item, index) in areaOptions"
               :key="index"
-              :label="item.label"
-              :value="item.value"
-              :disabled="item.disabled"
+              :label="item.address"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="商品规格" prop="sku">
-          <el-radio-group v-model="form.sku" size="medium">
+        <el-form-item label="商品规格" prop="spe_type">
+          <el-radio-group v-model="form.spe_type" size="medium">
             <el-radio
               v-for="(item, index) in skuOptions"
               :key="index"
               :label="item.value"
-              :disabled="item.disabled"
             >
               {{ item.label }}
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="原价" prop="ori_price">
-          <el-input
-            v-model="form.ori_price"
-            placeholder="请输入原价"
-            clearable
-            :style="{ width: '100%' }"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="销售价" prop="sale_price">
-          <el-input
-            v-model="form.sale_price"
-            placeholder="请输入销售价"
-            clearable
-            :style="{ width: '100%' }"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="单前库存" prop="stock">
-          <el-input
-            v-model="form.stock"
-            placeholder="请输入单前库存"
-            clearable
-            :style="{ width: '100%' }"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="重量（Kg）" prop="weight">
-          <el-input
-            v-model="form.weight"
-            placeholder="请输入重量（Kg）"
-            clearable
-            :style="{ width: '100%' }"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="商品图片" prop="good_img" required>
+        <div v-if="form.spe_type === 1">
+          <unifySpec
+            ref="unifySpec"
+            :model="form"
+            :is-add="isAdd"
+            @getData="handleGetData"
+          ></unifySpec>
+        </div>
+        <div v-if="form.spe_type === 2">
+          <prodSpec ref="prodSpec" :model="form" :is-add="isAdd"></prodSpec>
+        </div>
+
+        <el-form-item label="商品图片" prop="pics">
           <el-upload
-            ref="good_img"
-            :file-list="good_imgfileList"
-            :action="good_imgAction"
+            ref="pics_img"
+            :file-list="form.pics_list"
+            :action="fileUpload"
             :before-upload="good_imgBeforeUpload"
             list-type="picture"
-            accept="image/*"
+            accept="zip/*"
+            :on-success="handlePicsSuccess"
+            :before-remove="handlePicsRemove"
+            :limit="getLimit"
           >
             <el-button size="small" type="primary" icon="el-icon-upload">
               添加图片
@@ -143,14 +133,17 @@
             </div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="商品描述" prop="describe_img" required>
+        <el-form-item label="商品描述" prop="introPics">
           <el-upload
-            ref="describe_img"
-            :file-list="describe_imgfileList"
-            :action="describe_imgAction"
+            ref="introPics_img"
+            :file-list="form.introPics_list"
+            :action="fileUpload"
             :before-upload="describe_imgBeforeUpload"
             list-type="picture"
-            accept="image/*"
+            accept="zip/*"
+            :on-success="handleIntroPicsSuccess"
+            :before-remove="handleIntroPicsRemove"
+            :limit="getLimit"
           >
             <el-button size="small" type="primary" icon="el-icon-upload">
               添加图片
@@ -160,9 +153,9 @@
             </div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="运费模板" prop="freight">
+        <el-form-item label="运费模板" prop="postTempId">
           <el-select
-            v-model="form.freight"
+            v-model="form.postTempId"
             placeholder="请选择运费模板"
             clearable
             :style="{ width: '100%' }"
@@ -176,8 +169,12 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label-width="106px" label="库存计算方式" prop="mode">
-          <el-radio-group v-model="form.mode" size="medium">
+        <el-form-item
+          label-width="106px"
+          label="库存计算方式"
+          prop="dealStockType"
+        >
+          <el-radio-group v-model="form.dealStockType" size="medium">
             <el-radio
               v-for="(item, index) in modeOptions"
               :key="index"
@@ -188,71 +185,13 @@
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-row type="flex">
-          <el-col :span="10">
-            <el-form-item label="菜品名称" prop="food_name">
-              <el-input
-                v-model="form.food_name"
-                placeholder="请输入菜品名称"
-                clearable
-                :style="{ width: '100%' }"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="10">
-            <el-form-item label="重量" prop="food_weight">
-              <el-input
-                v-model="form.food_weight"
-                placeholder="请输入重量"
-                clearable
-                :style="{ width: '100%' }"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="1">
-            <el-form-item label="" prop="field123" class="add-btn">
-              <el-button type="primary" icon="el-icon-plus" size="small">
-                添加配方
-              </el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-table :data="tableData" style="width: 100%" border>
-          <el-table-column
-            prop="id"
-            label="序号"
-            width="80"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="name"
-            label="菜品名称"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="weight"
-            label="重量"
-            width="80"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            fixed="right"
-            label="操作"
-            width="120"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <el-button
-                type="danger"
-                size="small"
-                @click.native.prevent="deleteRow(scope.$index, tableData)"
-              >
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <div v-if="form.type === 4">
+          <prodRecipes
+            ref="prodRecipes"
+            :model="form"
+            :is-add="isAdd"
+          ></prodRecipes>
+        </div>
       </el-form>
     </div>
 
@@ -262,45 +201,53 @@
     </div>
   </el-drawer>
 </template>
-
 <script>
-  import { doEdit } from "@/api/goods";
-
+  import { addProduct, modifyProduct } from "@/api/goods";
+  import { mapState } from "vuex";
+  import { fileUpload } from "@/config/settings";
+  import { findAllProdAddress } from "@/api/produce";
+  import prodSpec from "./prodSpec";
+  import prodRecipes from "./prodRecipes";
+  import unifySpec from "./unifySpec";
   export default {
     name: "GoodsEdit",
+    components: {
+      prodSpec,
+      prodRecipes,
+      unifySpec,
+    },
     data() {
       return {
-        tableData: [
-          {
-            id: 1,
-            name: "土豆",
-            weight: 1,
-          },
-          {
-            id: 2,
-            name: "牛肉",
-            weight: 1,
-          },
-        ],
+        isAdd: true,
+        fileUpload,
         form: {
-          id: "",
+          storeId: 1,
+          name: "",
           type: "",
-          name: undefined,
-          desc: undefined,
-          category: [],
-          area: undefined,
-          sku: 1,
-          ori_price: undefined,
-          sale_price: undefined,
-          stock: undefined,
-          weight: undefined,
-          good_img: "",
-          describe_img: "",
-          freight: undefined,
-          mode: 1,
-          food_name: undefined,
-          food_weight: undefined,
-          field123: undefined,
+          summary: "",
+          cateId: "",
+          address_id: "",
+          subCateId: "",
+          spe_type: 1,
+          prodSpec: [
+            {
+              id: 0,
+              prodId: 0,
+              oriPrice: "",
+              sellPrice: "",
+              stock: "",
+              weight: "",
+            },
+          ],
+          postTempId: "",
+          dealStockType: "",
+          prodRecipes: "",
+          pics: "",
+          introPics: "",
+          menuId: "",
+          storeId: "",
+          introPics_list: [],
+          pics_list: [],
         },
         rules: {
           id: [{ required: true, trigger: "blur", message: "请输入id" }],
@@ -318,125 +265,59 @@
               trigger: "blur",
             },
           ],
-          desc: [
+          summary: [
             {
               required: true,
-              message: " 显示在商品标题下面的一行小字",
+              message: " 请输入商品简述,显示在商品标题下面的一行小字",
               trigger: "blur",
             },
           ],
-          category: [
+          cateId: [
             {
               required: true,
               type: "array",
-              message: "请至少选择一个商品类目",
+              message: "请选择一个商品类目",
               trigger: "change",
             },
           ],
-          area: [
+          address_id: [
             {
               required: true,
               message: "请选择商品产地",
               trigger: "change",
             },
           ],
-          sku: [
-            {
-              required: true,
-              message: "商品规格不能为空",
-              trigger: "change",
-            },
-          ],
-          ori_price: [
-            {
-              required: true,
-              message: "请输入原价",
-              trigger: "blur",
-            },
-          ],
-          sale_price: [
-            {
-              required: true,
-              message: "请输入销售价",
-              trigger: "blur",
-            },
-          ],
-          stock: [
-            {
-              required: true,
-              message: "请输入单前库存",
-              trigger: "blur",
-            },
-          ],
-          weight: [
-            {
-              required: true,
-              message: "请输入重量（Kg）",
-              trigger: "blur",
-            },
-          ],
-          freight: [
+          postTempId: [
             {
               required: true,
               message: "请选择运费模板",
               trigger: "change",
             },
           ],
-          mode: [
+          dealStockType: [
             {
               required: true,
-              message: "库存计算方式不能为空",
-              trigger: "change",
-            },
-          ],
-          food_name: [
-            {
-              required: true,
-              message: "请输入菜品名称",
+              message: "请选择库存计算方式",
               trigger: "blur",
             },
           ],
-          food_weight: [
+          pics: [
             {
               required: true,
-              message: "请输入重量",
-              trigger: "blur",
+              message: "请上传商品图片",
+            },
+          ],
+          introPics: [
+            {
+              required: true,
+              message: "请上传商品描述图片",
             },
           ],
         },
-        good_imgAction: "https://jsonplaceholder.typicode.com/posts/",
         good_imgfileList: [],
-        describe_imgAction: "https://jsonplaceholder.typicode.com/posts/",
         describe_imgfileList: [],
-        typeOptions: [
-          {
-            label: "菜谱",
-            value: 1,
-          },
-          {
-            label: "菜盒",
-            value: 2,
-          },
-          {
-            label: "菜品",
-            value: 3,
-          },
-          {
-            label: "设备",
-            value: 4,
-          },
-        ],
-        categoryOptions: [],
-        areaOptions: [
-          {
-            label: "选项一",
-            value: 1,
-          },
-          {
-            label: "选项二",
-            value: 2,
-          },
-        ],
+
+        areaOptions: [],
         skuOptions: [
           {
             label: "统一规格",
@@ -481,22 +362,90 @@
         ],
         categoryProps: {
           multiple: false,
-          label: "label",
-          value: "value",
-          children: "children",
+          label: "name",
+          value: "id",
+          children: "subCategoryList",
         },
         title: "",
         dialogFormVisible: false,
       };
     },
-    created() {},
+    computed: mapState({
+      goodsType: (state) => state.goods.goodsType,
+      category: (state) => state.goods.category,
+      getLimit() {
+        return this.isAdd ? 1 : 10;
+      },
+    }),
+    async created() {
+      const {
+        data: { prodAddress },
+      } = await findAllProdAddress();
+      this.areaOptions = prodAddress;
+      this.copyData = JSON.parse(JSON.stringify(this.form));
+    },
+    mounted() {},
     methods: {
+      handleIntroPicsRemove(file, fileList) {
+        if (!this.isAdd) {
+          const index = this.form.introPics.findIndex(
+            (item) => item.id === file.id
+          );
+          this.form.introPics.splice(index, 1);
+        } else {
+          this.form.introPics = "";
+        }
+      },
+      handlePicsRemove(file) {
+        if (!this.isAdd) {
+          const index = this.form.pics.findIndex((item) => item.id === file.id);
+          this.form.pics.splice(index, 1);
+        } else {
+          this.form.pics = "";
+        }
+      },
+      handlePicsSuccess(e) {
+        this.form.pics = e.data.tempUrl;
+        if (e.code === 500) {
+          this.$baseAlert(e.msg, "温馨提示");
+        }
+        this.$refs.form.clearValidate("pics");
+      },
+      handleIntroPicsSuccess(e) {
+        this.form.introPics = e.data.tempUrl;
+        if (e.code === 500) {
+          this.$baseAlert(e.msg, "温馨提示");
+        }
+        this.$refs.form.clearValidate("introPics");
+      },
       showEdit(row) {
         if (!row) {
           this.title = "添加商品";
+          this.isAdd = true;
         } else {
           this.title = "编辑商品";
-          this.form = Object.assign({}, row);
+          this.isAdd = false;
+          var row = JSON.parse(JSON.stringify(row));
+          row.spe_type = row.speType;
+          row.prodSpec = row.specList;
+          row.address_id = row.addressId;
+          row.cateId = [row.cateId, row.subCateId];
+          row.pics_list = row.pics.map((item) => {
+            return {
+              name: item.path.substr(item.path.lastIndexOf("/") + 1),
+              url: "/service/" + item.path,
+              id: item.id,
+            };
+          });
+          row.introPics_list = row.introPics.map((item) => {
+            return {
+              name: item.path.substr(item.path.lastIndexOf("/") + 1),
+              url: "/service/" + item.path,
+              id: item.id,
+            };
+          });
+
+          this.form = Object.assign(this.form, row);
         }
         this.dialogFormVisible = true;
       },
@@ -505,11 +454,36 @@
         this.form = this.$options.data().form;
         this.dialogFormVisible = false;
       },
-      save() {
+      handleGetData(e) {
+        this.form.prodSpec = JSON.stringify([e]);
+      },
+      async save() {
+        if (this.form.spe_type === 2) {
+          this.form.prodSpec = JSON.stringify(this.$refs.prodSpec.getData());
+        } else {
+          await this.$refs.unifySpec.getData();
+        }
+        if (this.form.type === 4) {
+          this.form.prodRecipes = JSON.stringify(
+            this.$refs.prodRecipes.getData()
+          );
+        }
+
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
-            const { msg } = await doEdit(this.form);
-            this.$baseMessage(msg, "success");
+            const form = JSON.parse(JSON.stringify(this.form));
+            let category = form.cateId;
+            form.cateId = category[0];
+            form.subCateId = category[1];
+
+            if (this.title.includes("添加")) {
+              const { msg } = await addProduct(form);
+              this.$baseMessage(msg, "success");
+            } else {
+              const { msg } = await modifyProduct(form);
+              this.$baseMessage(msg, "success");
+            }
+            this.form = this.copyData;
             this.$emit("fetchData");
             this.close();
           } else {
@@ -517,25 +491,14 @@
           }
         });
       },
-      getCategoryOptions() {
-        // 注意：this.$axios是通过Vue.prototype.$axios = axios挂载产生的
-        this.$axios({
-          method: "get",
-          url:
-            "https://www.fastmock.site/mock/f8d7a54fb1e60561e2f720d5a810009d/fg/cascaderList",
-        }).then((resp) => {
-          var { data } = resp;
-          this.categoryOptions = data.list;
-        });
-      },
       good_imgBeforeUpload(file) {
         let isRightSize = file.size / 1024 / 1024 < 2;
         if (!isRightSize) {
           this.$message.error("文件大小超过 2MB");
         }
-        let isAccept = new RegExp("image/*").test(file.type);
+        let isAccept = new RegExp("zip/*").test(file.type);
         if (!isAccept) {
-          this.$message.error("应该选择image/*类型的文件");
+          this.$message.error("应该选择zip/*类型的文件");
         }
         return isRightSize && isAccept;
       },
@@ -544,9 +507,9 @@
         if (!isRightSize) {
           this.$message.error("文件大小超过 2MB");
         }
-        let isAccept = new RegExp("image/*").test(file.type);
+        let isAccept = new RegExp("zip/*").test(file.type);
         if (!isAccept) {
-          this.$message.error("应该选择image/*类型的文件");
+          this.$message.error("应该选择zip/*类型的文件");
         }
         return isRightSize && isAccept;
       },
@@ -570,6 +533,19 @@
   }
 
   ::v-deep {
+    .el-card__header {
+      padding: 10px 20px;
+    }
+    .el-upload {
+      &-list__item-status-label,
+      &-list__item .el-icon-close {
+        display: none !important;
+      }
+    }
+
+    .el-card__body {
+      padding: 20px 10px 0 0;
+    }
     .add-btn {
       .el-form-item__content {
         margin-left: 10px !important;

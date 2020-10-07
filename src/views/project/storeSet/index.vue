@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 16:12:52
- * @LastEditTime: 2020-10-03 19:30:14
+ * @LastEditTime: 2020-10-06 22:44:52
 -->
 <template>
   <div class="storeSet-container">
@@ -35,9 +35,11 @@
           <el-upload
             ref="field117"
             :file-list="field117fileList"
-            :action="field117Action"
+            :action="action"
             :before-upload="handleBeforeUpload"
             list-type="picture-card"
+            :limit="1"
+            :on-success="handleSuccess"
           >
             <i class="el-icon-plus"></i>
             <div slot="tip" class="el-upload__tip">将展示为前台店铺logo</div>
@@ -58,12 +60,14 @@
 
 <script>
   import { getList, doDelete } from "@/api/storeSet";
+  import { fileUpload } from "@/config/settings";
   import { regionData } from "element-china-area-data";
   export default {
     name: "StoreSet",
     components: {},
     data() {
       return {
+        action: fileUpload,
         options: regionData,
         formData: {
           name: "",
@@ -102,6 +106,9 @@
     },
     created() {},
     methods: {
+      handleSuccess(response, file, fileList) {
+        console.log(response, file, fileList);
+      },
       handelConfirm() {
         this.$refs["elForm"].validate((valid) => {
           if (!valid) return;

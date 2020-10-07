@@ -1,24 +1,50 @@
+/*
+ * @Author: yukang 1172248038@qq.com
+ * @Description:商品管理
+ * @Date: 2020-10-03 11:27:37
+ * @LastEditTime: 2020-10-07 19:25:49
+ */
 import request from "@/utils/request";
 
-export function getList(data) {
+export function findProduct(params) {
   return request({
-    url: "/goods/getList",
+    url: "/service/plat/admin/findProduct",
+    method: "get",
+    params,
+  });
+}
+
+export function findAllCategory() {
+  return request({
+    url: "/service/plat/admin/findAllCategory",
+    method: "get",
+  });
+}
+
+export function findSubCategoryByCateId(params) {
+  return request({
+    url: "/service/plat/admin/findSubCategoryByCateId",
+    method: "get",
+    params,
+  });
+}
+export function addProduct(data) {
+  return request({
+    url: "/service/plat/admin/addProduct",
     method: "post",
     data,
   });
 }
-
-export function doEdit(data) {
+export function deleteProduct(data) {
   return request({
-    url: "/goods/doEdit",
+    url: "/service/plat/admin/deleteProduct",
     method: "post",
     data,
   });
 }
-
-export function doDelete(data) {
+export function modifyProduct(data) {
   return request({
-    url: "/goods/doDelete",
+    url: "/service/plat/admin/modifyProduct",
     method: "post",
     data,
   });

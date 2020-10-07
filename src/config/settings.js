@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2020-10-06 13:02:50
+ * @LastEditTime: 2020-10-06 22:36:58
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -101,4 +101,6 @@ module.exports = {
   templateFolder: "project",
   //是否显示终端donation打印
   donation: false,
+  // 上传文件url
+  fileUpload: "/service/common/fileUpload",
 };
