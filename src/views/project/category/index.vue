@@ -9,7 +9,7 @@
           批量删除
         </el-button>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel :span="12">
+      <!-- <vab-query-form-right-panel :span="12">
         <el-form :inline="true" :model="queryForm" @submit.native.prevent>
           <el-form-item>
             <el-input
@@ -24,7 +24,7 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-right-panel>
+      </vab-query-form-right-panel> -->
     </vab-query-form>
 
     <el-table
@@ -41,23 +41,25 @@
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="id"
+        prop="pos"
         label="排序"
         align="center"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="type"
+        prop="name"
         label="大类"
         align="center"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="child"
+        prop="subCategoryList"
         label="小分类"
         align="center"
       >
-        <template slot-scope="scope">{{ scope.row.child.join(",") }}</template>
+        <template slot-scope="scope">
+          {{ scope.row.subCategoryList | getChildName }}
+        </template>
       </el-table-column>
 
       <el-table-column fixed="right" label="操作" width="200" align="center">
@@ -72,6 +74,7 @@
       </el-table-column>
     </el-table>
     <el-pagination
+      v-if="false"
       background
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
@@ -85,12 +88,17 @@
 </template>
 
 <script>
-  import { getList, doDelete } from "@/api/category";
+  import { deleteCategory } from "@/api/category";
   import Edit from "./components/CategoryEdit";
-
+  import { mapState } from "vuex";
   export default {
     name: "Category",
     components: { Edit },
+    filters: {
+      getChildName: (value) => {
+        return value.map((item) => item.name).join();
+      },
+    },
     data() {
       return {
         list: null,
@@ -106,6 +114,9 @@
         },
       };
     },
+    computed: mapState({
+      category: (state) => state.goods.category,
+    }),
     created() {
       this.fetchData();
     },
@@ -123,7 +134,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await doDelete({ ids: row.id });
+            const { msg } = await deleteCategory({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.fetchData();
           });
@@ -131,7 +142,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await doDelete({ ids });
+              const { msg } = await deleteCategory({ ids });
               this.$baseMessage(msg, "success");
               this.fetchData();
             });
@@ -155,9 +166,9 @@
       },
       async fetchData() {
         this.listLoading = true;
-        // const { data, totalCount } = await getList(this.queryForm);
-        // this.list = data;
-        // this.total = totalCount;
+        await this.$store.dispatch("goods/findAllCategory");
+        this.list = this.category;
+        this.total = this.category.length;
         setTimeout(() => {
           this.listLoading = false;
         }, 300);

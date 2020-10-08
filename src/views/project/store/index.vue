@@ -8,14 +8,14 @@
           :model="queryForm"
           @submit.native.prevent
         >
-          <el-form-item prop="role">
+          <el-form-item prop="prodPri">
             <el-select
-              v-model="queryForm.role"
+              v-model="queryForm.prodPri"
               placeholder="请选择权限"
               multiple
             >
               <el-option
-                v-for="item in roles"
+                v-for="item in goodsType"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -108,7 +108,7 @@
         align="center"
       >
         <template slot-scope="scope">
-          {{ getProdPri(scope.row.prodPri) }}
+          {{ scope.row.prodPri | getProdPri(goodsType) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -156,7 +156,7 @@
     <edit
       ref="edit"
       :status="status"
-      :roles="roles"
+      :roles="goodsType"
       @fetchData="fetchData"
     ></edit>
   </div>
@@ -165,30 +165,24 @@
 <script>
   import { findStore, deleteStore } from "@/api/store";
   import Edit from "./components/StoreEdit";
-
+  import { mapState } from "vuex";
   export default {
     name: "Store",
     components: { Edit },
+    filters: {
+      getProdPri: (value, goodsType) => {
+        return goodsType
+          .map((item) => {
+            if ((value & item.value) > 0) {
+              return item.label;
+            }
+          })
+          .filter((item) => item !== undefined)
+          .join();
+      },
+    },
     data() {
       return {
-        roles: [
-          {
-            value: 1,
-            label: "菜品",
-          },
-          {
-            value: 2,
-            label: "菜盒",
-          },
-          {
-            value: 4,
-            label: "菜谱",
-          },
-          {
-            value: 8,
-            label: "设备",
-          },
-        ],
         status: [
           {
             value: 1,
@@ -216,20 +210,9 @@
         },
       };
     },
-    computed: {
-      getProdPri() {
-        return (e) => {
-          const roles = e.split(","),
-            arr = [];
-
-          for (let key of roles) {
-            let item = this.roles.filter((item) => item.value == key);
-            item.length ? arr.push(item[0]) : "";
-          }
-          return arr.map((item) => item.label).join();
-        };
-      },
-    },
+    computed: mapState({
+      goodsType: (state) => state.goods.goodsType,
+    }),
     created() {
       this.fetchData();
     },
@@ -282,9 +265,14 @@
       },
       async fetchData() {
         this.listLoading = true;
+        const queryForm = JSON.parse(JSON.stringify(this.queryForm));
+        if (queryForm.prodPri.length) {
+          queryForm.prodPri = queryForm.prodPri.reduce((a, b) => a + b);
+        }
+
         const {
           data: { storeList },
-        } = await findStore(this.queryForm);
+        } = await findStore(queryForm);
         this.list = storeList.list;
         this.total = storeList.total;
         setTimeout(() => {

@@ -79,18 +79,29 @@
       :element-loading-text="elementLoadingText"
       border
       @selection-change="setSelectRows"
+      @cell-click="handleDblclick"
     >
       <el-table-column
         show-overflow-tooltip
         type="selection"
         align="center"
       ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="id"
-        label="排序"
-        align="center"
-      />
+      <el-table-column show-overflow-tooltip prop="id" align="center">
+        <template slot="header">
+          <i class="el-icon-edit"></i>
+          排序
+        </template>
+        <template v-slot="scope">
+          <el-input
+            v-if="scope.row.edit"
+            v-model.number="scope.row.id"
+            autofocus
+            type="number"
+            @blur="handleBlur(scope.row)"
+          ></el-input>
+          <span v-else>{{ scope.row.id }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="name"
@@ -252,6 +263,20 @@
       await this.$store.dispatch("goods/findAllCategory");
     },
     methods: {
+      handleBlur(e) {
+        const index = this.list.findIndex((item) => item.id === e.id);
+        this.list[index].edit = false;
+
+        console.log(e.id);
+      },
+      handleDblclick(row, column, cell, event) {
+        this.list.map((item) => {
+          item.edit = false;
+        });
+        if (column.property === "id") {
+          row.edit = true;
+        }
+      },
       handleChange(e) {
         e.status = e.state === 1 ? 1 : 2;
         modifyProduct(e);
@@ -317,6 +342,7 @@
         } = await findProduct(this.queryForm);
         product.list.forEach((item) => {
           item.state = item.status === 0 || item.status === 2 ? 0 : 1;
+          item.edit = false;
         });
         this.list = product.list;
         this.total = product.total;

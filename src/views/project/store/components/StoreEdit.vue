@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-10-06 19:25:07
+ * @LastEditTime: 2020-10-08 15:17:43
 -->
 
 <template>
@@ -223,8 +223,14 @@
             TextToCode[row.province].code,
             TextToCode[row.province][row.city].code,
           ];
-
-          row.prodPri = row.prodPri.split(",").map((item) => item * 1);
+          const prodPri = this.roles
+            .map((item) => {
+              if ((row.prodPri & item.value) > 0) {
+                return item.value;
+              }
+            })
+            .filter((item) => item !== undefined);
+          row.prodPri = prodPri;
           this.form = Object.assign({}, row);
         }
         this.dialogFormVisible = true;
@@ -235,15 +241,16 @@
         this.dialogFormVisible = false;
       },
       save() {
+        const form = JSON.parse(JSON.stringify(this.form));
+        form.prodPri = form.prodPri.reduce((a, b) => a + b);
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
-            this.form.prodPri = this.form.prodPri.join();
-            this.form.address = this.form.province + " " + this.form.city;
+            form.address = form.province + " " + form.city;
             if (this.title.includes("添加")) {
-              const { msg } = await addStore(this.form);
+              const { msg } = await addStore(form);
               this.$baseMessage(msg, "success");
             } else {
-              const { msg } = await modifyStore(this.form);
+              const { msg } = await modifyStore(form);
               this.$baseMessage(msg, "success");
             }
 

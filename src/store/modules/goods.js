@@ -2,9 +2,10 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 全局商品类型
  * @Date: 2020-10-07 11:23:12
- * @LastEditTime: 2020-10-07 12:44:17
+ * @LastEditTime: 2020-10-08 10:19:56
  */
 import { findAllCategory, findSubCategoryByCateId } from "@/api/goods";
+import { data } from "autoprefixer";
 const state = {
   category: [],
   subCategory: [],
@@ -43,19 +44,6 @@ const actions = {
     const {
       data: { category },
     } = await findAllCategory();
-    // const data = category.map((item) => {
-    //   let children = [];
-    //   for (let key of item.subCategoryList) {
-    //     children.push({ label: key.name, value: key.id, pos: key.pos });
-    //   }
-    //   return {
-    //     label: item.name,
-    //     value: item.id,
-    //     pos: item.pos,
-    //     children,
-    //   };
-    // });
-
     commit("ChangeCategory", category);
   },
   async findSubCategoryByCateId({ commit }, params) {
