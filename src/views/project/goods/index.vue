@@ -131,19 +131,19 @@
       </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="sell_count"
+        prop="sellCount"
         label="实际销量"
         align="center"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="collect_count"
+        prop="collectCount"
         label="收藏数"
         align="center"
       />
       <el-table-column
         show-overflow-tooltip
-        prop="time"
+        prop="onlineTime"
         label="上下架时间"
         align="center"
         min-width="150"
@@ -190,7 +190,13 @@
 </template>
 
 <script>
-  import { findProduct, deleteProduct, modifyProduct } from "@/api/goods";
+  import {
+    findProduct,
+    deleteProduct,
+    modifyProduct,
+    onlineProduct,
+    offlineProduct,
+  } from "@/api/goods";
   import Edit from "./components/GoodsEdit";
   import { mapState } from "vuex";
   export default {
@@ -279,7 +285,10 @@
       },
       handleChange(e) {
         e.status = e.state === 1 ? 1 : 2;
-        modifyProduct(e);
+        e.status == 1
+          ? onlineProduct({ prod_id: e.id })
+          : offlineProduct({ prod_id: e.id });
+        this.fetchData();
       },
       handleReset() {
         this.queryForm.subCateId = "";
@@ -343,6 +352,8 @@
         product.list.forEach((item) => {
           item.state = item.status === 0 || item.status === 2 ? 0 : 1;
           item.edit = false;
+          if (item.onlineTime)
+            item.onlineTime = item.onlineTime.substring(0, 16);
         });
         this.list = product.list;
         this.total = product.total;

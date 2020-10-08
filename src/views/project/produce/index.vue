@@ -9,7 +9,7 @@
           批量删除
         </el-button>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel :span="12">
+      <!-- <vab-query-form-right-panel :span="12">
         <el-form :inline="true" :model="queryForm" @submit.native.prevent>
           <el-form-item>
             <el-input
@@ -24,7 +24,7 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-right-panel>
+      </vab-query-form-right-panel> -->
     </vab-query-form>
 
     <el-table

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:商品管理
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-10-07 19:25:49
+ * @LastEditTime: 2020-10-08 16:23:47
  */
 import request from "@/utils/request";
 
@@ -45,6 +45,20 @@ export function deleteProduct(data) {
 export function modifyProduct(data) {
   return request({
     url: "/service/plat/admin/modifyProduct",
+    method: "post",
+    data,
+  });
+}
+export function onlineProduct(data) {
+  return request({
+    url: "/service/plat/admin/onlineProduct",
+    method: "post",
+    data,
+  });
+}
+export function offlineProduct(data) {
+  return request({
+    url: "/service/plat/admin/offlineProduct",
     method: "post",
     data,
   });

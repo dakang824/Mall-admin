@@ -113,7 +113,7 @@
       </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="collec"
+        prop="collect_count"
         label="收藏数"
         align="center"
       />

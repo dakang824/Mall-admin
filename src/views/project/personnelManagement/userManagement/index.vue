@@ -8,8 +8,12 @@
           :model="queryForm"
           @submit.native.prevent
         >
-          <el-form-item prop="role">
-            <el-select v-model="queryForm.role" placeholder="请选择角色">
+          <el-form-item prop="roles">
+            <el-select
+              v-model="queryForm.roles"
+              placeholder="请选择角色"
+              multiple
+            >
               <el-option
                 v-for="item in roles"
                 :key="item.id"
@@ -112,7 +116,9 @@
         label="角色"
         align="center"
       >
-        <template v-slot="scope">{{ getRoles(scope.row.roles) }}</template>
+        <template v-slot="scope">
+          {{ scope.row.roles | getRoles(roles) }}
+        </template>
       </el-table-column>
       <el-table-column
         show-overflow-tooltip
@@ -176,6 +182,18 @@
   export default {
     name: "UserManagement",
     components: { Edit },
+    filters: {
+      getRoles: (value, roles) => {
+        return roles
+          .map((item) => {
+            if ((value & item.no) > 0) {
+              return item.name;
+            }
+          })
+          .filter((item) => item !== undefined)
+          .join();
+      },
+    },
     data() {
       return {
         status: [
@@ -206,14 +224,6 @@
           status: "",
         },
       };
-    },
-    computed: {
-      getRoles() {
-        return (e) => {
-          let arr = this.roles.filter((item) => item.no === e);
-          return arr.length ? arr[0].name : "";
-        };
-      },
     },
     created() {
       this.fetchData();
@@ -272,9 +282,14 @@
       },
       async fetchData() {
         this.listLoading = true;
+        const queryForm = JSON.parse(JSON.stringify(this.queryForm));
+        if (queryForm.roles.length) {
+          queryForm.roles = queryForm.roles.reduce((a, b) => a + b);
+        }
+
         const {
           data: { users },
-        } = await queryUsers(this.queryForm);
+        } = await queryUsers(queryForm);
         this.list = users.list;
         this.total = users.total;
         setTimeout(() => {

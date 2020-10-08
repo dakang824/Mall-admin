@@ -19,7 +19,7 @@
         <el-input v-model.trim="form.pwd" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="角色" prop="roles">
-        <el-select v-model="form.roles" style="width: 100%">
+        <el-select v-model="form.roles" style="width: 100%" multiple>
           <el-option
             v-for="item in roles"
             :key="item.id"
@@ -97,8 +97,15 @@
           this.form.status = 1;
         } else {
           this.title = "编辑";
+          var row = JSON.parse(JSON.stringify(row));
+          row.roles = this.roles
+            .map((item) => {
+              if ((row.roles & item.no) > 0) {
+                return item.no;
+              }
+            })
+            .filter((item) => item !== undefined);
           this.form = Object.assign({}, row);
-          console.log(this.form);
         }
         this.dialogFormVisible = true;
       },
@@ -110,13 +117,15 @@
       save() {
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
+            const form = JSON.parse(JSON.stringify(this.form));
+            form.roles = form.roles.reduce((a, b) => a + b);
             if (this.title.includes("添加")) {
-              const { msg } = await addUser(this.form);
+              const { msg } = await addUser(form);
               this.$baseMessage(msg, "success");
               this.$emit("fetchData");
               this.close();
             } else {
-              const { msg } = await modifyUser(this.form);
+              const { msg } = await modifyUser(form);
               this.$baseMessage(msg, "success");
               this.$emit("fetchData");
               this.close();

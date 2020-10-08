@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-10-08 15:17:43
+ * @LastEditTime: 2020-10-08 16:37:18
 -->
 
 <template>
@@ -241,10 +241,10 @@
         this.dialogFormVisible = false;
       },
       save() {
-        const form = JSON.parse(JSON.stringify(this.form));
-        form.prodPri = form.prodPri.reduce((a, b) => a + b);
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
+            const form = JSON.parse(JSON.stringify(this.form));
+            form.prodPri = form.prodPri.reduce((a, b) => a + b);
             form.address = form.province + " " + form.city;
             if (this.title.includes("添加")) {
               const { msg } = await addStore(form);
