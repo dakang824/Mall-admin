@@ -115,9 +115,11 @@
     position: relative;
     width: 100%;
     overflow: hidden;
+
     .vab-keel {
       margin: $base-padding;
     }
+
     .app-main-height {
       min-height: $base-app-main-height;
     }

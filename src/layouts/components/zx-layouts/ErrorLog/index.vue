@@ -118,10 +118,10 @@
   ::v-deep {
     .el-badge {
       .el-button {
-        height: 28px;
         display: flex;
-        justify-items: center;
         align-items: center;
+        justify-items: center;
+        height: 28px;
       }
     }
   }

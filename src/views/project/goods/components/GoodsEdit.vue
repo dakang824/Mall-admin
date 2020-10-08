@@ -521,21 +521,23 @@
   .el-form {
     margin: 0 40px 0 20px;
   }
+
   .dialog-footer {
-    text-align: center;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
     padding: $base-padding;
+    text-align: center;
     text-align: right;
     border-top: 1px solid $base-border-color;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
   }
 
   ::v-deep {
     .el-card__header {
       padding: 10px 20px;
     }
+
     .el-upload {
       &-list__item-status-label,
       &-list__item .el-icon-close {
@@ -546,26 +548,32 @@
     .el-card__body {
       padding: 20px 10px 0 0;
     }
+
     .add-btn {
       .el-form-item__content {
         margin-left: 10px !important;
       }
     }
+
     .el-upload__tip {
       line-height: 20px;
     }
+
     .el-drawer__header {
-      border-bottom: 1px solid $base-border-color;
       padding-bottom: 15px;
       margin-bottom: 0;
+      border-bottom: 1px solid $base-border-color;
     }
+
     .el-drawer {
       &__body {
-        padding-top: 10px;
         flex: inherit;
+        padding-top: 10px;
+
         .form {
           max-height: calc(100vh - 148px);
           overflow: auto;
+
           .el-table {
             margin-bottom: 20px;
           }

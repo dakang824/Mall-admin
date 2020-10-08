@@ -68,24 +68,24 @@
 </script>
 <style lang="scss" scoped>
   .avatar-dropdown {
-    padding: 0;
-    height: 50px;
     display: flex;
-    align-items: center;
     align-content: center;
-    justify-items: center;
+    align-items: center;
     justify-content: center;
+    justify-items: center;
+    height: 50px;
+    padding: 0;
 
     .user-avatar {
-      cursor: pointer;
       width: 40px;
       height: 40px;
+      cursor: pointer;
       border-radius: 50%;
     }
 
     .user-name {
-      margin-left: 5px;
       position: relative;
+      margin-left: 5px;
       margin-left: 5px;
       font-weight: 600;
       cursor: pointer;

@@ -48,7 +48,7 @@
         <el-button
           type="primary"
           size="medium"
-          style="margin-left: 100px; width: 140px"
+          style="width: 140px; margin-left: 100px"
           @click="handelConfirm"
         >
           保存
