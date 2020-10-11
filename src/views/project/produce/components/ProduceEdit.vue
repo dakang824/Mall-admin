@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:00:21
- * @LastEditTime: 2020-10-06 17:03:03
+ * @LastEditTime: 2020-10-11 23:42:35
 -->
 <template>
   <el-dialog
@@ -13,10 +13,14 @@
   >
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="排序" prop="pos">
-        <el-input v-model="form.pos" autocomplete="off"></el-input>
+        <el-input
+          v-model.number="form.pos"
+          autocomplete="off"
+          type="number"
+        ></el-input>
       </el-form-item>
       <el-form-item label="产地" prop="address">
-        <el-input v-model="form.address" autocomplete="off"></el-input>
+        <el-input v-model.trim="form.address" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -33,9 +37,7 @@
     name: "ProduceEdit",
     data() {
       return {
-        form: {
-          id: "",
-        },
+        form: { pos: "", address: "" },
         rules: {
           pos: [{ required: true, trigger: "blur", message: "请输入排序" }],
           address: [{ required: true, trigger: "blur", message: "请输入产地" }],
