@@ -283,12 +283,12 @@
           row.edit = true;
         }
       },
-      handleChange(e) {
+      async handleChange(e) {
         e.status = e.state === 1 ? 1 : 2;
         e.status == 1
-          ? onlineProduct({ prod_id: e.id })
-          : offlineProduct({ prod_id: e.id });
-        this.fetchData();
+          ? await onlineProduct({ prod_id: e.id })
+          : await offlineProduct({ prod_id: e.id });
+        await this.fetchData();
       },
       handleReset() {
         this.queryForm.subCateId = "";

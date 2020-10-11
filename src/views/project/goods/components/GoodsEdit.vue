@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-10-07 22:55:36
+ * @LastEditTime: 2020-10-11 21:52:02
 -->
 <template>
   <el-drawer
@@ -129,7 +129,7 @@
               添加图片
             </el-button>
             <div slot="tip" class="el-upload__tip">
-              上传ZIP格式压缩包，单张尺寸建议？？*？？？，？？？像素以上，单张图片大小1M以下，最多5张图片，01-05，顺序从小到大
+              上传ZIP格式压缩包，单张尺寸建议258px*258px，？？？像素以上，单张图片大小1M以下，最多5张图片，01-05，顺序从小到大
             </div>
           </el-upload>
         </el-form-item>
