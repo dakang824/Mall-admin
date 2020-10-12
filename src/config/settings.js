@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2020-10-11 15:43:16
+ * @LastEditTime: 2020-10-12 23:53:59
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -79,7 +79,7 @@ module.exports = {
   //无权限code
   noPermissionCode: 401,
   //是否显示在页面高亮错误
-  errorLog: ["development", "test", "production"],
+  errorLog: ["development", "test"],
   //是否开启登录拦截
   loginInterception: false,
   //是否开启登录RSA加密
