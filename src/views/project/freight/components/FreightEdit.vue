@@ -59,8 +59,12 @@
           v-model="form.area"
           @change="handleCheckedCitiesChange"
         >
-          <el-checkbox v-for="city in cities" :key="city" :label="city">
-            {{ city }}
+          <el-checkbox
+            v-for="item in province"
+            :key="item.id"
+            :label="item.code"
+          >
+            {{ item.name }}
           </el-checkbox>
         </el-checkbox-group>
       </el-form-item>
@@ -74,10 +78,15 @@
 </template>
 
 <script>
-  import { addPostTemplate, modifyPostTemplate } from "@/api/freight";
-  import { provinceAndCityData } from "element-china-area-data";
+  import { addPostTemplateArea, modifyPostTemplate } from "@/api/freight";
   export default {
     name: "FreightEdit",
+    props: {
+      province: {
+        type: Array,
+        default: () => [],
+      },
+    },
     data() {
       return {
         checkAll: false,
@@ -121,19 +130,17 @@
       };
     },
     computed: {},
-    created() {
-      this.cities = provinceAndCityData.map((item) => item.label);
-    },
+    created() {},
     methods: {
       handleCheckAllChange(val) {
-        this.form.area = val ? this.cities : [];
+        this.form.area = val ? this.province.map((item) => item.code) : [];
         this.isIndeterminate = false;
       },
       handleCheckedCitiesChange(value) {
         let checkedCount = value.length;
-        this.checkAll = checkedCount === this.cities.length;
+        this.checkAll = checkedCount === this.province.length;
         this.isIndeterminate =
-          checkedCount > 0 && checkedCount < this.cities.length;
+          checkedCount > 0 && checkedCount < this.province.length;
       },
       showEdit(row) {
         if (!row) {
@@ -156,7 +163,7 @@
           if (valid) {
             this.form.area = this.form.area.join();
             if (this.title.includes("添加")) {
-              const { msg } = await addPostTemplate(this.form);
+              const { msg } = await addPostTemplateArea(this.form);
               this.$baseMessage(msg, "success");
             } else {
               const { msg } = await modifyPostTemplate(this.form);

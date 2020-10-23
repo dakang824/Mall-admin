@@ -100,12 +100,16 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <edit ref="edit" @fetchData="fetchData"></edit>
+    <edit ref="edit" :province="province" @fetchData="fetchData"></edit>
   </div>
 </template>
 
 <script>
-  import { findAllPostTemplate, deletePostTemplate } from "@/api/freight";
+  import {
+    findAllPostTemplate,
+    deletePostTemplate,
+    findAllProvinceCode,
+  } from "@/api/freight";
   import Edit from "./components/FreightEdit";
 
   export default {
@@ -113,6 +117,7 @@
     components: { Edit },
     data() {
       return {
+        province: [],
         list: null,
         listLoading: true,
         layout: "total, sizes, prev, pager, next, jumper",
@@ -128,6 +133,7 @@
     },
     created() {
       this.fetchData();
+      this.getAllProvinceCode();
     },
     methods: {
       setSelectRows(val) {
@@ -172,6 +178,12 @@
       queryData() {
         this.queryForm.pageNo = 1;
         this.fetchData();
+      },
+      async getAllProvinceCode() {
+        const {
+          data: { province },
+        } = await findAllProvinceCode();
+        this.province = province;
       },
       async fetchData() {
         this.listLoading = true;

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:　运费管理
  * @Date: 2020-10-02 09:38:00
- * @LastEditTime: 2020-10-06 16:36:58
+ * @LastEditTime: 2020-10-23 23:19:24
  */
 import request from "@/utils/request";
 
@@ -33,5 +33,20 @@ export function deletePostTemplate(data) {
     url: "/service/plat/admin/deletePostTemplate",
     method: "post",
     data,
+  });
+}
+
+export function addPostTemplateArea(data) {
+  return request({
+    url: "/service/plat/admin/addPostTemplateArea",
+    method: "post",
+    data,
+  });
+}
+
+export function findAllProvinceCode() {
+  return request({
+    url: "/service/plat/admin/findAllProvinceCode",
+    method: "get",
   });
 }
