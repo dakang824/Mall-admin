@@ -30,7 +30,6 @@
       v-loading="listLoading"
       :data="list"
       row-key="id"
-      :tree-props="{ children: 'areas' }"
       :element-loading-text="elementLoadingText"
       @selection-change="setSelectRows"
     >
@@ -47,37 +46,9 @@
       />
       <el-table-column show-overflow-tooltip label="可配送区域" align="center">
         <template v-slot="scope">
-          {{ scope.row | getName(province) }}
+          {{ scope.row.areas | getName(province) }}
         </template>
       </el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="baseWeight"
-        label="首重（KG）"
-        align="center"
-        width="100"
-      />
-      <el-table-column
-        show-overflow-tooltip
-        prop="basePrice"
-        label="运费（元）"
-        align="center"
-        width="100"
-      />
-      <el-table-column
-        show-overflow-tooltip
-        prop="moreWeight"
-        label="续重（KG）"
-        align="center"
-        width="100"
-      />
-      <el-table-column
-        show-overflow-tooltip
-        prop="morePrice"
-        label="运费（元）"
-        width="100"
-        align="center"
-      />
 
       <el-table-column fixed="right" label="操作" width="200" align="center">
         <template v-slot="scope">
@@ -101,8 +72,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <add ref="add" :province="province" @fetchData="fetchData"></add>
-    <modify ref="edit" :province="province" @fetchData="fetchData"></modify>
+    <edit ref="edit" :province="province" @fetchData="fetchData"></edit>
   </div>
 </template>
 
@@ -112,18 +82,16 @@
     deletePostTemplate,
     findAllProvinceCode,
   } from "@/api/freight";
-  import Add from "./components/AddFreightEdit";
-  import Modify from "./components/ModifyFreightEdit";
+  import Edit from "./components/FreightEdit";
   import { decode } from "@/utils";
   export default {
     name: "Freight",
     components: {
-      Modify,
-      Add,
+      Edit,
     },
     filters: {
       getName(val, code) {
-        return val.area ? decode(val.area, code, "code") : "";
+        return val.map((item) => decode(item.area, code, "code")).join();
       },
     },
     data() {
@@ -155,7 +123,7 @@
         if (row.id) {
           this.$refs["edit"].showEdit(row);
         } else {
-          this.$refs["add"].showEdit();
+          this.$refs["edit"].showEdit();
         }
       },
       handleDelete(row) {

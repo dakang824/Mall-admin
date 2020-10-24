@@ -37,7 +37,7 @@
         :body-style="{ padding: '10px' }"
       >
         <div slot="header" class="clearfix" style="text-align: right">
-          <el-button type="primary" @click="save">添加</el-button>
+          <el-button type="primary" @click="handleAddArea">添加</el-button>
         </div>
         <el-row :gutter="20">
           <el-col :span="6">
@@ -76,7 +76,11 @@
       </el-card>
 
       <el-table :data="postTempArea" stripe style="width: 100%" border>
-        <el-table-column prop="name" label="可配送区域" align="center" />
+        <el-table-column prop="name" label="可配送区域" align="center">
+          <template v-slot="scope">
+            {{ scope.row.area | getName(province) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="baseWeight" label="首重（KG）" align="center" />
         <el-table-column prop="basePrice" label="运费（元" align="center" />
         <el-table-column prop="moreWeight" label="续重（KG）" align="center" />
@@ -87,13 +91,20 @@
         />
         <el-table-column fixed="right" label="操作" width="80" align="center">
           <template v-slot="scope">
-            <el-button type="danger" @click="handleDelete(scope.row)">
+            <el-button
+              type="danger"
+              @click="handleDelete(scope.row, scope.$index)"
+            >
               删除
             </el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-form>
+    <div slot="footer" class="dialog-footer" style="text-align: center">
+      <el-button type="primary" @click="save">确 定</el-button>
+      <el-button @click="close">取 消</el-button>
+    </div>
   </el-dialog>
 </template>
 
@@ -101,11 +112,17 @@
   import {
     addPostTemplate,
     addPostTemplateArea,
+    deletePostTemplateArea,
     modifyPostTemplate,
   } from "@/api/freight";
   import { decode } from "@/utils";
   export default {
     name: "FreightEdit",
+    filters: {
+      getName(val, code) {
+        return decode(val, code, "code");
+      },
+    },
     props: {
       province: {
         type: Array,
@@ -158,6 +175,38 @@
     computed: {},
     created() {},
     methods: {
+      handleAddArea() {
+        this.$refs["form"].validate(async (valid) => {
+          if (valid) {
+            const form = JSON.parse(JSON.stringify(this.form));
+            form.area = form.area.reduce((a, b) => a + b);
+            form.name = decode(form.area, this.province, "code");
+            this.postTempArea.push(form);
+            this.form = {
+              ...this.form,
+              area: [],
+              baseWeight: "",
+              basePrice: "",
+              moreWeight: "",
+              morePrice: "",
+            };
+          } else {
+            return false;
+          }
+        });
+      },
+      handleDelete(e, index) {
+        if (e.temp_id) {
+          this.$baseConfirm("你确定要删除当前项吗", null, async () => {
+            const { msg } = await deletePostTemplateArea({ ids: e.id });
+            this.$baseMessage(msg, "success");
+            this.postTempArea.splice(index, 1);
+            this.$emit("fetchData");
+          });
+        } else {
+          this.postTempArea.splice(index, 1);
+        }
+      },
       handleCheckAllChange(val) {
         this.form.area = val ? this.province.map((item) => item.code) : [];
         this.isIndeterminate = false;
@@ -169,7 +218,15 @@
           checkedCount > 0 && checkedCount < this.province.length;
       },
       showEdit(row) {
-        this.title = "添加运费模板";
+        if (!row) {
+          this.postTempArea = [];
+          this.title = "添加运费模板";
+        } else {
+          this.title = "编辑运费模板";
+          var row = JSON.parse(JSON.stringify(row));
+          this.postTempArea = row.areas;
+          this.form = { ...this.form, ...row };
+        }
         this.dialogFormVisible = true;
       },
       close() {
@@ -178,52 +235,42 @@
         this.dialogFormVisible = false;
       },
       async save() {
-        this.$refs["form"].validate(async (valid) => {
-          if (valid) {
-            const form = JSON.parse(JSON.stringify(this.form));
-            form.area = form.area.reduce((a, b) => a + b);
-            if (form.temp_id) {
-              const {
-                data: { postTempArea },
-              } = await addPostTemplateArea(form);
-              const name = decode(form.area, this.province, "code");
-              this.postTempArea.push({ ...postTempArea, name });
-            } else {
-              const {
-                data: {
-                  postTemp: { id },
-                },
-              } = await addPostTemplate({ name: form.name });
-              this.form.temp_id = id;
-              form.temp_id = id;
-              const {
-                data: { postTempArea },
-              } = await addPostTemplateArea(form);
-              const name = decode(form.area, this.province, "code");
-              this.postTempArea.push({ ...postTempArea, name });
-            }
-            this.form = {
-              ...this.form,
-              area: [],
-              baseWeight: "",
-              basePrice: "",
-              moreWeight: "",
-              morePrice: "",
-            };
+        if (this.title.includes("添加")) {
+          const {
+            data: {
+              postTemp: { id },
+            },
+          } = await addPostTemplate({ name: this.form.name });
 
-            // this.form.area = this.form.area.join();
-            // if (this.title.includes("添加")) {
-            //   const { msg } = await addPostTemplateArea(this.form);
-            //   this.$baseMessage(msg, "success");
-            // } else {
-            //   const { msg } = await modifyPostTemplate(this.form);
-            //   this.$baseMessage(msg, "success");
-            // }
+          this.postTempArea.map(async (item) => {
+            item.temp_id = id;
+            await addPostTemplateArea(item);
+          });
+
+          setTimeout(() => {
             this.$emit("fetchData");
-          } else {
-            return false;
-          }
-        });
+          }, 1000);
+          this.close();
+        } else {
+          await modifyPostTemplate({
+            name: this.form.name,
+            id: this.form.id,
+          });
+          const arr = this.postTempArea
+            .filter((item) => item.temp_id === "")
+            .map((item) => {
+              item.temp_id = this.form.id;
+              return item;
+            });
+          console.log(arr);
+          arr.map((item) => {
+            addPostTemplateArea(item);
+          });
+          setTimeout(() => {
+            this.$emit("fetchData");
+          }, 1000);
+          this.close();
+        }
       },
     },
   };

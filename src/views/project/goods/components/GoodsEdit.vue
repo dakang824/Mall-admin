@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-10-24 14:57:57
+ * @LastEditTime: 2020-10-24 18:08:04
 -->
 <template>
   <el-drawer
@@ -484,7 +484,7 @@
             let category = form.cateId;
             form.cateId = category[0];
             form.subCateId = category[1];
-
+            form.storeId = 7;
             if (this.title.includes("添加")) {
               const { msg } = await addProduct(form);
               this.$baseMessage(msg, "success");
