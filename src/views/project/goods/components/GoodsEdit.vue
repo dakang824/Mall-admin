@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-10-11 21:52:02
+ * @LastEditTime: 2020-10-24 14:57:57
 -->
 <template>
   <el-drawer
@@ -26,6 +26,7 @@
             filterable
             clearable
             :style="{ width: '100%' }"
+            @change="handleChange"
           >
             <el-option
               v-for="(item, index) in goodsType"
@@ -47,13 +48,19 @@
           ></el-input>
         </el-form-item>
         <el-form-item v-if="form.type === 1" label="所属菜谱" prop="menuId">
-          <el-input
+          <el-select
             v-model="form.menuId"
-            placeholder="所属菜谱必须是已经上架的菜谱"
-            show-word-limit
+            placeholder="请选择菜谱"
             clearable
             :style="{ width: '100%' }"
-          ></el-input>
+          >
+            <el-option
+              v-for="(item, index) in menuData"
+              :key="index"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="商品简述" prop="summary">
           <el-input
@@ -161,10 +168,10 @@
             :style="{ width: '100%' }"
           >
             <el-option
-              v-for="(item, index) in freightOptions"
+              v-for="(item, index) in postTemps"
               :key="index"
-              :label="item.label"
-              :value="item.value"
+              :label="item.name"
+              :value="item.id"
               :disabled="item.disabled"
             ></el-option>
           </el-select>
@@ -202,10 +209,11 @@
   </el-drawer>
 </template>
 <script>
-  import { addProduct, modifyProduct } from "@/api/goods";
+  import { addProduct, modifyProduct, findProduct } from "@/api/goods";
   import { mapState } from "vuex";
   import { fileUpload } from "@/config/settings";
   import { findAllProdAddress } from "@/api/produce";
+  import { findAllPostTemplate } from "@/api/freight";
   import prodSpec from "./prodSpec";
   import prodRecipes from "./prodRecipes";
   import unifySpec from "./unifySpec";
@@ -313,6 +321,12 @@
               message: "请上传商品描述图片",
             },
           ],
+          menuId: [
+            {
+              required: false,
+              message: "请上传商品描述图片",
+            },
+          ],
         },
         good_imgfileList: [],
         describe_imgfileList: [],
@@ -328,28 +342,8 @@
             value: 2,
           },
         ],
-        freightOptions: [
-          {
-            label: "包邮",
-            value: 1,
-          },
-          {
-            label: "江浙沪包邮",
-            value: 2,
-          },
-          {
-            label: "首重8元续重8元",
-            value: 3,
-          },
-          {
-            label: "偏远地区",
-            value: 4,
-          },
-          {
-            label: "生鲜配送",
-            value: 5,
-          },
-        ],
+        menuData: [],
+        postTemps: [],
         modeOptions: [
           {
             label: "下单减库存",
@@ -381,11 +375,25 @@
       const {
         data: { prodAddress },
       } = await findAllProdAddress();
+      const {
+        data: { postTemps },
+      } = await findAllPostTemplate();
+
+      const {
+        data: {
+          product: { list },
+        },
+      } = await findProduct({ type: 4, status: 1, pageNo: 1, pageSize: 10000 });
+      this.menuData = list;
       this.areaOptions = prodAddress;
+      this.postTemps = postTemps;
       this.copyData = JSON.parse(JSON.stringify(this.form));
     },
     mounted() {},
     methods: {
+      handleChange(e) {
+        this.rules.menuId[0].required = e === 1;
+      },
       handleIntroPicsRemove(file, fileList) {
         if (!this.isAdd) {
           const index = this.form.introPics.findIndex(
@@ -426,6 +434,7 @@
           this.title = "编辑商品";
           this.isAdd = false;
           var row = JSON.parse(JSON.stringify(row));
+          this.handleChange(row.type);
           row.spe_type = row.speType;
           row.prodSpec = row.specList;
           row.address_id = row.addressId;
@@ -492,26 +501,26 @@
         });
       },
       good_imgBeforeUpload(file) {
-        let isRightSize = file.size / 1024 / 1024 < 2;
-        if (!isRightSize) {
-          this.$message.error("文件大小超过 2MB");
-        }
+        // let isRightSize = file.size / 1024 / 1024 < 2;
+        // if (!isRightSize) {
+        //   this.$message.error("文件大小超过 2MB");
+        // }
         let isAccept = new RegExp("zip/*").test(file.type);
         if (!isAccept) {
           this.$message.error("应该选择zip/*类型的文件");
         }
-        return isRightSize && isAccept;
+        return isAccept;
       },
       describe_imgBeforeUpload(file) {
-        let isRightSize = file.size / 1024 / 1024 < 2;
-        if (!isRightSize) {
-          this.$message.error("文件大小超过 2MB");
-        }
+        // let isRightSize = file.size / 1024 / 1024 < 2;
+        // if (!isRightSize) {
+        //   this.$message.error("文件大小超过 2MB");
+        // }
         let isAccept = new RegExp("zip/*").test(file.type);
         if (!isAccept) {
           this.$message.error("应该选择zip/*类型的文件");
         }
-        return isRightSize && isAccept;
+        return isAccept;
       },
     },
   };

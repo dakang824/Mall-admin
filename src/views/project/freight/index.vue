@@ -26,11 +26,11 @@
         </el-form>
       </vab-query-form-right-panel> -->
     </vab-query-form>
-
     <el-table
       v-loading="listLoading"
       :data="list"
-      border
+      row-key="id"
+      :tree-props="{ children: 'areas' }"
       :element-loading-text="elementLoadingText"
       @selection-change="setSelectRows"
     >
@@ -45,12 +45,11 @@
         label="名称"
         align="center"
       />
-      <el-table-column
-        show-overflow-tooltip
-        prop="area"
-        label="可配送区域"
-        align="center"
-      />
+      <el-table-column show-overflow-tooltip label="可配送区域" align="center">
+        <template v-slot="scope">
+          {{ scope.row | getName(province) }}
+        </template>
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="baseWeight"
@@ -82,12 +81,14 @@
 
       <el-table-column fixed="right" label="操作" width="200" align="center">
         <template v-slot="scope">
-          <el-button type="primary" @click="handleEdit(scope.row)">
-            编辑
-          </el-button>
-          <el-button type="danger" @click="handleDelete(scope.row)">
-            删除
-          </el-button>
+          <div v-if="'areas' in scope.row">
+            <el-button type="primary" @click="handleEdit(scope.row)">
+              编辑
+            </el-button>
+            <el-button type="danger" @click="handleDelete(scope.row)">
+              删除
+            </el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -100,7 +101,8 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <edit ref="edit" :province="province" @fetchData="fetchData"></edit>
+    <add ref="add" :province="province" @fetchData="fetchData"></add>
+    <modify ref="edit" :province="province" @fetchData="fetchData"></modify>
   </div>
 </template>
 
@@ -110,11 +112,20 @@
     deletePostTemplate,
     findAllProvinceCode,
   } from "@/api/freight";
-  import Edit from "./components/FreightEdit";
-
+  import Add from "./components/AddFreightEdit";
+  import Modify from "./components/ModifyFreightEdit";
+  import { decode } from "@/utils";
   export default {
     name: "Freight",
-    components: { Edit },
+    components: {
+      Modify,
+      Add,
+    },
+    filters: {
+      getName(val, code) {
+        return val.area ? decode(val.area, code, "code") : "";
+      },
+    },
     data() {
       return {
         province: [],
@@ -131,6 +142,7 @@
         },
       };
     },
+    computed: {},
     created() {
       this.fetchData();
       this.getAllProvinceCode();
@@ -143,21 +155,21 @@
         if (row.id) {
           this.$refs["edit"].showEdit(row);
         } else {
-          this.$refs["edit"].showEdit();
+          this.$refs["add"].showEdit();
         }
       },
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await deletePostTemplate({ ids: row.id });
+            const { msg } = await deletePostTemplate({ id: row.id });
             this.$baseMessage(msg, "success");
             this.fetchData();
           });
         } else {
           if (this.selectRows.length > 0) {
-            const ids = this.selectRows.map((item) => item.id).join();
+            const id = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await deletePostTemplate({ ids });
+              const { msg } = await deletePostTemplate({ id });
               this.$baseMessage(msg, "success");
               this.fetchData();
             });
