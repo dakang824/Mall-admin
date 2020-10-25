@@ -242,14 +242,12 @@
             },
           } = await addPostTemplate({ name: this.form.name });
 
-          this.postTempArea.map(async (item) => {
+          await this.postTempArea.map(async (item) => {
             item.temp_id = id;
             await addPostTemplateArea(item);
           });
 
-          setTimeout(() => {
-            this.$emit("fetchData");
-          }, 1000);
+          this.$emit("fetchData");
           this.close();
         } else {
           await modifyPostTemplate({
@@ -262,13 +260,10 @@
               item.temp_id = this.form.id;
               return item;
             });
-          console.log(arr);
-          arr.map((item) => {
-            addPostTemplateArea(item);
+          await arr.map(async (item) => {
+            await addPostTemplateArea(item);
           });
-          setTimeout(() => {
-            this.$emit("fetchData");
-          }, 1000);
+          this.$emit("fetchData");
           this.close();
         }
       },

@@ -154,6 +154,22 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/finance",
+    component: Layout,
+    redirect: "/finance",
+    children: [
+      {
+        path: "/finance",
+        name: "Finance",
+        component: () => import("@/views/project/finance/index"),
+        meta: {
+          title: "财务管理",
+          icon: "money-bill-alt",
+        },
+      },
+    ],
+  },
+  {
     path: "/setting",
     component: Layout,
     redirect: "/setting",

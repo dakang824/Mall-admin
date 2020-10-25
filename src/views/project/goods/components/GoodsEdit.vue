@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-10-24 18:08:04
+ * @LastEditTime: 2020-10-25 19:31:01
 -->
 <template>
   <el-drawer
@@ -485,6 +485,11 @@
             form.cateId = category[0];
             form.subCateId = category[1];
             form.storeId = 7;
+            if (form.spe_type == 1) {
+              const arr = JSON.parse(form.prodSpec);
+              arr[0].name = "统一规格";
+              form.prodSpec = JSON.stringify(arr);
+            }
             if (this.title.includes("添加")) {
               const { msg } = await addProduct(form);
               this.$baseMessage(msg, "success");
