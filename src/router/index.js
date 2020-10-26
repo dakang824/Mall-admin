@@ -140,7 +140,7 @@ export const asyncRoutes = [
   {
     path: "/store",
     component: Layout,
-    redirect: "/store",
+    redirect: "store",
     children: [
       {
         path: "/store",
@@ -149,6 +149,38 @@ export const asyncRoutes = [
         meta: {
           title: "店铺管理",
           icon: "store",
+        },
+      },
+    ],
+  },
+  {
+    path: "/order",
+    component: Layout,
+    redirect: "noRedirect",
+    name: "Order",
+    meta: {
+      title: "订单管理",
+      icon: "shopping-cart",
+    },
+    children: [
+      {
+        path: "/curd",
+        name: "Curd",
+        component: () => import("@/views/project/order/goods"),
+        meta: {
+          title: "商品订单",
+          icon: "shopping-bag",
+          noKeepAlive: true,
+        },
+      },
+      {
+        path: "/curd",
+        name: "Curd",
+        component: () => import("@/views/project/order/goods"),
+        meta: {
+          title: "商品订单",
+          icon: "shopping-bag",
+          noKeepAlive: true,
         },
       },
     ],

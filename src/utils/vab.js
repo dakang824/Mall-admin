@@ -3,6 +3,7 @@ import * as lodash from "lodash";
 import { Loading, Message, MessageBox, Notification } from "element-ui";
 import store from "@/store";
 import { getAccessToken } from "@/utils/accessToken";
+import filters from "@/filters";
 
 const accessToken = store.getters["user/accessToken"];
 const layout = store.getters["settings/layout"];
@@ -147,6 +148,11 @@ const install = (Vue, opts = {}) => {
   Vue.prototype.$baseLodash = lodash;
   /* 全局事件总线 */
   Vue.prototype.$baseEventBus = new Vue();
+
+  // 全局过滤器
+  Object.keys(filters).forEach((filterKey) =>
+    Vue.filter(filterKey, filters[filterKey])
+  );
 };
 
 if (typeof window !== "undefined" && window.Vue) {

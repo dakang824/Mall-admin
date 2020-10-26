@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-10-25 19:31:01
+ * @LastEditTime: 2020-10-27 00:21:36
 -->
 <template>
   <el-drawer
@@ -217,6 +217,7 @@
   import prodSpec from "./prodSpec";
   import prodRecipes from "./prodRecipes";
   import unifySpec from "./unifySpec";
+  import filters from "@/filters";
   export default {
     name: "GoodsEdit",
     components: {
@@ -442,14 +443,14 @@
           row.pics_list = row.pics.map((item) => {
             return {
               name: item.path.substr(item.path.lastIndexOf("/") + 1),
-              url: "/service/" + item.path,
+              url: filters.imgBaseUrl(item.path),
               id: item.id,
             };
           });
           row.introPics_list = row.introPics.map((item) => {
             return {
               name: item.path.substr(item.path.lastIndexOf("/") + 1),
-              url: "/service/" + item.path,
+              url: filters.imgBaseUrl(item.path),
               id: item.id,
             };
           });
