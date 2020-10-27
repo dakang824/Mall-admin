@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-10-27 00:21:36
+ * @LastEditTime: 2020-10-27 23:48:30
 -->
 <template>
   <el-drawer
@@ -53,6 +53,7 @@
             placeholder="请选择菜谱"
             clearable
             :style="{ width: '100%' }"
+            @change="handleMenuId"
           >
             <el-option
               v-for="(item, index) in menuData"
@@ -192,9 +193,10 @@
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <div v-if="form.type === 4">
+        <div v-if="form.type === 4 || (form.type === 1 && form.menuId)">
           <prodRecipes
             ref="prodRecipes"
+            :key="'it' + proInd"
             :model="form"
             :is-add="isAdd"
           ></prodRecipes>
@@ -229,6 +231,7 @@
       return {
         isAdd: true,
         fileUpload,
+        proInd: 0,
         form: {
           storeId: 1,
           name: "",
@@ -392,8 +395,21 @@
     },
     mounted() {},
     methods: {
+      handleMenuId(e) {
+        if (e) {
+          const item = this.menuData.filter((item) => item.id === e);
+          this.form.prodRecipes = item[0].prodRecipes;
+          this.proInd += 1;
+          // this.$set(this.form, "prodRecipes", item[0].prodRecipes);
+        } else {
+          this.form.prodRecipes = "";
+        }
+      },
       handleChange(e) {
-        this.rules.menuId[0].required = e === 1;
+        if (e === 1) {
+          this.form.menuId = "";
+          this.rules.menuId[0].required = true;
+        }
       },
       handleIntroPicsRemove(file, fileList) {
         if (!this.isAdd) {

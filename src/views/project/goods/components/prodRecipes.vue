@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 商品配方
  * @Date: 2020-10-07 14:36:06
- * @LastEditTime: 2020-10-07 19:15:32
+ * @LastEditTime: 2020-10-27 23:33:32
 -->
 <template>
   <div class="prodRecipes">
@@ -10,6 +10,7 @@
       <el-card class="box-card" shadow="never">
         <div slot="header" class="clearfix" style="text-align: right">
           <el-button
+            :disabled="getDisabled"
             type="primary"
             icon="el-icon-plus"
             size="small"
@@ -72,6 +73,7 @@
           <el-button
             type="danger"
             size="small"
+            :disabled="getDisabled"
             @click.native.prevent="deleteRow(scope.$index, tableData)"
           >
             删除
@@ -125,8 +127,13 @@
         tableData: [],
       };
     },
+    computed: {
+      getDisabled() {
+        return this.model.type === 1;
+      },
+    },
     created() {
-      if (this.model.type === 4 && !this.isAdd) {
+      if ((this.model.type === 4 && !this.isAdd) || this.model.type === 1) {
         this.tableData = this.model.prodRecipes;
         this.resetIndex();
       }
