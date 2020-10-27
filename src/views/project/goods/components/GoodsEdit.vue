@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-10-27 23:48:30
+ * @LastEditTime: 2020-10-27 23:51:40
 -->
 <template>
   <el-drawer
@@ -253,7 +253,7 @@
           ],
           postTempId: "",
           dealStockType: "",
-          prodRecipes: "",
+          prodRecipes: [],
           pics: "",
           introPics: "",
           menuId: "",
@@ -402,7 +402,7 @@
           this.proInd += 1;
           // this.$set(this.form, "prodRecipes", item[0].prodRecipes);
         } else {
-          this.form.prodRecipes = "";
+          this.form.prodRecipes = [];
         }
       },
       handleChange(e) {
