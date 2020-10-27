@@ -2,13 +2,14 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-10-27 00:45:55
+ * @LastEditTime: 2020-10-27 22:59:31
 -->
 <template>
   <el-drawer
     :title="title"
     :visible.sync="dialogFormVisible"
     size="100%"
+    modal-append-to-body
     @close="close"
   >
     <div class="form">
@@ -28,10 +29,37 @@
         />
         <el-table-column label="下单时间" align="center">
           <template slot-scope="scope">
-            {{ scope.row.pay_time.slice(0, 16) }}
+            {{ scope.row.pay_time | slice(0, 16) }}
           </template>
         </el-table-column>
         <el-table-column prop="buyer_common" label="买家留言" align="center" />
+      </el-table>
+
+      <!-- 物流表格 -->
+      <el-table
+        v-if="form.status !== 1 && form.status !== 2"
+        :data="refundTable"
+        border
+      >
+        <el-table-column label="支付方式" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.pay_type | getPayName }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          show-overflow-tooltip
+          label="物流公司"
+          align="center"
+          prop="post_courier"
+        />
+
+        <el-table-column prop="post_track" label="物流单号" align="center" />
+        <el-table-column prop="delivery_time" label="发货时间" align="center" />
+        <el-table-column label="确认收货时间" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.recived_time | slice(0, 16) }}
+          </template>
+        </el-table-column>
       </el-table>
 
       <p class="title">收货人信息：</p>
@@ -62,6 +90,15 @@
         <el-table-column prop="address" label="商品名称" align="center">
           <template slot-scope="scope">
             {{ scope.row.name }}
+
+            <el-link
+              v-if="scope.row.prod_type === 1"
+              type="primary"
+              style="position: absolute; bottom: -1px; right: 10px"
+              @click="handleClick(scope.row)"
+            >
+              查看菜品
+            </el-link>
           </template>
         </el-table-column>
         <el-table-column prop="spe_name" label="规格" align="center" />
@@ -73,12 +110,45 @@
           align="center"
         />
       </el-table>
+
+      <p class="title">费用信息：</p>
+      <el-table :data="moneyTable" border>
+        <el-table-column
+          label="商品合计（元）"
+          align="center"
+          prop="total_amount"
+        />
+        <el-table-column prop="post_amount" label="运费（元）" align="center" />
+
+        <el-table-column
+          prop="orderTotalMoney"
+          label="订单总金额（元）"
+          align="center"
+        />
+        <el-table-column
+          prop="pay_amount"
+          label="应付款金额（元）"
+          align="center"
+        />
+      </el-table>
     </div>
 
-    <div slot="footer" class="dialog-footer">
+    <div v-if="form.status === 2" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="save">确 定</el-button>
+      <el-button type="primary" @click="handleSend">发 货</el-button>
     </div>
+
+    <el-dialog
+      title="菜品明细"
+      :visible.sync="dialogTableVisible"
+      :modal-append-to-body="false"
+      append-to-body
+    >
+      <el-table :data="gridData" border>
+        <el-table-column property="name" label="名称"></el-table-column>
+        <el-table-column property="weight" label="重量"></el-table-column>
+      </el-table>
+    </el-dialog>
   </el-drawer>
 </template>
 
@@ -98,7 +168,11 @@
           : v === 4
           ? "已完成"
           : v === 5
-          ? "已关闭"
+          ? "已取消"
+          : v === 6
+          ? "待退款"
+          : v === 7
+          ? "已退款"
           : "";
       },
       getPayName(v) {
@@ -118,8 +192,12 @@
         form: {
           id: "",
         },
+        dialogTableVisible: false,
         baseTable: [],
         userTable: [],
+        moneyTable: [],
+        gridData: [],
+        refundTable: [],
         rules: {
           id: [{ required: true, trigger: "blur", message: "请输入id" }],
         },
@@ -129,6 +207,12 @@
     },
     created() {},
     methods: {
+      handleClick(row) {
+        this.gridData = row.recipes.map((item) => {
+          return { name: item.name, weight: item.weight };
+        });
+        this.dialogTableVisible = true;
+      },
       showEdit(row) {
         if (!row) {
           this.title = "添加";
@@ -145,6 +229,13 @@
             mobile,
             phone,
             address,
+            total_amount,
+            post_amount,
+            discount,
+            post_courier,
+            post_track,
+            recived_time,
+            pay_type,
           } = row;
           this.baseTable.push({
             trade_no,
@@ -155,31 +246,42 @@
             buyer_common,
           });
 
+          const orderTotalMoney = total_amount + post_amount;
+          this.moneyTable.push({
+            total_amount,
+            post_amount,
+            orderTotalMoney,
+            pay_amount: orderTotalMoney - discount,
+          });
+
           this.userTable.push({
             name,
             mobile,
             phone,
             address,
           });
+
+          this.refundTable.push({
+            pay_type,
+            post_courier,
+            post_track,
+            recived_time,
+            delivery_time: "暂无",
+          });
         }
         this.dialogFormVisible = true;
       },
       close() {
+        this.baseTable = [];
+        this.userTable = [];
+        this.moneyTable = [];
+        this.refundTable = [];
+        this.dialogFormVisible = false;
         this.$refs["form"].resetFields();
         this.form = this.$options.data().form;
-        this.dialogFormVisible = false;
       },
-      save() {
-        this.$refs["form"].validate(async (valid) => {
-          if (valid) {
-            const { msg } = await doEdit(this.form);
-            this.$baseMessage(msg, "success");
-            this.$emit("fetchData");
-            this.close();
-          } else {
-            return false;
-          }
-        });
+      handleSend() {
+        this.$baseMessage("发货代做", "success");
       },
       getSummaries(param) {
         const { columns, data } = param;
