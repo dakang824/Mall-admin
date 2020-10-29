@@ -77,7 +77,7 @@
       </el-table-column>
       <el-table-column show-overflow-tooltip label="下单时间" align="center">
         <template slot-scope="scope">
-          {{ scope.row.pay_time.slice(0, 16) }}
+          {{ scope.row.pay_time | slice(0, 16) }}
         </template>
       </el-table-column>
       <el-table-column
