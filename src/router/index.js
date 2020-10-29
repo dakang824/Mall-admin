@@ -174,12 +174,12 @@ export const asyncRoutes = [
         },
       },
       {
-        path: "/curd",
-        name: "Curd",
-        component: () => import("@/views/project/order/goods"),
+        path: "/remittance",
+        name: "Remittance",
+        component: () => import("@/views/project/order/remittance"),
         meta: {
-          title: "商品订单",
-          icon: "shopping-bag",
+          title: "汇款订单",
+          icon: "file-invoice-dollar",
           noKeepAlive: true,
         },
       },
