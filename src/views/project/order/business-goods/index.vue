@@ -37,13 +37,24 @@
               clearable
             ></el-input>
           </el-form-item>
+          <el-form-item prop="order_no">
+            <el-input
+              v-model="queryForm.order_no"
+              placeholder="请输入店铺账号 还没绑定字段"
+              clearable
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="order_no">
+            <el-input
+              v-model="queryForm.order_no"
+              placeholder="请输入买家账号 还没绑定字段"
+              clearable
+            ></el-input>
+          </el-form-item>
           <el-form-item>
             <el-button icon="el-icon-search" type="primary" @click="queryData">
               查询
             </el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button icon="el-icon-document">菜品明细</el-button>
           </el-form-item>
           <el-form-item>
             <el-button icon="el-icon-download">订单导出</el-button>
@@ -96,6 +107,18 @@
           {{ scope.row.status | getStatusStr }}
         </template>
       </el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="user_id"
+        label="买家账号"
+        align="center"
+      />
+      <el-table-column
+        show-overflow-tooltip
+        prop="store_name"
+        label="店铺账号"
+        align="center"
+      />
 
       <el-table-column fixed="right" label="操作" width="80" align="center">
         <template v-slot="scope">

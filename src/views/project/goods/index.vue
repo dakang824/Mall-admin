@@ -200,7 +200,7 @@
   import Edit from "./components/GoodsEdit";
   import { mapState } from "vuex";
   export default {
-    name: "Goods",
+    name: "OrderGoods",
     components: { Edit },
     filters: {
       minPrice: (value) => {

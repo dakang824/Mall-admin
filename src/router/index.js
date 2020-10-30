@@ -164,8 +164,18 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: "/curd",
-        name: "Curd",
+        path: "/recharge",
+        name: "Recharge",
+        component: () => import("@/views/project/order/recharge"),
+        meta: {
+          title: "充值订单",
+          icon: "funnel-dollar",
+          noKeepAlive: true,
+        },
+      },
+      {
+        path: "/orderGoods",
+        name: "OrderGoods",
         component: () => import("@/views/project/order/goods"),
         meta: {
           title: "商品订单",
@@ -180,6 +190,16 @@ export const asyncRoutes = [
         meta: {
           title: "汇款订单",
           icon: "file-invoice-dollar",
+          noKeepAlive: true,
+        },
+      },
+      {
+        path: "/businessGoods",
+        name: "BusinessGoods",
+        component: () => import("@/views/project/order/business-goods"),
+        meta: {
+          title: "商家订单查询",
+          icon: "shopping-bag",
           noKeepAlive: true,
         },
       },

@@ -6,9 +6,9 @@
           <el-form-item label="下单时间" prop="time">
             <el-date-picker
               v-model="queryForm.time"
-              type="daterange"
-              format="yyyy-MM-dd"
-              value-format="yyyy-MM-dd"
+              type="datetimerange"
+              format="yyyy-MM-dd HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               range-separator="至"

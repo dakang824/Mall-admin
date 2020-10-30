@@ -1,24 +1,14 @@
+/*
+ * @Author: yukang 1172248038@qq.com
+ * @Description:
+ * @Date: 2020-10-30 22:51:52
+ * @LastEditTime: 2020-10-30 23:06:34
+ */
 import request from "@/utils/request";
 
-export function getList(data) {
+export function queryRecharge(data) {
   return request({
-    url: "/order/recharge/getList",
-    method: "post",
-    data,
-  });
-}
-
-export function doEdit(data) {
-  return request({
-    url: "/order/recharge/doEdit",
-    method: "post",
-    data,
-  });
-}
-
-export function doDelete(data) {
-  return request({
-    url: "/order/recharge/doDelete",
+    url: "/service/plat/admin/queryRecharge",
     method: "post",
     data,
   });
