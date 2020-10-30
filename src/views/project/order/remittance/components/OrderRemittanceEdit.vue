@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-10-30 21:29:33
+ * @LastEditTime: 2020-10-30 22:21:18
 -->
 <template>
   <el-drawer
@@ -55,16 +55,20 @@
 
     <div class="dialog-footer">
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="handleSend">已处理</el-button>
+      <el-button v-if="form.status === 1" type="primary">已处理</el-button>
+      <el-button v-if="form.status === 0" type="primary" @click="handleSend">
+        审核
+      </el-button>
     </div>
+    <Dialog :id="form.id" v-model="show" @change="handleResult" />
   </el-drawer>
 </template>
 
 <script>
-  import { doEdit } from "@/api/order/goods";
-
+  import Dialog from "./dialog";
   export default {
     name: "OrderGoodsEdit",
+    components: { Dialog },
     filters: {
       getStatusStr(v) {
         return v === 0 ? "待审核 " : v === 1 ? "已审核确认" : "";
@@ -75,7 +79,7 @@
         form: {
           id: "",
         },
-        dialogTableVisible: false,
+        show: false,
         baseTable: [],
         rules: {
           id: [{ required: true, trigger: "blur", message: "请输入id" }],
@@ -86,50 +90,23 @@
     },
     created() {},
     methods: {
-      handleClick(row) {
-        this.gridData = row.recipes.map((item) => {
-          return { name: item.name, weight: item.weight };
-        });
-        this.dialogTableVisible = true;
+      handleResult(e) {
+        this.form.status = e !== 0 ? 1 : 0;
       },
       showEdit(row) {
-        if (!row) {
-          this.title = "添加";
-        } else {
-          this.title = "订单详情";
-          this.form = Object.assign({}, row);
-          this.baseTable.push(row);
-        }
+        this.title = "订单详情";
+        this.form = Object.assign({}, row);
+        this.baseTable.push(row);
         this.dialogFormVisible = true;
       },
       close() {
         this.baseTable = [];
-        this.userTable = [];
-        this.moneyTable = [];
-        this.refundTable = [];
         this.dialogFormVisible = false;
         this.$refs["form"].resetFields();
         this.form = this.$options.data().form;
       },
       handleSend() {
-        this.$baseMessage("发货代做", "success");
-      },
-      getSummaries(param) {
-        const { columns, data } = param;
-        const sums = ["总价"];
-        const values = data
-          .map((item) => Number(item["total_amount"]))
-          .reduce((prev, curr) => {
-            const value = Number(curr);
-            if (!isNaN(value)) {
-              return prev + curr;
-            } else {
-              return prev;
-            }
-          }, 0);
-
-        sums[columns.length - 1] = values + "元";
-        return sums;
+        this.show = true;
       },
     },
   };

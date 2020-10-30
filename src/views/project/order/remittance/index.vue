@@ -119,7 +119,7 @@
         prop="status"
         label="状态"
         align="center"
-        width="90"
+        width="110"
       >
         <template slot-scope="scope">
           {{ scope.row.status | getStatusStr }}

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-10-27 22:59:31
+ * @LastEditTime: 2020-10-30 22:37:14
 -->
 <template>
   <el-drawer
@@ -149,14 +149,15 @@
         <el-table-column property="weight" label="重量"></el-table-column>
       </el-table>
     </el-dialog>
+    <Dialog v-model="show" :model="form"></Dialog>
   </el-drawer>
 </template>
 
 <script>
-  import { doEdit } from "@/api/order/goods";
-
+  import Dialog from "./dialog";
   export default {
     name: "OrderGoodsEdit",
+    components: { Dialog },
     filters: {
       getStatusStr(v) {
         return v === 1
@@ -198,6 +199,7 @@
         moneyTable: [],
         gridData: [],
         refundTable: [],
+        show: false,
         rules: {
           id: [{ required: true, trigger: "blur", message: "请输入id" }],
         },
@@ -281,7 +283,7 @@
         this.form = this.$options.data().form;
       },
       handleSend() {
-        this.$baseMessage("发货代做", "success");
+        this.show = true;
       },
       getSummaries(param) {
         const { columns, data } = param;
