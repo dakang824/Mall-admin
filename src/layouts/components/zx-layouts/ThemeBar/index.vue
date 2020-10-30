@@ -72,7 +72,7 @@
       return {
         drawerVisible: false,
         theme: {
-          name: "default",
+          name: "dark",
           layout: "",
           header: "",
           tabsBar: "",
@@ -100,6 +100,9 @@
         this.theme.layout = this.layout;
         this.theme.header = this.header;
         this.theme.tabsBar = this.tabsBar;
+        document.getElementsByTagName(
+          "body"
+        )[0].className = `vue-admin-beautiful-theme-${this.theme.name}`;
       }
     },
     methods: {
@@ -142,11 +145,15 @@
         this.$refs["form"].resetFields();
         Object.assign(this.$data, this.$options.data());
         this.$store.dispatch("settings/changeLayout", defaultLayout);
-        this.theme.name = "default";
+        this.theme.name = "dark";
         this.theme.layout = this.layout;
         this.theme.header = this.header;
         this.theme.tabsBar = this.tabsBar;
         this.drawerVisible = false;
+
+        document.getElementsByTagName(
+          "body"
+        )[0].className = `vue-admin-beautiful-theme-${this.theme.name}`;
       },
     },
   };

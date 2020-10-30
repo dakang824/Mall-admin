@@ -250,7 +250,7 @@
         elementLoadingText: "正在加载...",
         queryForm: {
           pageNo: 1,
-          pageSize: 20,
+          pageSize: 10,
           storeId: "",
           status: "",
           subCateId: "",
