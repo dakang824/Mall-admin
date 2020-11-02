@@ -11,12 +11,9 @@ const {
   providePlugin,
   build7z,
   donation,
+  copyright,
 } = require("./src/config/settings");
-const {
-  webpackBarName,
-  webpackBanner,
-  donationConsole,
-} = require("zx-layouts");
+const { webpackBanner, donationConsole } = require("zx-layouts");
 
 if (donation) donationConsole();
 const { version, author } = require("./package.json");
@@ -80,7 +77,7 @@ module.exports = {
       plugins: [
         new Webpack.ProvidePlugin(providePlugin),
         new WebpackBar({
-          name: webpackBarName,
+          name: copyright,
         }),
       ],
     };

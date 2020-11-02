@@ -43,10 +43,14 @@
             </el-button>
           </el-form-item>
           <el-form-item>
-            <el-button icon="el-icon-document">菜品明细</el-button>
+            <el-button icon="el-icon-document" @click="show = true">
+              菜品明细
+            </el-button>
           </el-form-item>
           <el-form-item>
-            <el-button icon="el-icon-download">订单导出</el-button>
+            <el-button icon="el-icon-download" @click="handleDown">
+              订单导出
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -115,16 +119,18 @@
       @current-change="handleCurrentChange"
     ></el-pagination>
     <edit ref="edit" @fetchData="fetchData"></edit>
+    <foodDialog v-model="show" :model="queryForm" />
   </div>
 </template>
 
 <script>
-  import { queryOrders } from "@/api/order/goods";
+  import { queryOrders, exportOrders } from "@/api/order/goods";
   import Edit from "./components/OrderGoodsEdit";
-
+  import foodDialog from "./components/foodDialog";
+  import filters from "@/filters";
   export default {
     name: "OrderGoods",
-    components: { Edit },
+    components: { Edit, foodDialog },
     filters: {
       getProdName(v) {
         return v.map((item) => item.name).join();
@@ -188,6 +194,7 @@
         ],
         list: null,
         listLoading: true,
+        show: false,
         layout: "total, sizes, prev, pager, next, jumper",
         total: 0,
         selectRows: "",
@@ -218,6 +225,13 @@
         } else {
           this.$refs["edit"].showEdit();
         }
+      },
+      async handleDown() {
+        this.model.trade_no = this.model.order_no;
+        const {
+          data: { excel_path },
+        } = await exportOrders(this.model);
+        window.open(filters.imgBaseUrl(excel_path));
       },
       handleSizeChange(val) {
         this.queryForm.pageSize = val;
