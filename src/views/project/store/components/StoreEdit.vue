@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-10-08 16:37:18
+ * @LastEditTime: 2020-11-05 22:09:38
 -->
 
 <template>
@@ -111,9 +111,9 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="物流服务" prop="postScore" label-width="89px">
+          <el-form-item label="物流服务" prop="postStore" label-width="89px">
             <el-input
-              v-model.number="form.postScore"
+              v-model.number="form.postStore"
               autocomplete="off"
             ></el-input>
           </el-form-item>

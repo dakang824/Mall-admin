@@ -113,7 +113,7 @@
       </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="collect_count"
+        prop="collectCount"
         label="收藏数"
         align="center"
       />
@@ -208,11 +208,26 @@
           prodPri: "",
           status: "",
         },
+        goodsType: [
+          {
+            label: "菜盒",
+            value: 1,
+          },
+          {
+            label: "菜品",
+            value: 2,
+          },
+          {
+            label: "设备",
+            value: 4,
+          },
+          {
+            label: "菜谱",
+            value: 8,
+          },
+        ],
       };
     },
-    computed: mapState({
-      goodsType: (state) => state.goods.goodsType,
-    }),
     created() {
       this.fetchData();
     },

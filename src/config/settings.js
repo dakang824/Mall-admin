@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2020-10-27 00:26:42
+ * @LastEditTime: 2020-11-05 23:36:15
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -49,7 +49,7 @@ module.exports = {
   //加载时显示文字
   loadingText: "正在加载中...",
   //token名称
-  tokenName: "accessToken",
+  tokenName: "token",
   //token在localStorage、sessionStorage、cookie存储的key的名称
   tokenTableName: "vue-admin-beautiful",
   //token存储位置localStorage sessionStorage cookie
@@ -83,9 +83,9 @@ module.exports = {
   //是否显示在页面高亮错误
   errorLog: ["development", "test"],
   //是否开启登录拦截
-  loginInterception: false,
+  loginInterception: true,
   //是否开启登录RSA加密
-  loginRSA: true,
+  loginRSA: false,
   //是否依据mock数据生成webstorm HTTP Request请求文件
   httpRequestFile: false,
   //intelligence和all两种方式，前者后端权限只控制permissions不控制view文件的import（前后端配合，减轻后端工作量），all方式完全交给后端前端只负责加载

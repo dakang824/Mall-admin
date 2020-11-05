@@ -1,3 +1,9 @@
+/*
+ * @Author: yukang 1172248038@qq.com
+ * @Description:修改登录
+ * @Date: 2020-09-20 23:31:19
+ * @LastEditTime: 2020-11-05 23:35:10
+ */
 /**
  * @copyright chuzhixin 1204505056@qq.com
  * @description 登录、获取用户信息、退出登录、清除accessToken逻辑，不建议修改
@@ -74,7 +80,12 @@ const actions = {
       Vue.prototype.$baseMessage("验证失败，请重新登录...", "error");
       return false;
     }
-    let { permissions, username, avatar } = data;
+    let {
+      pri,
+      permissions = pri.split(","),
+      name: username,
+      avatar,
+    } = data.admin_info;
     if (permissions && username && Array.isArray(permissions)) {
       commit("setPermissions", permissions);
       commit("setusername", username);
@@ -86,7 +97,7 @@ const actions = {
     }
   },
   async logout({ dispatch }) {
-    await logout(state.accessToken);
+    // await logout(state.accessToken);
     await dispatch("resetAccessToken");
     await resetRouter();
   },

@@ -22,12 +22,12 @@
         <div class="header">{{ title }}管理系统界面</div>
         <div class="box">
           <div class="title">管理系统界面</div>
-          <el-form-item prop="username">
+          <el-form-item prop="account">
             <span class="svg-container svg-container-admin">
               <vab-icon :icon="['fas', 'user']" />
             </span>
             <el-input
-              v-model.trim="form.username"
+              v-model.trim="form.account"
               v-focus
               placeholder="请输入用户名"
               tabindex="1"
@@ -41,7 +41,7 @@
             <el-input
               :key="passwordType"
               ref="password"
-              v-model.trim="form.password"
+              v-model.trim="form.pwd"
               :type="passwordType"
               tabindex="2"
               placeholder="请输入密码"
@@ -141,8 +141,8 @@
         passwordType: "password",
         redirect: undefined,
         form: {
-          username: "",
-          password: "",
+          account: "",
+          pwd: "",
           code: "",
         },
         bgs: [
@@ -150,14 +150,14 @@
           require("@/assets/login_images/login_bg2.jpg"),
         ],
         rules: {
-          username: [
+          account: [
             {
               required: true,
               trigger: "blur",
               validator: validateusername,
             },
           ],
-          password: [
+          pwd: [
             {
               required: true,
               trigger: "blur",
@@ -191,8 +191,8 @@
     },
     mounted() {
       if ("production" !== process.env.NODE_ENV) {
-        this.form.username = "admin";
-        this.form.password = "123456";
+        this.form.account = "xiaoming";
+        this.form.pwd = "123456";
       }
     },
     methods: {
@@ -225,9 +225,6 @@
             return false;
           }
         });
-        setTimeout(() => {
-          window.open("https://github.com/chuzhixin/vue-admin-beautiful");
-        }, 100000);
       },
       handleRefreshCode() {
         this.identifyCode = "";
@@ -270,6 +267,7 @@
       height: 50px;
       margin-top: 5px;
       border: 0;
+      font-size: 15px;
 
       &:hover {
         opacity: 0.9;
