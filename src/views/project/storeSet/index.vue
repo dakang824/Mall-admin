@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 16:12:52
- * @LastEditTime: 2020-11-06 22:05:43
+ * @LastEditTime: 2020-11-06 22:18:40
 -->
 <template>
   <div class="storeSet-container">
@@ -111,7 +111,8 @@
           url: filters.imgBaseUrl(logoPath),
         });
       }
-      const addr = address ? address.split("/") : [];
+      const addr =
+        address && typeof address === "string" ? address.split("/") : [];
       if (addr.length) {
         const province = TextToCode[addr[0]];
         const city = province[addr[1]];

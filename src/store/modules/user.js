@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:修改登录
  * @Date: 2020-09-20 23:31:19
- * @LastEditTime: 2020-11-06 20:44:41
+ * @LastEditTime: 2020-11-06 22:14:57
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -93,7 +93,10 @@ const actions = {
     if (permissions && username && Array.isArray(permissions)) {
       commit("setPermissions", permissions);
       commit("setusername", username);
-      commit("setAvatar", avatar);
+      commit(
+        "setAvatar",
+        avatar ? avatar : require("@/assets/default-avatar.gif")
+      );
       commit("setStore", data.store);
       return permissions;
     } else {

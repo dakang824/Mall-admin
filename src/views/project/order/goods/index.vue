@@ -227,10 +227,10 @@
         }
       },
       async handleDown() {
-        this.model.trade_no = this.model.order_no;
+        this.queryForm.trade_no = this.queryForm.order_no;
         const {
           data: { excel_path },
-        } = await exportOrders(this.model);
+        } = await exportOrders(this.queryForm);
         window.open(filters.imgBaseUrl(excel_path));
       },
       handleSizeChange(val) {
