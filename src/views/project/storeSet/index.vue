@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 16:12:52
- * @LastEditTime: 2020-10-06 22:44:52
+ * @LastEditTime: 2020-11-06 22:05:43
 -->
 <template>
   <div class="storeSet-container">
@@ -24,17 +24,17 @@
             :style="{ width: '100%' }"
           ></el-input>
         </el-form-item>
-        <el-form-item label="店铺地址" prop="field116">
+        <el-form-item label="店铺地址" prop="address">
           <el-cascader
             v-model="formData.address"
             style="width: 100%"
             :options="options"
           ></el-cascader>
         </el-form-item>
-        <el-form-item label="店铺logo" prop="field117" required>
+        <el-form-item label="店铺logo" prop="logoPath" required>
           <el-upload
             ref="field117"
-            :file-list="field117fileList"
+            :file-list="fileList"
             :action="action"
             :before-upload="handleBeforeUpload"
             list-type="picture-card"
@@ -61,7 +61,10 @@
 <script>
   import { getList, doDelete } from "@/api/storeSet";
   import { fileUpload } from "@/config/settings";
-  import { regionData } from "element-china-area-data";
+  import { regionData, CodeToText, TextToCode } from "element-china-area-data";
+  import { modifyStore } from "@/api/store";
+  import { mapState } from "vuex";
+  import filters from "@/filters";
   export default {
     name: "StoreSet",
     components: {},
@@ -71,8 +74,8 @@
         options: regionData,
         formData: {
           name: "",
-          field116: "",
-          field117: "",
+          address: "",
+          logoPath: "",
         },
         rules: {
           name: [
@@ -81,38 +84,66 @@
               message: "将展示为前台店铺名称",
               trigger: "blur",
             },
+          ],
+          address: [
             {
-              pattern: /^1(3|4|5|7|8|9)\d{9}$/,
-              message: "手机号格式错误",
+              required: true,
+              message: "将展示为前台店铺地址",
               trigger: "blur",
             },
           ],
-          field116: [
+          logoPath: [
             {
               required: true,
-              message: "将展示为前台店铺名称",
-              trigger: "blur",
-            },
-            {
-              pattern: /^1(3|4|5|7|8|9)\d{9}$/,
-              message: "手机号格式错误",
+              message: "将展示为前台店铺logo",
               trigger: "blur",
             },
           ],
         },
-        field117Action: "https://jsonplaceholder.typicode.com/posts/",
-        field117fileList: [],
+        fileList: [],
       };
     },
-    created() {},
+    created() {
+      this.formData = this.$store.state.user.store[0];
+      const { logoPath, address } = this.formData;
+      if (logoPath) {
+        this.formData.fileList.push({
+          url: filters.imgBaseUrl(logoPath),
+        });
+      }
+      const addr = address ? address.split("/") : [];
+      if (addr.length) {
+        const province = TextToCode[addr[0]];
+        const city = province[addr[1]];
+        const county = city[addr[2]];
+        this.formData.address = [];
+        this.formData.address.push(province.code, city.code, county.code);
+      }
+    },
     methods: {
       handleSuccess(response, file, fileList) {
-        console.log(response, file, fileList);
+        let {
+          data: { tempUrl },
+        } = response;
+        if (tempUrl) {
+          this.formData.logoPath = tempUrl;
+          this.fileList.push({
+            url: filters.imgBaseUrl(tempUrl),
+          });
+        }
       },
       handelConfirm() {
-        this.$refs["elForm"].validate((valid) => {
-          if (!valid) return;
-          this.close();
+        this.$refs["elForm"].validate(async (valid) => {
+          if (valid) {
+            const form = JSON.parse(JSON.stringify(this.formData));
+            form.address = `${CodeToText[form.address[0]]}/${
+              CodeToText[form.address[1]]
+            }/${CodeToText[form.address[2]]}`;
+            const { msg } = await modifyStore(form);
+            this.$baseMessage(msg, "success");
+          } else {
+            return;
+          }
         });
       },
       handleBeforeUpload(file) {

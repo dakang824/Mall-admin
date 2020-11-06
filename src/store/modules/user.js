@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:修改登录
  * @Date: 2020-09-20 23:31:19
- * @LastEditTime: 2020-11-05 23:35:10
+ * @LastEditTime: 2020-11-06 20:44:41
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -24,6 +24,7 @@ const state = {
   username: "",
   avatar: "",
   permissions: [],
+  store: [],
 };
 const getters = {
   accessToken: (state) => state.accessToken,
@@ -41,6 +42,9 @@ const mutations = {
   },
   setAvatar(state, avatar) {
     state.avatar = avatar;
+  },
+  setStore(state, store) {
+    state.store = store;
   },
   setPermissions(state, permissions) {
     state.permissions = permissions;
@@ -90,6 +94,7 @@ const actions = {
       commit("setPermissions", permissions);
       commit("setusername", username);
       commit("setAvatar", avatar);
+      commit("setStore", data.store);
       return permissions;
     } else {
       Vue.prototype.$baseMessage("用户信息接口异常", "error");
