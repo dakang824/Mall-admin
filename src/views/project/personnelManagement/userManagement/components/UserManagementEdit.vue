@@ -134,14 +134,20 @@
             }
             form.roles = form.roles.reduce((a, b) => a + b);
             if (this.title.includes("添加")) {
-              const { msg } = await addUser(form);
+              const {
+                msg,
+                data: { user },
+              } = await addUser(form);
               this.$baseMessage(msg, "success");
-              this.$emit("fetchData");
+              this.$emit("add", user);
               this.close();
             } else {
-              const { msg } = await modifyUser(form);
+              const {
+                msg,
+                data: { user },
+              } = await modifyUser(form);
               this.$baseMessage(msg, "success");
-              this.$emit("fetchData");
+              this.$emit("update", user);
               this.close();
             }
           } else {

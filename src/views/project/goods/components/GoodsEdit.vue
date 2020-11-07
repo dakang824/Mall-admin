@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-10-27 23:51:40
+ * @LastEditTime: 2020-11-07 19:04:40
 -->
 <template>
   <el-drawer
@@ -510,13 +510,16 @@
             if (this.title.includes("添加")) {
               const { msg } = await addProduct(form);
               this.$baseMessage(msg, "success");
+              this.form = this.copyData;
+              this.$emit("fetchData", false);
+              this.close();
             } else {
               const { msg } = await modifyProduct(form);
               this.$baseMessage(msg, "success");
+              this.form = this.copyData;
+              this.$emit("fetchData", false);
+              this.close();
             }
-            this.form = this.copyData;
-            this.$emit("fetchData");
-            this.close();
           } else {
             return false;
           }

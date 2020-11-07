@@ -247,7 +247,7 @@
             await addPostTemplateArea(item);
           });
 
-          this.$emit("fetchData");
+          this.$emit("fetchData", false);
           this.close();
         } else {
           await modifyPostTemplate({
@@ -263,7 +263,7 @@
           await arr.map(async (item) => {
             await addPostTemplateArea(item);
           });
-          this.$emit("fetchData");
+          this.$emit("fetchData", false);
           this.close();
         }
       },

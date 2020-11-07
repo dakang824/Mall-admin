@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 商品配方
  * @Date: 2020-10-07 14:36:06
- * @LastEditTime: 2020-10-27 23:33:32
+ * @LastEditTime: 2020-11-07 17:55:08
 -->
 <template>
   <div class="prodRecipes">
@@ -43,7 +43,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="重量" prop="weight">
+            <el-form-item label="重量(g)" prop="weight">
               <el-input
                 v-model="form.weight"
                 placeholder="请输入重量"
@@ -59,7 +59,12 @@
     <el-table :data="tableData" style="width: 100%" border>
       <el-table-column prop="no" label="序号" width="80" align="center" />
       <el-table-column prop="name" label="菜品名称" align="center" />
-      <el-table-column prop="weight" label="重量" width="80" align="center" />
+      <el-table-column
+        prop="weight"
+        label="重量(g)"
+        width="80"
+        align="center"
+      />
       <el-table-column prop="type" label="类型" width="80" align="center">
         <template slot-scope="scope">
           {{

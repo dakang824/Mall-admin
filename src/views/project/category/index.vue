@@ -9,22 +9,22 @@
           批量删除
         </el-button>
       </vab-query-form-left-panel>
-      <!-- <vab-query-form-right-panel :span="12">
+      <vab-query-form-right-panel :span="12">
         <el-form :inline="true" :model="queryForm" @submit.native.prevent>
-          <el-form-item>
+          <!-- <el-form-item>
             <el-input
               v-model.trim="queryForm.id"
               placeholder="请输入查询条件"
               clearable
             />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item>
-            <el-button icon="el-icon-search" type="primary" @click="queryData">
-              查询
+            <el-button icon="el-icon-refresh" type="primary" @click="queryData">
+              刷新
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-right-panel> -->
+      </vab-query-form-right-panel>
     </vab-query-form>
 
     <el-table
@@ -83,7 +83,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <edit ref="edit" @fetchData="fetchData"></edit>
+    <edit ref="edit" @fetchData="fetchData" @update="update" @add="add"></edit>
   </div>
 </template>
 
@@ -124,6 +124,13 @@
       setSelectRows(val) {
         this.selectRows = val;
       },
+      add(e) {
+        this.list.push(e);
+      },
+      update(e) {
+        const index = this.list.findIndex((item) => item.id === e.id);
+        this.$set(this.list, index, e);
+      },
       handleEdit(row) {
         if (row.id) {
           this.$refs["edit"].showEdit(row);
@@ -136,7 +143,10 @@
           this.$baseConfirm("你确定要删除当前项吗?", null, async () => {
             const { msg } = await deleteCategory({ ids: row.id });
             this.$baseMessage(msg, "success");
-            this.fetchData();
+            this.list.splice(
+              this.list.findIndex((item) => item.id === row.id),
+              1
+            );
           });
         } else {
           if (this.selectRows.length > 0) {
@@ -144,7 +154,12 @@
             this.$baseConfirm("你确定要删除选中项吗?", null, async () => {
               const { msg } = await deleteCategory({ ids });
               this.$baseMessage(msg, "success");
-              this.fetchData();
+              this.selectRows.map((item) => {
+                this.list.splice(
+                  this.list.findIndex((it) => it.id === item.id),
+                  1
+                );
+              });
             });
           } else {
             this.$baseMessage("未选中任何行", "error");

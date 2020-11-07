@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:00:21
- * @LastEditTime: 2020-10-11 23:42:35
+ * @LastEditTime: 2020-11-07 18:20:18
 -->
 <template>
   <el-dialog
@@ -66,14 +66,22 @@
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
             if (this.title.includes("添加")) {
-              const { msg } = await addProdAddress(this.form);
+              const {
+                msg,
+                data: { prodAddress },
+              } = await addProdAddress(this.form);
               this.$baseMessage(msg, "success");
+              this.$emit("add", prodAddress);
+              this.close();
             } else {
-              const { msg } = await modifyProdAddress(this.form);
+              const {
+                msg,
+                data: { prodAddress },
+              } = await modifyProdAddress(this.form);
               this.$baseMessage(msg, "success");
+              this.$emit("update", prodAddress);
+              this.close();
             }
-            this.$emit("fetchData");
-            this.close();
           } else {
             return false;
           }

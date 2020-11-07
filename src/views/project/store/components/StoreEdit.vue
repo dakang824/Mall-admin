@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-11-07 10:26:47
+ * @LastEditTime: 2020-11-07 19:09:44
 -->
 
 <template>
@@ -254,15 +254,22 @@
             form.prodPri = form.prodPri.reduce((a, b) => a + b);
             form.address = form.province + " " + form.city;
             if (this.title.includes("添加")) {
-              const { msg } = await addStore(form);
+              const {
+                msg,
+                data: { store },
+              } = await addStore(form);
               this.$baseMessage(msg, "success");
+              this.$emit("add", store);
+              this.close();
             } else {
-              const { msg } = await modifyStore(form);
+              const {
+                msg,
+                data: { store },
+              } = await modifyStore(form);
               this.$baseMessage(msg, "success");
+              this.$emit("update", store);
+              this.close();
             }
-
-            this.$emit("fetchData");
-            this.close();
           } else {
             return false;
           }

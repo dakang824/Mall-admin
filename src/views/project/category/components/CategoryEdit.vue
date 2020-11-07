@@ -151,14 +151,22 @@
               form.subCategory = form.subCategory
                 .map((item) => item.name)
                 .join();
-              const { msg } = await addCategory(form);
+              const {
+                msg,
+                data: { category },
+              } = await addCategory(form);
               this.$baseMessage(msg, "success");
+              this.$emit("add", category);
+              this.close();
             } else {
-              const { msg } = await modifyCategory(this.form);
+              const {
+                msg,
+                data: { category },
+              } = await modifyCategory(this.form);
               this.$baseMessage(msg, "success");
+              this.$emit("update", category);
+              this.close();
             }
-            this.$emit("fetchData");
-            this.close();
           } else {
             return false;
           }

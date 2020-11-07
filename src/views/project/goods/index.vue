@@ -318,7 +318,10 @@
           this.$baseConfirm("你确定要删除当前项吗?", null, async () => {
             const { msg } = await deleteProduct({ ids: row.id });
             this.$baseMessage(msg, "success");
-            this.fetchData();
+            this.list.splice(
+              this.list.findIndex((item) => item.id === row.id),
+              1
+            );
           });
         } else {
           if (this.selectRows.length > 0) {
@@ -326,7 +329,12 @@
             this.$baseConfirm("你确定要删除选中项吗?", null, async () => {
               const { msg } = await deleteProduct({ ids });
               this.$baseMessage(msg, "success");
-              this.fetchData();
+              this.selectRows.map((item) => {
+                this.list.splice(
+                  this.list.findIndex((it) => it.id === item.id),
+                  1
+                );
+              });
             });
           } else {
             this.$baseMessage("未选中任何行", "error");
@@ -353,7 +361,7 @@
         this.fetchData();
       },
       async fetchData(showLoading = true) {
-        showLoading ? (this.listLoading = true) : "";
+        this.listLoading = showLoading;
         const {
           data: { product },
           totalCount,

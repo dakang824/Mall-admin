@@ -131,15 +131,23 @@
           this.$baseConfirm("你确定要删除当前项吗?", null, async () => {
             const { msg } = await deletePostTemplate({ id: row.id });
             this.$baseMessage(msg, "success");
-            this.fetchData();
+            this.list.splice(
+              this.list.findIndex((item) => item.id === row.id),
+              1
+            );
           });
         } else {
           if (this.selectRows.length > 0) {
-            const id = this.selectRows.map((item) => item.id).join();
+            const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗?", null, async () => {
-              const { msg } = await deletePostTemplate({ id });
+              const { msg } = await deletePostTemplate({ ids });
               this.$baseMessage(msg, "success");
-              this.fetchData();
+              this.selectRows.map((item) => {
+                this.list.splice(
+                  this.list.findIndex((it) => it.id === item.id),
+                  1
+                );
+              });
             });
           } else {
             this.$baseMessage("未选中任何行", "error");
@@ -165,8 +173,8 @@
         } = await findAllProvinceCode();
         this.province = province;
       },
-      async fetchData() {
-        this.listLoading = true;
+      async fetchData(listLoading = true) {
+        this.listLoading = listLoading;
         const { data, totalCount } = await findAllPostTemplate(this.queryForm);
         this.list = data.postTemps;
         this.total = data.postTemps.length;
