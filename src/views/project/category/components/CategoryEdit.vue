@@ -119,6 +119,9 @@
       },
       showInput() {
         this.inputVisible = true;
+        this.$nextTick((_) => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
       },
       showEdit(row) {
         if (!row) {
@@ -140,7 +143,7 @@
         this.form = this.$options.data().form;
         this.dialogFormVisible = false;
       },
-      save() {
+      async save() {
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
             if (this.title.includes("添加")) {

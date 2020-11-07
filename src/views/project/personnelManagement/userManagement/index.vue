@@ -44,7 +44,11 @@
             />
           </el-form-item>
           <el-form-item prop="status">
-            <el-select v-model="queryForm.status" placeholder="请选择用户状态">
+            <el-select
+              v-model="queryForm.status"
+              placeholder="请选择用户状态"
+              clearable
+            >
               <el-option
                 v-for="item in status"
                 :key="item.value"
@@ -242,7 +246,7 @@
       },
       handleDelete(row) {
         if (row.id) {
-          this.$baseConfirm("你确定要删除当前项吗", null, async () => {
+          this.$baseConfirm("你确定要删除当前项吗?", null, async () => {
             const { msg } = await deleteUser({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.fetchData();
@@ -250,7 +254,7 @@
         } else {
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
-            this.$baseConfirm("你确定要删除选中项吗", null, async () => {
+            this.$baseConfirm("你确定要删除选中项吗?", null, async () => {
               const { msg } = await deleteUser({ ids });
               this.$baseMessage(msg, "success");
               this.fetchData();

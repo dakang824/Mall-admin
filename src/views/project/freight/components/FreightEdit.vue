@@ -197,7 +197,7 @@
       },
       handleDelete(e, index) {
         if (e.temp_id) {
-          this.$baseConfirm("你确定要删除当前项吗", null, async () => {
+          this.$baseConfirm("你确定要删除当前项吗?", null, async () => {
             const { msg } = await deletePostTemplateArea({ ids: e.id });
             this.$baseMessage(msg, "success");
             this.postTempArea.splice(index, 1);

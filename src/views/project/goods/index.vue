@@ -16,7 +16,11 @@
             />
           </el-form-item>
           <el-form-item prop="type">
-            <el-select v-model="queryForm.type" placeholder="请选择商品类型">
+            <el-select
+              v-model="queryForm.type"
+              placeholder="请选择商品类型"
+              clearable
+            >
               <el-option
                 v-for="item in goodsType"
                 :key="item.value"
@@ -36,15 +40,19 @@
             ></el-cascader>
           </el-form-item>
 
-          <el-form-item prop="storeId">
+          <!-- <el-form-item prop="storeId">
             <el-input
               v-model.trim="queryForm.storeId"
               placeholder="请输入商铺id"
               clearable
             />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item prop="status">
-            <el-select v-model="queryForm.status" placeholder="请选择状态">
+            <el-select
+              v-model="queryForm.status"
+              placeholder="请选择状态"
+              clearable
+            >
               <el-option
                 v-for="item in statusOptions"
                 :key="item.value"
@@ -178,7 +186,7 @@
     </el-table>
     <el-pagination
       background
-      :current-page="queryForm.pageNo"
+      :current-page="queryForm.pageNum"
       :page-size="queryForm.pageSize"
       :layout="layout"
       :total="total"
@@ -249,9 +257,8 @@
         selectRows: "",
         elementLoadingText: "正在加载...",
         queryForm: {
-          pageNo: 1,
+          pageNum: 1,
           pageSize: 10,
-          storeId: "",
           status: "",
           subCateId: "",
           cateId: "",
@@ -285,10 +292,12 @@
       },
       async handleChange(e) {
         e.status = e.state === 1 ? 1 : 2;
-        e.status == 1
-          ? await onlineProduct({ prod_id: e.id })
-          : await offlineProduct({ prod_id: e.id });
-        await this.fetchData();
+        let { msg } =
+          e.status == 1
+            ? await onlineProduct({ prod_id: e.id })
+            : await offlineProduct({ prod_id: e.id });
+        this.$baseMessage(msg, "success");
+        await this.fetchData(false);
       },
       handleReset() {
         this.queryForm.subCateId = "";
@@ -306,7 +315,7 @@
       },
       handleDelete(row) {
         if (row.id) {
-          this.$baseConfirm("你确定要删除当前项吗", null, async () => {
+          this.$baseConfirm("你确定要删除当前项吗?", null, async () => {
             const { msg } = await deleteProduct({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.fetchData();
@@ -314,7 +323,7 @@
         } else {
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
-            this.$baseConfirm("你确定要删除选中项吗", null, async () => {
+            this.$baseConfirm("你确定要删除选中项吗?", null, async () => {
               const { msg } = await deleteProduct({ ids });
               this.$baseMessage(msg, "success");
               this.fetchData();
@@ -330,11 +339,11 @@
         this.fetchData();
       },
       handleCurrentChange(val) {
-        this.queryForm.pageNo = val;
+        this.queryForm.pageNum = val;
         this.fetchData();
       },
       queryData() {
-        this.queryForm.pageNo = 1;
+        this.queryForm.pageNum = 1;
         let category = this.queryForm.cateId;
         if (category.length) {
           this.queryForm.cateId = category[0];
@@ -343,8 +352,8 @@
 
         this.fetchData();
       },
-      async fetchData() {
-        this.listLoading = true;
+      async fetchData(showLoading = true) {
+        showLoading ? (this.listLoading = true) : "";
         const {
           data: { product },
           totalCount,

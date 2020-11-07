@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:修改登录
  * @Date: 2020-09-20 23:31:19
- * @LastEditTime: 2020-11-06 22:14:57
+ * @LastEditTime: 2020-11-07 11:15:19
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -31,6 +31,7 @@ const getters = {
   username: (state) => state.username,
   avatar: (state) => state.avatar,
   permissions: (state) => state.permissions,
+  store: (state) => state.store,
 };
 const mutations = {
   setAccessToken(state, accessToken) {
@@ -55,7 +56,7 @@ const actions = {
     commit("setPermissions", permissions);
   },
   async login({ commit }, userInfo) {
-    const { data } = await login(userInfo);
+    const { data, msg } = await login(userInfo);
     const accessToken = data[tokenName];
     if (accessToken) {
       commit("setAccessToken", accessToken);
@@ -72,10 +73,7 @@ const actions = {
           : "晚上好";
       Vue.prototype.$baseNotify(`欢迎登录${title}`, `${thisTime}！`);
     } else {
-      Vue.prototype.$baseMessage(
-        `登录接口异常，未正确返回${tokenName}...`,
-        "error"
-      );
+      Vue.prototype.$baseMessage(msg, "error");
     }
   },
   async getUserInfo({ commit, state }) {

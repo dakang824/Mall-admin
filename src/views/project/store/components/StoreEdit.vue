@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-11-05 22:09:38
+ * @LastEditTime: 2020-11-07 10:26:47
 -->
 
 <template>
@@ -192,7 +192,14 @@
           ],
           pwd: [{ required: true, trigger: "blur", message: "请输入密码" }],
           address: [{ required: true, trigger: "blur", message: "请输入地址" }],
-          mobile: [{ required: true, trigger: "blur", message: "请输入电话" }],
+          mobile: [
+            { required: true, trigger: "blur", message: "请输入电话" },
+            {
+              pattern: /^[0-9]*$/,
+              message: "请输入数字",
+              trigger: "blur",
+            },
+          ],
           contact: [
             { required: true, trigger: "blur", message: "请输入联系人" },
           ],

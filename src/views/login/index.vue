@@ -128,6 +128,8 @@
       const validateCode = (rule, value, callback) => {
         if ("" == value) {
           callback(new Error("验证码不能为空"));
+        } else if (value !== this.identifyCode) {
+          callback(new Error("验证码错误"));
         } else {
           callback();
         }

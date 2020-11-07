@@ -247,7 +247,7 @@
       },
       handleDelete(row) {
         if (row.id) {
-          this.$baseConfirm("你确定要删除当前项吗", null, async () => {
+          this.$baseConfirm("你确定要删除当前项吗?", null, async () => {
             const { msg } = await deleteStore({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.fetchData();
@@ -255,7 +255,7 @@
         } else {
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
-            this.$baseConfirm("你确定要删除选中项吗", null, async () => {
+            this.$baseConfirm("你确定要删除选中项吗?", null, async () => {
               const { msg } = await deleteStore({ ids });
               this.$baseMessage(msg, "success");
               this.fetchData();

@@ -13,10 +13,15 @@
         <el-input v-model.trim="form.account" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="手机号" prop="mobile">
-        <el-input v-model.trim="form.mobile" autocomplete="off"></el-input>
+        <el-input v-model.number="form.mobile" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="pwd">
-        <el-input v-model.trim="form.pwd" autocomplete="off"></el-input>
+        <el-input
+          v-model.number="form.pwd"
+          autocomplete="off"
+          type="password"
+          :maxlength="8"
+        ></el-input>
       </el-form-item>
       <el-form-item label="角色" prop="roles">
         <el-select v-model="form.roles" style="width: 100%" multiple>
@@ -48,7 +53,7 @@
 
 <script>
   import { addUser, doEdit, modifyUser } from "@/api/userManagement";
-
+  import { isEmail } from "@/utils/validate";
   export default {
     name: "UserManagementEdit",
     props: {
@@ -75,14 +80,19 @@
           roles: "",
           status: [],
         },
+        oldPwd: "",
         rules: {
           name: [{ required: true, trigger: "blur", message: "请输入用户名" }],
           account: [{ required: true, trigger: "blur", message: "请输入账号" }],
           mobile: [
             { required: true, trigger: "blur", message: "请输入手机号" },
+            {
+              pattern: /^1(3|4|5|7|8|9)\d{9}$/,
+              message: "手机号格式错误",
+              trigger: "blur",
+            },
           ],
           pwd: [{ required: true, trigger: "blur", message: "请输入密码" }],
-          email: [{ required: true, trigger: "blur", message: "请输入邮箱" }],
           roles: [{ required: true, trigger: "blur", message: "请选择角色" }],
         },
         title: "",
@@ -105,6 +115,7 @@
               }
             })
             .filter((item) => item !== undefined);
+          this.oldPwd = row.pwd;
           this.form = Object.assign({}, row);
         }
         this.dialogFormVisible = true;
@@ -118,6 +129,9 @@
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
             const form = JSON.parse(JSON.stringify(this.form));
+            if (this.oldPwd === form.pwd) {
+              delete form.pwd;
+            }
             form.roles = form.roles.reduce((a, b) => a + b);
             if (this.title.includes("添加")) {
               const { msg } = await addUser(form);
