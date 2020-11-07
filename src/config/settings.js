@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2020-11-06 22:32:24
+ * @LastEditTime: 2020-11-07 20:13:58
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -75,7 +75,7 @@ module.exports = {
   //最长请求时间
   requestTimeout: 5000,
   //操作正常code，支持String、Array、int多种类型
-  successCode: [200, 0],
+  successCode: [200],
   //登录失效code
   invalidCode: 402,
   //无权限code

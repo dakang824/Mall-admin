@@ -155,7 +155,11 @@
         label="上下架时间"
         align="center"
         min-width="150"
-      />
+      >
+        <template v-slot="scope">
+          {{ scope.row.onlineTime | slice(0, 19) }}
+        </template>
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="state"
@@ -193,7 +197,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <edit ref="edit" @fetchData="fetchData"></edit>
+    <edit ref="edit" @fetchData="fetchData" @update="update" @add="add"></edit>
   </div>
 </template>
 
@@ -279,8 +283,13 @@
       handleBlur(e) {
         const index = this.list.findIndex((item) => item.id === e.id);
         this.list[index].edit = false;
-
-        console.log(e.id);
+      },
+      add(e) {
+        this.list.push(e);
+      },
+      update(e) {
+        const index = this.list.findIndex((item) => item.id === e.id);
+        this.$set(this.list, index, e);
       },
       handleDblclick(row, column, cell, event) {
         this.list.map((item) => {
@@ -318,6 +327,7 @@
           this.$baseConfirm("你确定要删除当前项吗?", null, async () => {
             const { msg } = await deleteProduct({ ids: row.id });
             this.$baseMessage(msg, "success");
+
             this.list.splice(
               this.list.findIndex((item) => item.id === row.id),
               1
@@ -369,8 +379,6 @@
         product.list.forEach((item) => {
           item.state = item.status === 0 || item.status === 2 ? 0 : 1;
           item.edit = false;
-          if (item.onlineTime)
-            item.onlineTime = item.onlineTime.substring(0, 16);
         });
         this.list = product.list;
         this.total = product.total;

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-11-07 19:04:40
+ * @LastEditTime: 2020-11-07 20:10:53
 -->
 <template>
   <el-drawer
@@ -387,7 +387,12 @@
         data: {
           product: { list },
         },
-      } = await findProduct({ type: 4, status: 1, pageNo: 1, pageSize: 10000 });
+      } = await findProduct({
+        type: 4,
+        status: 1,
+        pageNum: 1,
+        pageSize: 10000,
+      });
       this.menuData = list;
       this.areaOptions = prodAddress;
       this.postTemps = postTemps;
@@ -508,16 +513,30 @@
               form.prodSpec = JSON.stringify(arr);
             }
             if (this.title.includes("添加")) {
-              const { msg } = await addProduct(form);
+              const {
+                msg,
+                data: { product },
+              } = await addProduct(form);
               this.$baseMessage(msg, "success");
               this.form = this.copyData;
-              this.$emit("fetchData", false);
+              product.state =
+                product.status === 0 || product.status === 2 ? 0 : 1;
+              product.edit = false;
+              this.$emit("add", product);
+              // this.$emit("fetchData", false);
               this.close();
             } else {
-              const { msg } = await modifyProduct(form);
+              const {
+                msg,
+                data: { product },
+              } = await modifyProduct(form);
               this.$baseMessage(msg, "success");
               this.form = this.copyData;
-              this.$emit("fetchData", false);
+              product.state =
+                product.status === 0 || product.status === 2 ? 0 : 1;
+              product.edit = false;
+              this.$emit("update", product);
+              // this.$emit("fetchData", false);
               this.close();
             }
           } else {

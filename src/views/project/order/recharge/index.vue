@@ -129,13 +129,7 @@
           : "其它";
       },
       getStatusStr(v) {
-        return v === 0
-          ? "待支付"
-          : v === 1
-          ? "已完成"
-          : v === 2
-          ? "已取消"
-          : "";
+        return v === 0 ? "未支付" : v === 1 ? "已付款" : "";
       },
     },
     data() {
@@ -157,19 +151,15 @@
         },
         statusOptions: [
           {
-            label: "全部订单",
+            label: "全部",
             value: "",
           },
           {
-            label: "已完成",
+            label: "未支付",
             value: 0,
           },
           {
-            label: "待支付",
-            value: 1,
-          },
-          {
-            label: "已取消",
+            label: "已付款",
             value: 1,
           },
         ],

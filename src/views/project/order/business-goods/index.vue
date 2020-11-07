@@ -37,17 +37,17 @@
               clearable
             ></el-input>
           </el-form-item>
-          <el-form-item prop="order_no">
+          <el-form-item prop="store_account">
             <el-input
-              v-model="queryForm.order_no"
-              placeholder="请输入店铺账号 还没绑定字段"
+              v-model="queryForm.store_account"
+              placeholder="请输入店铺账号"
               clearable
             ></el-input>
           </el-form-item>
-          <el-form-item prop="order_no">
+          <el-form-item prop="user_account">
             <el-input
-              v-model="queryForm.order_no"
-              placeholder="请输入买家账号 还没绑定字段"
+              v-model="queryForm.user_account"
+              placeholder="请输入买家账号"
               clearable
             ></el-input>
           </el-form-item>
@@ -220,11 +220,13 @@
           pageSize: 10,
           id: "",
           status: "",
-          store_id: "",
           order_no: "",
           time: [],
           from: "",
           to: "",
+          store_account: "",
+          user_account: "",
+          ignoreStoreId: false,
         },
       };
     },

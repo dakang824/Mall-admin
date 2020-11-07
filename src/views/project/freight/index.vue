@@ -9,22 +9,22 @@
           批量删除
         </el-button>
       </vab-query-form-left-panel>
-      <!-- <vab-query-form-right-panel :span="12">
+      <vab-query-form-right-panel :span="12">
         <el-form :inline="true" :model="queryForm" @submit.native.prevent>
-          <el-form-item>
+          <!-- <el-form-item>
             <el-input
               v-model.trim="queryForm.id"
               placeholder="请输入查询条件"
               clearable
             />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item>
-            <el-button icon="el-icon-search" type="primary" @click="queryData">
-              查询
+            <el-button icon="el-icon-refresh" type="primary" @click="queryData">
+              刷新
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-right-panel> -->
+      </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
       v-loading="listLoading"
@@ -64,6 +64,7 @@
       </el-table-column>
     </el-table>
     <el-pagination
+      v-if="false"
       background
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
@@ -129,7 +130,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗?", null, async () => {
-            const { msg } = await deletePostTemplate({ id: row.id });
+            const { msg } = await deletePostTemplate({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.list.splice(
               this.list.findIndex((item) => item.id === row.id),

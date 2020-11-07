@@ -68,11 +68,14 @@ instance.interceptors.request.use(
       config.headers[tokenName] = store.getters["user/accessToken"];
       if (
         store.getters["user/store"].length &&
-        (config.data || config.params)
+        (config.data || config.params) &&
+        !("ignoreStoreId" in (config.data || config.params))
       ) {
         config.data
-          ? (config.data.storeId = store.getters["user/store"][0].id)
-          : (config.params.storeId = store.getters["user/store"][0].id);
+          ? ((config.data.storeId = store.getters["user/store"][0].id),
+            (config.data.store_id = store.getters["user/store"][0].id))
+          : ((config.params.storeId = store.getters["user/store"][0].id),
+            (config.params.store_id = store.getters["user/store"][0].id));
       }
     }
     //这里会过滤所有为空、0、false的key，如果不需要请自行注释

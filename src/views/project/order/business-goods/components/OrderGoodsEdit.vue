@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-10-30 22:37:14
+ * @LastEditTime: 2020-11-07 20:48:47
 -->
 <template>
   <el-drawer
@@ -133,7 +133,7 @@
       </el-table>
     </div>
 
-    <div v-if="form.status === 2" class="dialog-footer">
+    <div v-if="form.status === 2 && false" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
       <el-button type="primary" @click="handleSend">发 货</el-button>
     </div>

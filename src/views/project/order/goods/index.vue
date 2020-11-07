@@ -204,7 +204,6 @@
           pageSize: 10,
           id: "",
           status: "",
-          store_id: "",
           order_no: "",
           time: [],
           from: "",
