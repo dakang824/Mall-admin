@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-11-07 20:48:47
+ * @LastEditTime: 2020-11-07 22:58:56
 -->
 <template>
   <el-drawer

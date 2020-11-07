@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 16:12:52
- * @LastEditTime: 2020-11-06 22:18:40
+ * @LastEditTime: 2020-11-07 23:30:27
 -->
 <template>
   <div class="storeSet-container">
@@ -31,15 +31,16 @@
             :options="options"
           ></el-cascader>
         </el-form-item>
-        <el-form-item label="店铺logo" prop="logoPath" required>
+        <el-form-item label="店铺logo" prop="fileList">
           <el-upload
             ref="field117"
-            :file-list="fileList"
+            :file-list="formData.fileList"
             :action="action"
             :before-upload="handleBeforeUpload"
             list-type="picture-card"
             :limit="1"
             :on-success="handleSuccess"
+            :on-remove="handleRemove"
           >
             <i class="el-icon-plus"></i>
             <div slot="tip" class="el-upload__tip">将展示为前台店铺logo</div>
@@ -75,7 +76,8 @@
         formData: {
           name: "",
           address: "",
-          logoPath: "",
+          logo_path: "",
+          fileList: [],
         },
         rules: {
           name: [
@@ -92,7 +94,7 @@
               trigger: "blur",
             },
           ],
-          logoPath: [
+          fileList: [
             {
               required: true,
               message: "将展示为前台店铺logo",
@@ -100,11 +102,10 @@
             },
           ],
         },
-        fileList: [],
       };
     },
     created() {
-      this.formData = this.$store.state.user.store[0];
+      this.formData = { ...this.formData, ...this.$store.state.user.store[0] };
       const { logoPath, address } = this.formData;
       if (logoPath) {
         this.formData.fileList.push({
@@ -122,15 +123,19 @@
       }
     },
     methods: {
+      handleRemove(file, fileList) {
+        this.formData.fileList = fileList;
+      },
       handleSuccess(response, file, fileList) {
         let {
           data: { tempUrl },
         } = response;
         if (tempUrl) {
-          this.formData.logoPath = tempUrl;
-          this.fileList.push({
+          this.formData.logo_path = tempUrl;
+          this.formData.fileList.push({
             url: filters.imgBaseUrl(tempUrl),
           });
+          this.$refs.elForm.clearValidate("fileList");
         }
       },
       handelConfirm() {
@@ -140,7 +145,14 @@
             form.address = `${CodeToText[form.address[0]]}/${
               CodeToText[form.address[1]]
             }/${CodeToText[form.address[2]]}`;
-            const { msg } = await modifyStore(form);
+            const {
+              msg,
+              data: { store },
+            } = await modifyStore(form);
+            this.$store.dispatch(
+              "user/getUserInfo",
+              this.$store.getters["user/accessToken"]
+            );
             this.$baseMessage(msg, "success");
           } else {
             return;
