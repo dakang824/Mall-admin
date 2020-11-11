@@ -225,15 +225,38 @@ export const asyncRoutes = [
   {
     path: "/setting",
     component: Layout,
-    redirect: "/setting",
+    redirect: "noRedirect",
+    name: "Order",
+    meta: {
+      title: "系统设置",
+      icon: "cog",
+    },
     children: [
+      {
+        path: "/banner",
+        name: "Banner",
+        component: () => import("@/views/project/banner/index"),
+        meta: {
+          title: "banner设置",
+          icon: "images",
+        },
+      },
+      {
+        path: "/ads",
+        name: "Ads",
+        component: () => import("@/views/project/ads/index"),
+        meta: {
+          title: "广告设置",
+          icon: "image",
+        },
+      },
       {
         path: "/setting",
         name: "Setting",
         component: () => import("@/views/project/storeSet/index"),
         meta: {
           title: "店铺设置",
-          icon: "cog",
+          icon: "store-alt",
         },
       },
     ],

@@ -10,11 +10,11 @@
     </span>
 
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item command="personalCenter">
+      <!-- <el-dropdown-item command="personalCenter"  divided>
         <vab-icon :icon="['fas', 'user']"></vab-icon>
         个人中心
-      </el-dropdown-item>
-      <el-dropdown-item command="logout" divided>
+      </el-dropdown-item> -->
+      <el-dropdown-item command="logout">
         <vab-icon :icon="['fas', 'sign-out-alt']"></vab-icon>
         退出登录
       </el-dropdown-item>
