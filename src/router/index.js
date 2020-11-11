@@ -213,6 +213,22 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/payBackOrders",
+    component: Layout,
+    redirect: "/payBackOrders",
+    children: [
+      {
+        path: "/payBackOrders",
+        name: "PayBackOrders",
+        component: () => import("@/views/project/payBackOrders/index"),
+        meta: {
+          title: "退款订单",
+          icon: "money-bill-alt",
+        },
+      },
+    ],
+  },
+  {
     path: "/finance",
     component: Layout,
     redirect: "/finance",
