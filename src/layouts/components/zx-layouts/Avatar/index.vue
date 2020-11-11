@@ -1,3 +1,9 @@
+<!--
+ * @Author: yukang 1172248038@qq.com
+ * @Description: 
+ * @Date: 2020-11-11 22:54:14
+ * @LastEditTime: 2020-11-11 23:11:21
+-->
 <template>
   <el-dropdown @command="handleCommand">
     <span class="avatar-dropdown">
@@ -10,11 +16,11 @@
     </span>
 
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item command="personalCenter">
+      <!-- <el-dropdown-item command="personalCenter" divided>
         <vab-icon :icon="['fas', 'user']"></vab-icon>
         个人中心
-      </el-dropdown-item>
-      <el-dropdown-item command="logout" divided>
+      </el-dropdown-item> -->
+      <el-dropdown-item command="logout">
         <vab-icon :icon="['fas', 'sign-out-alt']"></vab-icon>
         退出登录
       </el-dropdown-item>
