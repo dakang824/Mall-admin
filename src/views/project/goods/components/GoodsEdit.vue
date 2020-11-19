@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-11-07 20:10:53
+ * @LastEditTime: 2020-11-19 13:08:49
 -->
 <template>
   <el-drawer
@@ -127,7 +127,7 @@
             :file-list="form.pics_list"
             :action="fileUpload"
             :before-upload="good_imgBeforeUpload"
-            list-type="picture"
+            :list-type="form.introPics_list.length ? 'picture' : 'text'"
             accept="zip/*"
             :on-success="handlePicsSuccess"
             :before-remove="handlePicsRemove"
@@ -147,7 +147,7 @@
             :file-list="form.introPics_list"
             :action="fileUpload"
             :before-upload="describe_imgBeforeUpload"
-            list-type="picture"
+            :list-type="form.introPics_list.length ? 'picture' : 'text'"
             accept="zip/*"
             :on-success="handleIntroPicsSuccess"
             :before-remove="handleIntroPicsRemove"

@@ -227,6 +227,10 @@
       },
       async handleDown() {
         this.queryForm.trade_no = this.queryForm.order_no;
+        if (this.queryForm.time) {
+          this.queryForm.from = this.queryForm.time[0];
+          this.queryForm.to = this.queryForm.time[1];
+        }
         const {
           data: { excel_path },
         } = await exportOrders(this.queryForm);

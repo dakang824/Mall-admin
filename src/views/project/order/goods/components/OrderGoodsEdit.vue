@@ -2,13 +2,13 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-10-30 22:37:14
+ * @LastEditTime: 2020-11-19 12:52:43
 -->
 <template>
   <el-drawer
     :title="title"
     :visible.sync="dialogFormVisible"
-    size="100%"
+    size="50%"
     modal-append-to-body
     @close="close"
   >

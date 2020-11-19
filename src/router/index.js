@@ -154,6 +154,22 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/finance",
+    component: Layout,
+    redirect: "/finance",
+    children: [
+      {
+        path: "/finance",
+        name: "Finance",
+        component: () => import("@/views/project/finance/index"),
+        meta: {
+          title: "财务管理",
+          icon: "money-bill-alt",
+        },
+      },
+    ],
+  },
+  {
     path: "/order",
     component: Layout,
     redirect: "noRedirect",
@@ -201,23 +217,6 @@ export const asyncRoutes = [
           title: "商家订单查询",
           icon: "shopping-bag",
           noKeepAlive: true,
-        },
-      },
-    ],
-  },
-  {
-    path: "/finance",
-    component: Layout,
-    redirect: "/finance",
-    hidden: true,
-    children: [
-      {
-        path: "/finance",
-        name: "Finance",
-        component: () => import("@/views/project/finance/index"),
-        meta: {
-          title: "财务管理",
-          icon: "money-bill-alt",
         },
       },
     ],
