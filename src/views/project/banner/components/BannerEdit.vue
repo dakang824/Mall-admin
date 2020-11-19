@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-11-11 21:20:15
- * @LastEditTime: 2020-11-11 22:31:15
+ * @LastEditTime: 2020-11-19 11:26:11
 -->
 <template>
   <el-dialog
@@ -101,9 +101,9 @@
           this.title = "添加Banner";
         } else {
           this.title = "编辑Banner";
+          row.img_path = row.pic_path;
           row.pic_path = [{ url: filters.imgBaseUrl(row.pic_path) }];
           this.form = Object.assign({}, row);
-          console.log(row);
         }
         this.dialogFormVisible = true;
       },
@@ -117,6 +117,7 @@
       },
       handlePicsSuccess(e) {
         this.form.pic_path = [{ url: filters.imgBaseUrl(e.data.tempUrl) }];
+        this.form.img_path = e.data.tempUrl;
         if (e.code === 500) {
           this.$baseAlert(e.msg, "温馨提示");
         }
@@ -136,7 +137,7 @@
       save() {
         this.$refs["form"].validate(async (valid) => {
           let form = Object.assign({}, this.form);
-          form.pic_path = form.pic_path[0].url;
+          form.pic_path = form.img_path;
           if (valid) {
             if (this.title.includes("添加")) {
               const {
@@ -144,6 +145,7 @@
                 data: { banner },
               } = await addBanner(form);
               this.$baseMessage(msg, "success");
+              banner.img_path = banner.pic_path;
               this.$emit("add", banner);
               this.close();
             } else {
@@ -152,6 +154,7 @@
                 data: { banner },
               } = await modifyBanner(form);
               this.$baseMessage(msg, "success");
+              banner.img_path = banner.pic_path;
               this.$emit("update", banner);
               this.close();
             }

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:banner接口
  * @Date: 2020-11-11 21:20:15
- * @LastEditTime: 2020-11-11 22:40:07
+ * @LastEditTime: 2020-11-19 11:11:43
  */
 import request from "@/utils/request";
 
@@ -24,7 +24,7 @@ export function getBanner(params) {
 
 export function modifyBanner(data) {
   return request({
-    url: "/service/plat/admin/modifyAds",
+    url: "/service/plat/admin/modifyBanner",
     method: "post",
     data,
   });

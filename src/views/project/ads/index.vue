@@ -49,12 +49,12 @@
       />
       <el-table-column
         show-overflow-tooltip
-        prop="pic_path"
+        prop="img_path"
         label="图片"
         align="center"
       >
         <template v-slot="scope">
-          <el-image :src="scope.row.pic_path | imgBaseUrl"></el-image>
+          <el-image :src="scope.row.img_path | imgBaseUrl"></el-image>
         </template>
       </el-table-column>
       <el-table-column
@@ -170,6 +170,9 @@
       async fetchData() {
         this.listLoading = true;
         const { data, totalCount } = await getAds(this.queryForm);
+        data.ads.map((item) => {
+          item.img_path = item.pic_path;
+        });
         this.list = data.ads;
         // this.total = totalCount;
         setTimeout(() => {

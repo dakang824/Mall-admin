@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-11-11 21:20:15
- * @LastEditTime: 2020-11-11 22:41:13
+ * @LastEditTime: 2020-11-19 11:24:52
 -->
 <template>
   <el-dialog
@@ -48,7 +48,7 @@
           <el-button size="small" type="primary" icon="el-icon-upload">
             添加图片
           </el-button>
-          <div slot="tip" class="el-upload__tip">建议尺寸855px*430px</div>
+          <div slot="tip" class="el-upload__tip">建议尺寸300px*573px</div>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -101,9 +101,8 @@
           this.title = "添加Banner";
         } else {
           this.title = "编辑Banner";
-          row.pic_path = [{ url: filters.imgBaseUrl(row.pic_path) }];
-          this.form = Object.assign({}, row);
-          console.log(row);
+          row.pic_path = [{ url: filters.imgBaseUrl(row.img_path) }];
+          this.form = JSON.parse(JSON.stringify(row));
         }
         this.dialogFormVisible = true;
       },
@@ -117,6 +116,7 @@
       },
       handlePicsSuccess(e) {
         this.form.pic_path = [{ url: filters.imgBaseUrl(e.data.tempUrl) }];
+        this.form.img_path = e.data.tempUrl;
         if (e.code === 500) {
           this.$baseAlert(e.msg, "温馨提示");
         }
@@ -136,7 +136,7 @@
       save() {
         this.$refs["form"].validate(async (valid) => {
           let form = Object.assign({}, this.form);
-          form.pic_path = form.pic_path[0].url;
+          form.pic_path = form.img_path;
           if (valid) {
             if (this.title.includes("添加")) {
               const {
@@ -144,6 +144,7 @@
                 data: { banner },
               } = await addBanner(form);
               this.$baseMessage(msg, "success");
+              banner.img_path = banner.pic_path;
               this.$emit("add", banner);
               this.close();
             } else {
@@ -152,6 +153,7 @@
                 data: { banner },
               } = await modifyAds(form);
               this.$baseMessage(msg, "success");
+              banner.img_path = banner.pic_path;
               this.$emit("update", banner);
               this.close();
             }
