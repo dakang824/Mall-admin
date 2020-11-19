@@ -136,7 +136,7 @@
         return v.map((item) => item.name).join();
       },
       getStatusStr(v) {
-        return v === 1
+        return v === 0
           ? "待付款"
           : v === 2
           ? "待发货"
@@ -173,7 +173,7 @@
           },
           {
             label: "待付款",
-            value: 1,
+            value: 0,
           },
           {
             label: "待发货",
@@ -188,8 +188,16 @@
             value: 4,
           },
           {
-            label: "已关闭",
+            label: "已取消",
             value: 5,
+          },
+          {
+            label: "待退款",
+            value: 6,
+          },
+          {
+            label: "已退款",
+            value: 7,
           },
         ],
         list: null,
