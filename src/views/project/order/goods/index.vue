@@ -118,7 +118,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <edit ref="edit" @fetchData="fetchData"></edit>
+    <edit ref="edit" @fetchData="fetchData" @changeStatus="changeStatus"></edit>
     <foodDialog v-model="show" :model="queryForm" />
   </div>
 </template>
@@ -166,6 +166,7 @@
     },
     data() {
       return {
+        rowIndex: "",
         statusOptions: [
           {
             label: "全部订单",
@@ -226,9 +227,13 @@
       setSelectRows(val) {
         this.selectRows = val;
       },
+      changeStatus(e) {
+        this.list[this.rowIndex].status = 3;
+      },
       handleEdit(row) {
         if (row.id) {
           this.$refs["edit"].showEdit(row);
+          this.rowIndex = this.list.findIndex((item) => item.id === row.id);
         } else {
           this.$refs["edit"].showEdit();
         }
