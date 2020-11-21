@@ -57,7 +57,9 @@
             </el-button>
           </el-form-item>
           <el-form-item>
-            <el-button icon="el-icon-download">订单导出</el-button>
+            <el-button icon="el-icon-download" @click="handleExportOrders">
+              订单导出
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -203,7 +205,16 @@
           this.$refs["edit"].showEdit();
         }
       },
-
+      async handleExportOrders() {
+        if (this.queryForm.time) {
+          this.queryForm.from = this.queryForm.time[0];
+          this.queryForm.to = this.queryForm.time[1];
+        }
+        const {
+          data: { excel_path },
+        } = await exportOrders(this.queryForm);
+        window.open(filters.imgBaseUrl(excel_path));
+      },
       handleSizeChange(val) {
         this.queryForm.pageSize = val;
         this.fetchData();

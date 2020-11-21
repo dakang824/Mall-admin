@@ -158,6 +158,23 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/finance",
+    component: Layout,
+    redirect: "/finance",
+    children: [
+      {
+        path: "/finance",
+        name: "Finance",
+        component: () => import("@/views/project/finance/index"),
+        meta: {
+          title: "财务管理",
+          icon: "money-bill-alt",
+          permissions: ["financial", "admin"],
+        },
+      },
+    ],
+  },
+  {
     path: "/order",
     component: Layout,
     redirect: "noRedirect",
@@ -231,32 +248,38 @@ export const asyncRoutes = [
   {
     path: "/finance",
     component: Layout,
-    redirect: "/finance",
-    hidden: true,
+    redirect: "noRedirect",
+    name: "Order",
+    meta: {
+      title: "系统设置",
+      icon: "cog",
+    },
     children: [
       {
-        path: "/finance",
-        name: "Finance",
-        component: () => import("@/views/project/finance/index"),
+        path: "/banner",
+        name: "Banner",
+        component: () => import("@/views/project/banner/index"),
         meta: {
-          title: "财务管理",
-          icon: "money-bill-alt",
+          title: "banner设置",
+          icon: "images",
         },
       },
-    ],
-  },
-  {
-    path: "/setting",
-    component: Layout,
-    redirect: "/setting",
-    children: [
+      {
+        path: "/ads",
+        name: "Ads",
+        component: () => import("@/views/project/ads/index"),
+        meta: {
+          title: "广告设置",
+          icon: "image",
+        },
+      },
       {
         path: "/setting",
         name: "Setting",
         component: () => import("@/views/project/storeSet/index"),
         meta: {
           title: "店铺设置",
-          icon: "cog",
+          icon: "store-alt",
         },
       },
     ],

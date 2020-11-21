@@ -2,13 +2,13 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-10-30 22:37:14
+ * @LastEditTime: 2020-11-19 18:45:31
 -->
 <template>
   <el-drawer
     :title="title"
     :visible.sync="dialogFormVisible"
-    size="100%"
+    size="50%"
     modal-append-to-body
     @close="close"
   >
@@ -149,7 +149,7 @@
         <el-table-column property="weight" label="重量"></el-table-column>
       </el-table>
     </el-dialog>
-    <Dialog v-model="show" :model="form"></Dialog>
+    <Dialog v-model="show" :model="form" @change="handleChange"></Dialog>
   </el-drawer>
 </template>
 
@@ -214,6 +214,10 @@
           return { name: item.name, weight: item.weight };
         });
         this.dialogTableVisible = true;
+      },
+      handleChange() {
+        this.form.status = 3;
+        this.$emit("changeStatus");
       },
       showEdit(row) {
         if (!row) {

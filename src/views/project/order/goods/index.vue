@@ -118,7 +118,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <edit ref="edit" @fetchData="fetchData"></edit>
+    <edit ref="edit" @fetchData="fetchData" @changeStatus="changeStatus"></edit>
     <foodDialog v-model="show" :model="queryForm" />
   </div>
 </template>
@@ -136,7 +136,7 @@
         return v.map((item) => item.name).join();
       },
       getStatusStr(v) {
-        return v === 1
+        return v === 0
           ? "待付款"
           : v === 2
           ? "待发货"
@@ -166,6 +166,7 @@
     },
     data() {
       return {
+        rowIndex: "",
         statusOptions: [
           {
             label: "全部订单",
@@ -173,7 +174,7 @@
           },
           {
             label: "待付款",
-            value: 1,
+            value: 0,
           },
           {
             label: "待发货",
@@ -188,8 +189,16 @@
             value: 4,
           },
           {
-            label: "已关闭",
+            label: "已取消",
             value: 5,
+          },
+          {
+            label: "待退款",
+            value: 6,
+          },
+          {
+            label: "已退款",
+            value: 7,
           },
         ],
         list: null,
@@ -218,15 +227,23 @@
       setSelectRows(val) {
         this.selectRows = val;
       },
+      changeStatus(e) {
+        this.list[this.rowIndex].status = 3;
+      },
       handleEdit(row) {
         if (row.id) {
           this.$refs["edit"].showEdit(row);
+          this.rowIndex = this.list.findIndex((item) => item.id === row.id);
         } else {
           this.$refs["edit"].showEdit();
         }
       },
       async handleDown() {
         this.queryForm.trade_no = this.queryForm.order_no;
+        if (this.queryForm.time) {
+          this.queryForm.from = this.queryForm.time[0];
+          this.queryForm.to = this.queryForm.time[1];
+        }
         const {
           data: { excel_path },
         } = await exportOrders(this.queryForm);
