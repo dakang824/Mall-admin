@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-11-19 13:08:49
+ * @LastEditTime: 2020-11-21 12:30:49
 -->
 <template>
   <el-drawer
@@ -372,7 +372,7 @@
       goodsType: (state) => state.goods.goodsType,
       category: (state) => state.goods.category,
       getLimit() {
-        return this.isAdd ? 1 : 10;
+        return this.isAdd ? 1 : 10000;
       },
     }),
     async created() {
@@ -526,6 +526,9 @@
               // this.$emit("fetchData", false);
               this.close();
             } else {
+              form.pics = JSON.stringify(form.pics);
+              form.introPics = JSON.stringify(form.introPics);
+              console.log(form);
               const {
                 msg,
                 data: { product },

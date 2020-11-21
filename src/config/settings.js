@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2020-11-07 20:13:58
+ * @LastEditTime: 2020-11-21 13:57:23
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -73,7 +73,7 @@ module.exports = {
   //消息框消失时间
   messageDuration: 3000,
   //最长请求时间
-  requestTimeout: 5000,
+  requestTimeout: 60000,
   //操作正常code，支持String、Array、int多种类型
   successCode: [200],
   //登录失效code

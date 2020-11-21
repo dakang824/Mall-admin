@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-11-11 21:20:15
- * @LastEditTime: 2020-11-19 11:26:11
+ * @LastEditTime: 2020-11-21 11:03:47
 -->
 <template>
   <el-dialog
@@ -48,7 +48,7 @@
           <el-button size="small" type="primary" icon="el-icon-upload">
             添加图片
           </el-button>
-          <div slot="tip" class="el-upload__tip">建议尺寸855px*430px</div>
+          <div slot="tip" class="el-upload__tip">建议尺寸926px*430px</div>
         </el-upload>
       </el-form-item>
     </el-form>
