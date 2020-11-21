@@ -165,6 +165,7 @@ export const asyncRoutes = [
         meta: {
           title: "财务管理",
           icon: "money-bill-alt",
+          permissions: ["financial", "admin"],
         },
       },
     ],
