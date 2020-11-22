@@ -32,7 +32,7 @@
           </el-form-item>
           <el-form-item prop="order_no">
             <el-input
-              v-model="queryForm.order_no"
+              v-model.trim="queryForm.order_no"
               placeholder="请输入订单编号"
               clearable
             ></el-input>
@@ -43,7 +43,7 @@
             </el-button>
           </el-form-item>
           <el-form-item>
-            <el-button icon="el-icon-document" @click="show = true">
+            <el-button icon="el-icon-document" @click="handleShow">
               菜品明细
             </el-button>
           </el-form-item>
@@ -119,7 +119,7 @@
       @current-change="handleCurrentChange"
     ></el-pagination>
     <edit ref="edit" @fetchData="fetchData" @changeStatus="changeStatus"></edit>
-    <foodDialog v-model="show" :model="queryForm" />
+    <foodDialog ref="detail" v-model="show" :model="queryForm" />
   </div>
 </template>
 
@@ -229,6 +229,11 @@
       },
       changeStatus(e) {
         this.list[this.rowIndex].status = 3;
+        this.fetchData(false);
+      },
+      handleShow() {
+        this.show = true;
+        this.$refs["detail"].fetchData();
       },
       handleEdit(row) {
         if (row.id) {
@@ -268,8 +273,8 @@
         this.queryForm.pageNum = 1;
         this.fetchData();
       },
-      async fetchData() {
-        this.listLoading = true;
+      async fetchData(loading = true) {
+        this.listLoading = loading;
         const {
           data: {
             data: { list, total },

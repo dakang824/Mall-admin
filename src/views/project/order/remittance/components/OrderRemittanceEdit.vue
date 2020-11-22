@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-11-19 12:54:01
+ * @LastEditTime: 2020-11-22 12:43:18
 -->
 <template>
   <el-drawer
@@ -92,6 +92,8 @@
     methods: {
       handleResult(e) {
         this.form.status = e !== 0 ? 1 : 0;
+        this.$emit("fetchData", false);
+        this.close();
       },
       showEdit(row) {
         this.title = "订单详情";

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-11-19 18:45:31
+ * @LastEditTime: 2020-11-22 13:21:45
 -->
 <template>
   <el-drawer
@@ -54,7 +54,11 @@
         />
 
         <el-table-column prop="post_track" label="物流单号" align="center" />
-        <el-table-column prop="delivery_time" label="发货时间" align="center" />
+        <el-table-column prop="post_time" label="发货时间" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.post_time | slice(0, 16) }}
+          </template>
+        </el-table-column>
         <el-table-column label="确认收货时间" align="center">
           <template slot-scope="scope">
             {{ scope.row.recived_time | slice(0, 16) }}
@@ -133,9 +137,18 @@
       </el-table>
     </div>
 
-    <div v-if="form.status === 2" class="dialog-footer">
+    <div v-if="form.status === 2 || form.status === 6" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="handleSend">发 货</el-button>
+      <el-button v-if="form.status === 2" type="primary" @click="handleSend">
+        发 货
+      </el-button>
+      <el-button
+        v-if="form.status === 6"
+        type="primary"
+        @click="handleBackMoney"
+      >
+        退 款
+      </el-button>
     </div>
 
     <el-dialog
@@ -215,9 +228,10 @@
         });
         this.dialogTableVisible = true;
       },
-      handleChange() {
+      handleChange(e) {
         this.form.status = 3;
-        this.$emit("changeStatus");
+        this.$emit("changeStatus", e);
+        this.close();
       },
       showEdit(row) {
         if (!row) {
@@ -225,6 +239,9 @@
         } else {
           this.title = "订单详情";
           this.form = Object.assign({}, row);
+          this.form.items.map((item) => {
+            item.total_amount = (item.sell_price * item.quantity).toFixed(2);
+          });
           const {
             trade_no,
             status,
@@ -242,6 +259,7 @@
             post_track,
             recived_time,
             pay_type,
+            post_time,
           } = row;
           this.baseTable.push({
             trade_no,
@@ -272,7 +290,7 @@
             post_courier,
             post_track,
             recived_time,
-            delivery_time: "暂无",
+            post_time,
           });
         }
         this.dialogFormVisible = true;
@@ -289,6 +307,7 @@
       handleSend() {
         this.show = true;
       },
+      handleBackMoney() {},
       getSummaries(param) {
         const { columns, data } = param;
         const sums = ["总价"];
@@ -303,7 +322,7 @@
             }
           }, 0);
 
-        sums[columns.length - 1] = values + "元";
+        sums[columns.length - 1] = values.toFixed(2) + "元";
         return sums;
       },
     },
