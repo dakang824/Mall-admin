@@ -131,6 +131,8 @@
             const form = JSON.parse(JSON.stringify(this.form));
             if (this.oldPwd === form.pwd) {
               delete form.pwd;
+            } else {
+              form.pwd = new this.$md5().update(form.pwd + "").digest("hex");
             }
             form.roles = form.roles.reduce((a, b) => a + b);
             if (this.title.includes("添加")) {
