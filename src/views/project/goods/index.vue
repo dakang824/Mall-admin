@@ -316,6 +316,7 @@
         this.selectRows = val;
       },
       handleEdit(row) {
+        console.log(row);
         if (row.id) {
           this.$refs["edit"].showEdit(row);
         } else {

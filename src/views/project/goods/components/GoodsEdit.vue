@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-11-21 12:30:49
+ * @LastEditTime: 2020-11-22 13:15:25
 -->
 <template>
   <el-drawer
@@ -375,29 +375,7 @@
         return this.isAdd ? 1 : 10000;
       },
     }),
-    async created() {
-      const {
-        data: { prodAddress },
-      } = await findAllProdAddress();
-      const {
-        data: { postTemps },
-      } = await findAllPostTemplate();
-
-      const {
-        data: {
-          product: { list },
-        },
-      } = await findProduct({
-        type: 4,
-        status: 1,
-        pageNum: 1,
-        pageSize: 10000,
-      });
-      this.menuData = list;
-      this.areaOptions = prodAddress;
-      this.postTemps = postTemps;
-      this.copyData = JSON.parse(JSON.stringify(this.form));
-    },
+    created() {},
     mounted() {},
     methods: {
       handleMenuId(e) {
@@ -449,6 +427,7 @@
         this.$refs.form.clearValidate("introPics");
       },
       showEdit(row) {
+        this.fetchData();
         if (!row) {
           this.title = "添加商品";
           this.isAdd = true;
@@ -568,6 +547,29 @@
           this.$message.error("应该选择zip/*类型的文件");
         }
         return isAccept;
+      },
+      async fetchData() {
+        const {
+          data: { prodAddress },
+        } = await findAllProdAddress();
+        const {
+          data: { postTemps },
+        } = await findAllPostTemplate();
+
+        const {
+          data: {
+            product: { list },
+          },
+        } = await findProduct({
+          type: 4,
+          status: 1,
+          pageNum: 1,
+          pageSize: 10000,
+        });
+        this.menuData = list;
+        this.areaOptions = prodAddress;
+        this.postTemps = postTemps;
+        this.copyData = JSON.parse(JSON.stringify(this.form));
       },
     },
   };

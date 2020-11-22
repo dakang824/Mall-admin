@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 菜品明细
  * @Date: 2020-10-30 21:33:18
- * @LastEditTime: 2020-11-02 23:11:26
+ * @LastEditTime: 2020-11-22 12:59:25
 -->
 <template>
   <div>
@@ -54,15 +54,18 @@
         tableData: [],
       };
     },
-    async created() {
-      const model = this.model;
-      model.trade_no = model.order_no;
-      const {
-        data: { recipes },
-      } = await findOrderRecipe(model);
-      this.tableData = recipes;
+    created() {
+      this.fetchData();
     },
     methods: {
+      async fetchData() {
+        const model = this.model;
+        model.trade_no = model.order_no;
+        const {
+          data: { recipes },
+        } = await findOrderRecipe(model);
+        this.tableData = recipes;
+      },
       handleClose() {
         this.$emit("input", false);
       },

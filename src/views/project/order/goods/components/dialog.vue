@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 确认汇款订单
  * @Date: 2020-10-30 21:33:18
- * @LastEditTime: 2020-10-30 22:48:16
+ * @LastEditTime: 2020-11-22 12:28:05
 -->
 <template>
   <div>
@@ -89,14 +89,14 @@
       handleClose() {
         this.$emit("input", false);
       },
-      submitForm() {
+      async submitForm() {
         this.$refs["elForm"].validate(async (valid) => {
           if (valid) {
-            const data = this.formData;
+            const data = JSON.parse(JSON.stringify(this.formData));
             data.id = this.model.id;
             const { msg } = await orderPost(data);
             this.$baseMessage(msg, "success");
-            this.$emit("change", data.status);
+            this.$emit("change", data);
             this.resetForm();
             this.handleClose();
           } else {

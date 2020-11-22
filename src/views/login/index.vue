@@ -268,8 +268,8 @@
       width: 100%;
       height: 50px;
       margin-top: 5px;
-      border: 0;
       font-size: 15px;
+      border: 0;
 
       &:hover {
         opacity: 0.9;

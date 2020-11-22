@@ -234,8 +234,8 @@
         this.queryForm.pageNum = 1;
         this.fetchData();
       },
-      async fetchData() {
-        this.listLoading = true;
+      async fetchData(loading = true) {
+        this.listLoading = loading;
         const {
           data: { remittances },
         } = await findMyRemittance(this.queryForm);
