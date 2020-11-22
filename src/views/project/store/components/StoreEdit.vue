@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-11-07 19:09:44
+ * @LastEditTime: 2020-11-22 16:26:57
 -->
 
 <template>
@@ -20,7 +20,11 @@
         <el-input v-model="form.account" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="pwd">
-        <el-input v-model="form.pwd" autocomplete="off"></el-input>
+        <el-input
+          v-model="form.pwd"
+          autocomplete="off"
+          type="password"
+        ></el-input>
       </el-form-item>
       <el-form-item prop="prodPri" label="店铺权限">
         <el-select
@@ -165,6 +169,7 @@
     data() {
       return {
         options: provinceAndCityData,
+        oldPwd: "",
         form: {
           name: "",
           account: "",
@@ -238,6 +243,7 @@
             })
             .filter((item) => item !== undefined);
           row.prodPri = prodPri;
+          this.oldPwd = row.pwd;
           this.form = Object.assign({}, row);
         }
         this.dialogFormVisible = true;
@@ -253,6 +259,9 @@
             const form = JSON.parse(JSON.stringify(this.form));
             form.prodPri = form.prodPri.reduce((a, b) => a + b);
             form.address = form.province + " " + form.city;
+            if (this.oldPwd === form.pwd) {
+              delete form.pwd;
+            }
             if (this.title.includes("添加")) {
               const {
                 msg,
