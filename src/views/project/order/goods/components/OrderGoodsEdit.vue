@@ -98,7 +98,7 @@
             <el-link
               v-if="scope.row.prod_type === 1"
               type="primary"
-              style="position: absolute; bottom: -1px; right: 10px"
+              style="position: absolute; right: 10px; bottom: -1px"
               @click="handleClick(scope.row)"
             >
               查看菜品
@@ -333,10 +333,12 @@
   .form {
     margin: 0 20px;
   }
+
   .title {
-    font-weight: bold;
     font-size: 15px;
+    font-weight: bold;
   }
+
   .dialog-footer {
     position: absolute;
     right: 0;

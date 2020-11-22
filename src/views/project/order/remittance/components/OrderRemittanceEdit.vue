@@ -118,10 +118,12 @@
   .form {
     margin: 0 20px;
   }
+
   .title {
-    font-weight: bold;
     font-size: 15px;
+    font-weight: bold;
   }
+
   .dialog-footer {
     position: absolute;
     right: 0;
