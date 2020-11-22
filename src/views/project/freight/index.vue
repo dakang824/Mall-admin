@@ -176,7 +176,10 @@
       },
       async fetchData(listLoading = true) {
         this.listLoading = listLoading;
-        const { data, totalCount } = await findAllPostTemplate(this.queryForm);
+        const { data, totalCount } = await findAllPostTemplate(
+          this.queryForm,
+          {}
+        );
         this.list = data.postTemps;
         this.total = data.postTemps.length;
         setTimeout(() => {

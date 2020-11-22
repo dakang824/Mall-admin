@@ -161,7 +161,6 @@ export const asyncRoutes = [
     path: "/finance",
     component: Layout,
     redirect: "/finance",
-    hidden: true,
     children: [
       {
         path: "/finance",
@@ -259,6 +258,7 @@ export const asyncRoutes = [
       {
         path: "/banner",
         name: "Banner",
+        hidden: true,
         component: () => import("@/views/project/banner/index"),
         meta: {
           title: "banner设置",
@@ -268,6 +268,7 @@ export const asyncRoutes = [
       {
         path: "/ads",
         name: "Ads",
+        hidden: true,
         component: () => import("@/views/project/ads/index"),
         meta: {
           title: "广告设置",
