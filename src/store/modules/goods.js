@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 全局商品类型
  * @Date: 2020-10-07 11:23:12
- * @LastEditTime: 2020-10-08 10:19:56
+ * @LastEditTime: 2020-11-22 15:58:41
  */
 import { findAllCategory, findSubCategoryByCateId } from "@/api/goods";
 import { data } from "autoprefixer";
@@ -20,11 +20,11 @@ const state = {
     },
     {
       label: "设备",
-      value: 3,
+      value: 4,
     },
     {
       label: "菜谱",
-      value: 4,
+      value: 8,
     },
   ],
 };

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-11-22 13:15:25
+ * @LastEditTime: 2020-11-22 16:03:32
 -->
 <template>
   <el-drawer
@@ -29,7 +29,7 @@
             @change="handleChange"
           >
             <el-option
-              v-for="(item, index) in goodsType"
+              v-for="(item, index) in getGoodsType"
               :key="index"
               :label="item.label"
               :value="item.value"
@@ -374,6 +374,19 @@
       getLimit() {
         return this.isAdd ? 1 : 10000;
       },
+      getGoodsType() {
+        const arr = this.goodsType
+          .filter(
+            (item) => (this.$store.state.user.store[0].prodPri & item.value) > 0
+          )
+          .map((item) => {
+            item.value =
+              item.value === 4 ? 3 : item.value === 8 ? 4 : item.value;
+            return item;
+          });
+        arr.length === 1 ? (this.form.type = arr[0].value) : "";
+        return arr;
+      },
     }),
     created() {},
     mounted() {},
@@ -565,6 +578,7 @@
           status: 1,
           pageNum: 1,
           pageSize: 10000,
+          ignoreStoreId: true,
         });
         this.menuData = list;
         this.areaOptions = prodAddress;
