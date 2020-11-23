@@ -18,7 +18,7 @@
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="https://httpbin.org/post"
+        :action="fileUpload || 'https://httpbin.org/post'"
         list-type="picture-card"
       >
         <el-button size="small" type="primary">Click upload</el-button>
@@ -31,7 +31,8 @@
 
 <script>
   // import { getToken } from 'api/qiniu'
-
+  import { fileUpload } from "@/config/settings";
+  import filters from "@/filters";
   export default {
     name: "EditorSlideUpload",
     props: {
@@ -45,6 +46,7 @@
         dialogVisible: false,
         listObj: {},
         fileList: [],
+        fileUpload,
       };
     },
     methods: {
@@ -71,7 +73,10 @@
         const objKeyArr = Object.keys(this.listObj);
         for (let i = 0, len = objKeyArr.length; i < len; i++) {
           if (this.listObj[objKeyArr[i]].uid === uid) {
-            this.listObj[objKeyArr[i]].url = response.files.file;
+            // this.listObj[objKeyArr[i]].url = response.files.file;
+            this.listObj[objKeyArr[i]].url = filters.imgBaseUrl(
+              response.data.tempUrl
+            );
             this.listObj[objKeyArr[i]].hasSuccess = true;
             return;
           }
@@ -93,16 +98,28 @@
         const fileName = file.uid;
         this.listObj[fileName] = {};
         return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.src = _URL.createObjectURL(file);
-          img.onload = function () {
+          if (file.type.includes("video")) {
             _self.listObj[fileName] = {
               hasSuccess: false,
               uid: file.uid,
               width: this.width,
               height: this.height,
+              type: "video",
             };
-          };
+          } else if (file.type.includes("image")) {
+            const img = new Image();
+            img.src = _URL.createObjectURL(file);
+            img.onload = function () {
+              _self.listObj[fileName] = {
+                hasSuccess: false,
+                uid: file.uid,
+                width: this.width,
+                height: this.height,
+                type: "image",
+              };
+            };
+          }
+
           resolve(true);
         });
       },

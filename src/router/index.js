@@ -60,7 +60,6 @@ export const asyncRoutes = [
     path: "/userManagement",
     component: Layout,
     redirect: "/userManagement",
-    hidden: true,
     children: [
       {
         path: "/userManagement",
@@ -95,6 +94,7 @@ export const asyncRoutes = [
     path: "/goods",
     component: Layout,
     redirect: "/goods",
+    hidden: true,
     children: [
       {
         path: "/goods",
@@ -111,6 +111,7 @@ export const asyncRoutes = [
     path: "/freight",
     component: Layout,
     redirect: "/freight",
+    hidden: true,
     children: [
       {
         path: "/freight",
@@ -161,6 +162,7 @@ export const asyncRoutes = [
     path: "/finance",
     component: Layout,
     redirect: "/finance",
+    hidden: true,
     children: [
       {
         path: "/finance",
@@ -179,6 +181,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: "noRedirect",
     name: "Order",
+    hidden: true,
     meta: {
       title: "订单管理",
       icon: "shopping-cart",
@@ -232,6 +235,7 @@ export const asyncRoutes = [
   {
     path: "/payBackOrders",
     component: Layout,
+    hidden: true,
     redirect: "/payBackOrders",
     children: [
       {
@@ -250,6 +254,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: "noRedirect",
     name: "Order",
+    hidden: true,
     meta: {
       title: "系统设置",
       icon: "cog",
@@ -258,7 +263,6 @@ export const asyncRoutes = [
       {
         path: "/banner",
         name: "Banner",
-        hidden: true,
         component: () => import("@/views/project/banner/index"),
         meta: {
           title: "banner设置",
@@ -268,7 +272,6 @@ export const asyncRoutes = [
       {
         path: "/ads",
         name: "Ads",
-        hidden: true,
         component: () => import("@/views/project/ads/index"),
         meta: {
           title: "广告设置",
@@ -291,7 +294,6 @@ export const asyncRoutes = [
     component: Layout,
     redirect: "noRedirect",
     name: "Article",
-    hidden: true,
     meta: {
       title: "文章管理",
       icon: "users-cog",

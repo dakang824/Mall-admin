@@ -135,7 +135,7 @@
           language_url:
             "https://cdn.jsdelivr.net/npm/tinymce-lang/langs/zh_CN.js", // site absolute URL
           height: this.height,
-          body_class: "panel-body ",
+          body_class: "panel-body",
           object_resizing: false,
           toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
           menubar: this.menubar,
@@ -221,11 +221,17 @@
         window.tinymce.get(this.tinymceId).getContent();
       },
       imageSuccessCBK(arr) {
-        arr.forEach((v) =>
+        arr.forEach((v) => {
           window.tinymce
             .get(this.tinymceId)
-            .insertContent(`<img class="wscnph" src="${v.url}" >`)
-        );
+            .insertContent(
+              v.type === "image"
+                ? `<img class="wscnph" src="${v.url}"/>`
+                : v.type === "video"
+                ? `<video src="${v.url}" controls="controls"></video>`
+                : ""
+            );
+        });
       },
     },
   };
