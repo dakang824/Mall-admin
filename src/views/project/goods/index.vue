@@ -99,7 +99,7 @@
           <i class="el-icon-edit"></i>
           排序
         </template>
-        <template v-slot="scope">
+        <template #default="scope">
           <el-input
             v-if="scope.row.edit"
             v-model.number="scope.row.id"
@@ -123,7 +123,7 @@
         label="价格"
         align="center"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.specList | minPrice }}
         </template>
       </el-table-column>
@@ -133,7 +133,7 @@
         label="总库存"
         align="center"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.specList | totalStock }}
         </template>
       </el-table-column>
@@ -151,12 +151,22 @@
       />
       <el-table-column
         show-overflow-tooltip
+        prop="type"
+        label="商品类型"
+        align="center"
+      >
+        <template #default="scope">
+          {{ scope.row.type | getGoodsType(goodsType) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        show-overflow-tooltip
         prop="onlineTime"
         label="上下架时间"
         align="center"
         min-width="150"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.onlineTime | slice(0, 19) }}
         </template>
       </el-table-column>
@@ -178,7 +188,7 @@
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="200" align="center">
-        <template v-slot="scope">
+        <template #default="scope">
           <el-button type="primary" @click="handleEdit(scope.row)">
             编辑
           </el-button>
@@ -230,6 +240,9 @@
           });
           return total;
         }
+      },
+      getGoodsType: (val, type) => {
+        console.log(val, type);
       },
     },
     data() {
