@@ -74,7 +74,7 @@
       <el-table-column
         show-overflow-tooltip
         prop="user_account"
-        label="用户名"
+        label="买家账号"
         align="center"
       />
       <el-table-column
@@ -103,12 +103,6 @@
         label="汇款时间"
         align="center"
         width="160"
-      />
-      <el-table-column
-        show-overflow-tooltip
-        prop="user_account"
-        label="买家账号"
-        align="center"
       />
       <el-table-column
         show-overflow-tooltip
@@ -221,7 +215,7 @@
         const {
           data: { excel_path },
         } = await exportRemittanceOrders(this.queryForm);
-        window.open(filters.imgBaseUrl(excel_path));
+        window.open(filters.imgBaseUrl(excel_path), "_parent");
       },
       handleSizeChange(val) {
         this.queryForm.pageSize = val;
