@@ -32,21 +32,21 @@
           </el-form-item>
           <el-form-item prop="order_no">
             <el-input
-              v-model="queryForm.order_no"
+              v-model.trim="queryForm.order_no"
               placeholder="请输入订单编号"
               clearable
             ></el-input>
           </el-form-item>
           <el-form-item prop="store_account">
             <el-input
-              v-model="queryForm.store_account"
+              v-model.trim="queryForm.store_account"
               placeholder="请输入店铺账号"
               clearable
             ></el-input>
           </el-form-item>
           <el-form-item prop="user_account">
             <el-input
-              v-model="queryForm.user_account"
+              v-model.trim="queryForm.user_account"
               placeholder="请输入买家账号"
               clearable
             ></el-input>
@@ -111,16 +111,24 @@
       </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="user_id"
+        prop="users"
         label="买家账号"
         align="center"
-      />
+      >
+        <template slot-scope="scope">
+          {{ scope.row.users.account }}
+        </template>
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="store_name"
         label="店铺账号"
         align="center"
-      />
+      >
+        <template slot-scope="scope">
+          {{ scope.row.store.account }}
+        </template>
+      </el-table-column>
 
       <el-table-column fixed="right" label="操作" width="80" align="center">
         <template v-slot="scope">
