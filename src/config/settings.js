@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2020-11-22 14:35:26
+ * @LastEditTime: 2020-11-25 19:13:00
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -25,7 +25,7 @@ module.exports = {
       ? "/"
       : "http://47.101.210.167/" || "vab-mock-server",
   //标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）
-  title: "嗨厨玩味",
+  title: "学习平台",
   //简写
   abbreviation: "vab",
   //开发环境端口号
@@ -83,7 +83,7 @@ module.exports = {
   //是否显示在页面高亮错误
   errorLog: ["development", "test"],
   //是否开启登录拦截
-  loginInterception: true,
+  loginInterception: false,
   //是否开启登录RSA加密
   loginRSA: false,
   //是否依据mock数据生成webstorm HTTP Request请求文件
