@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2020-11-22 14:35:26
+ * @LastEditTime: 2020-11-22 18:19:41
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -10,7 +10,7 @@
  */
 module.exports = {
   // 开发以及部署时的URL 如"/test/"
-  publicPath: "/storeAdmin/",
+  publicPath: "/platAdmin/",
   // 生产环境构建文件的目录名
   outputDir: "dist",
   // 放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录。

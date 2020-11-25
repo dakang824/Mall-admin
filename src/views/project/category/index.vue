@@ -44,12 +44,14 @@
         prop="pos"
         label="排序"
         align="center"
+        width="80"
       />
       <el-table-column
         show-overflow-tooltip
         prop="name"
         label="大类"
         align="center"
+        width="100"
       />
       <el-table-column
         show-overflow-tooltip
@@ -63,7 +65,7 @@
       </el-table-column>
 
       <el-table-column fixed="right" label="操作" width="200" align="center">
-        <template v-slot="scope">
+        <template #default="scope">
           <el-button type="primary" @click="handleEdit(scope.row)">
             编辑
           </el-button>

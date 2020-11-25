@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:修改登录
  * @Date: 2020-09-20 23:31:19
- * @LastEditTime: 2020-11-11 23:31:14
+ * @LastEditTime: 2020-11-22 20:44:53
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -86,16 +86,16 @@ const actions = {
       pri = "admin",
       permissions = pri.split(","),
       name: username,
-      logoPath: avatar,
-    } = data.store_info;
+    } = data.admin_info;
     if (permissions && username && Array.isArray(permissions)) {
+      const { logoPath: avatar } = data.store[0];
       commit("setPermissions", permissions);
       commit("setusername", username);
       commit(
         "setAvatar",
         avatar ? avatar : require("@/assets/default-avatar.gif")
       );
-      commit("setStore", [data.store_info]);
+      commit("setStore", data.store);
       return permissions;
     } else {
       Vue.prototype.$baseMessage("用户信息接口异常", "error");

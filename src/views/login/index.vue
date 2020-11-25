@@ -99,7 +99,7 @@
   import { isPassword } from "@/utils/validate";
   import { random } from "@/utils";
   import identifyCode from "@/components/identify-code";
-  import { copyright, title } from "@/config/settings";
+  import { copyright, title, loginRSA } from "@/config/settings";
   export default {
     name: "Login",
     components: { identifyCode },
@@ -210,8 +210,12 @@
         this.$refs.form.validate((valid) => {
           if (valid) {
             this.loading = true;
+            const form = JSON.parse(JSON.stringify(this.form));
+            if (loginRSA) {
+              form.pwd = new this.$md5().update(form.pwd).digest("hex");
+            }
             this.$store
-              .dispatch("user/login", this.form)
+              .dispatch("user/login", form)
               .then(() => {
                 const routerPath =
                   this.redirect === "/404" || this.redirect === "/401"
