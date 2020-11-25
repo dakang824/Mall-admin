@@ -256,7 +256,7 @@
         const {
           data: { excel_path },
         } = await exportOrders(this.queryForm);
-        window.open(filters.imgBaseUrl(excel_path));
+        window.open(filters.imgBaseUrl(excel_path), "_parent");
       },
       handleEdit(row) {
         if (row.id) {

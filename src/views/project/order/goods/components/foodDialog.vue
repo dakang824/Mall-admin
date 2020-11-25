@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 菜品明细
  * @Date: 2020-10-30 21:33:18
- * @LastEditTime: 2020-11-22 12:59:25
+ * @LastEditTime: 2020-11-25 22:17:48
 -->
 <template>
   <div>
@@ -75,7 +75,7 @@
         const {
           data: { excel_path },
         } = await exportOrderRecipe(model);
-        window.open(filters.imgBaseUrl(excel_path));
+        window.open(filters.imgBaseUrl(excel_path), "_parent");
         this.handleClose();
       },
       resetForm() {
