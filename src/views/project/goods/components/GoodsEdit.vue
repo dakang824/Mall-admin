@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-11-22 16:03:32
+ * @LastEditTime: 2020-11-25 20:09:52
 -->
 <template>
   <el-drawer
@@ -178,7 +178,7 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          label-width="106px"
+          label-width="120px"
           label="库存计算方式"
           prop="dealStockType"
         >

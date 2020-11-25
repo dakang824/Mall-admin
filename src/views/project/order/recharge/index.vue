@@ -112,8 +112,7 @@
 </template>
 
 <script>
-  import { queryRecharge } from "@/api/order/recharge";
-  import { exportOrders } from "@/api/order/goods";
+  import { queryRecharge, exportRechargeOrders } from "@/api/order/recharge";
   import Edit from "./components/OrderRechargeEdit";
   import filters from "@/filters";
   export default {
@@ -181,13 +180,16 @@
         this.fetchData();
       },
       async handleExportOrders() {
-        if (this.queryForm.time) {
+        if (this.queryForm.time.length) {
           this.queryForm.from = this.queryForm.time[0];
           this.queryForm.to = this.queryForm.time[1];
+        } else {
+          this.queryForm.from = "";
+          this.queryForm.to = "";
         }
         const {
           data: { excel_path },
-        } = await exportOrders(this.queryForm);
+        } = await exportRechargeOrders(this.queryForm);
         window.open(filters.imgBaseUrl(excel_path));
       },
       queryData() {

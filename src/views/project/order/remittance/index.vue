@@ -37,13 +37,6 @@
               clearable
             ></el-input>
           </el-form-item>
-          <el-form-item prop="order_no">
-            <el-input
-              v-model="queryForm.order_no"
-              placeholder="请输入店铺账号"
-              clearable
-            ></el-input>
-          </el-form-item>
           <el-form-item prop="mobile">
             <el-input
               v-model="queryForm.mobile"
@@ -89,6 +82,7 @@
         prop="bank_account"
         label="汇款账号"
         align="center"
+        min-width="150"
       />
       <el-table-column
         show-overflow-tooltip
@@ -112,9 +106,16 @@
       />
       <el-table-column
         show-overflow-tooltip
-        prop="mobile"
-        label="电话"
+        prop="user_account"
+        label="买家账号"
         align="center"
+      />
+      <el-table-column
+        show-overflow-tooltip
+        prop="mobile"
+        label="买家手机号"
+        align="center"
+        min-width="120"
       />
       <el-table-column
         show-overflow-tooltip
@@ -150,9 +151,12 @@
 </template>
 
 <script>
-  import { findMyRemittance } from "@/api/order/remittance";
+  import {
+    findMyRemittance,
+    exportRemittanceOrders,
+  } from "@/api/order/remittance";
   import Edit from "./components/OrderRemittanceEdit";
-
+  import filters from "@/filters";
   export default {
     name: "OrderRemittance",
     components: { Edit },
@@ -190,6 +194,7 @@
           mobile: "",
           status: "",
           from: "",
+          time: [],
           to: "",
         },
       };
@@ -206,13 +211,16 @@
         }
       },
       async handleExportOrders() {
-        if (this.queryForm.time) {
+        if (this.queryForm.time.length) {
           this.queryForm.from = this.queryForm.time[0];
           this.queryForm.to = this.queryForm.time[1];
+        } else {
+          this.queryForm.from = "";
+          this.queryForm.to = "";
         }
         const {
           data: { excel_path },
-        } = await exportOrders(this.queryForm);
+        } = await exportRemittanceOrders(this.queryForm);
         window.open(filters.imgBaseUrl(excel_path));
       },
       handleSizeChange(val) {
