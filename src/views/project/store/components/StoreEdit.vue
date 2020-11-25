@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-11-22 16:26:57
+ * @LastEditTime: 2020-11-25 21:45:55
 -->
 
 <template>
@@ -75,6 +75,9 @@
             <el-input
               v-model.number="form.desScore"
               autocomplete="off"
+              type="number"
+              max="5"
+              min="0"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -87,6 +90,9 @@
             <el-input
               v-model.number="form.desCompare"
               autocomplete="off"
+              type="number"
+              max="100"
+              min="0"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -97,6 +103,9 @@
             <el-input
               v-model.number="form.serScore"
               autocomplete="off"
+              type="number"
+              max="5"
+              min="0"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -109,6 +118,9 @@
             <el-input
               v-model.number="form.serCompare"
               autocomplete="off"
+              type="number"
+              max="100"
+              min="0"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -119,6 +131,9 @@
             <el-input
               v-model.number="form.postStore"
               autocomplete="off"
+              type="number"
+              max="5"
+              min="0"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -131,6 +146,9 @@
             <el-input
               v-model.number="form.postCompare"
               autocomplete="off"
+              type="number"
+              max="100"
+              min="0"
             ></el-input>
           </el-form-item>
         </el-col>
