@@ -31,7 +31,7 @@
           </el-form-item>
           <el-form-item prop="cateId">
             <el-cascader
-              v-model="queryForm.cateId"
+              v-model="queryForm.cate"
               :options="category"
               :props="categoryProps"
               :style="{ width: '100%' }"
@@ -161,6 +161,17 @@
       </el-table-column>
       <el-table-column
         show-overflow-tooltip
+        prop="type"
+        label="商品类目"
+        align="center"
+        min-width="150"
+      >
+        <template #default="scope">
+          {{ scope.row | getGoodsCate(category) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        show-overflow-tooltip
         prop="onlineTime"
         label="上下架时间"
         align="center"
@@ -242,7 +253,15 @@
         }
       },
       getGoodsType: (val, type) => {
-        console.log(val, type);
+        val = val === 3 ? 4 : val === 4 ? 8 : val;
+        return type.find((item) => item.value === val).label;
+      },
+      getGoodsCate: (val, type) => {
+        const firstName = type.find((item) => item.id === val.cateId);
+        const lastName = firstName.subCategoryList.find(
+          (item) => item.id === val.subCateId
+        );
+        return `${firstName.name}/${lastName.name}`;
       },
     },
     data() {
@@ -279,6 +298,7 @@
           status: "",
           subCateId: "",
           cateId: "",
+          cate: "",
           type: "",
           name: "",
         },
@@ -376,20 +396,27 @@
       },
       queryData() {
         this.queryForm.pageNum = 1;
-        let category = this.queryForm.cateId;
+        let category = this.queryForm.cate;
         if (category.length) {
           this.queryForm.cateId = category[0];
           this.queryForm.subCateId = category[1];
+        } else {
+          this.queryForm.cateId = "";
+          this.queryForm.subCateId = "";
         }
 
         this.fetchData();
       },
       async fetchData(showLoading = true) {
         this.listLoading = showLoading;
+        const queryForm = JSON.parse(JSON.stringify(this.queryForm));
+        queryForm.type =
+          queryForm.type === 4 ? 3 : queryForm.type === 8 ? 4 : queryForm.type;
+        delete queryForm.cate;
         const {
           data: { product },
           totalCount,
-        } = await findProduct(this.queryForm);
+        } = await findProduct(queryForm);
         product.list.forEach((item) => {
           item.state = item.status === 0 || item.status === 2 ? 0 : 1;
           item.edit = false;
