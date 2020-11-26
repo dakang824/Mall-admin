@@ -10,3 +10,9 @@
     mounted() {},
   };
 </script>
+
+<style lang="scss" scoped>
+  ::v-deep .el-table__fixed-right {
+    height: 100% !important;
+  }
+</style>

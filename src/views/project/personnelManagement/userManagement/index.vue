@@ -233,7 +233,7 @@
     },
     created() {
       this.fetchData();
-      this.queryUsers();
+      // this.queryUsers();
     },
     methods: {
       setSelectRows(val) {
@@ -311,11 +311,11 @@
           queryForm.roles = queryForm.roles.reduce((a, b) => a + b);
         }
 
-        const {
-          data: { users },
-        } = await queryUsers(queryForm);
-        this.list = users.list;
-        this.total = users.total;
+        // const {
+        //   data: { users },
+        // } = await queryUsers(queryForm);
+        // this.list = users.list;
+        // this.total = users.total;
         setTimeout(() => {
           this.listLoading = false;
         }, 300);

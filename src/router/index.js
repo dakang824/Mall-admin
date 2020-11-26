@@ -297,26 +297,23 @@ export const asyncRoutes = [
     meta: {
       title: "文章管理",
       icon: "users-cog",
-      permissions: ["admin"],
     },
     children: [
       {
-        path: "/curd",
-        name: "Curd",
-        component: () => import("@/views/project/article/curd"),
+        path: "list",
+        name: "List",
+        component: () => import("@/views/project/article/list.vue"),
         meta: {
-          title: "文章列表",
+          title: "文章管理",
           icon: "list-ul",
-          noKeepAlive: true,
         },
       },
       {
-        path: "/editor",
-        name: "Editor",
-        component: () => import("@/views/project/article/editor"),
+        path: "editor",
+        hidden: true,
+        component: () => import("@/views/project/article/editor.vue"),
         meta: {
           title: "编辑文章",
-          icon: "edit",
           noKeepAlive: true,
         },
       },
