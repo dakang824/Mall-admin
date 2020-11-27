@@ -125,6 +125,22 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/demo",
+    component: Layout,
+    redirect: "/demo",
+    children: [
+      {
+        path: "/demo",
+        name: "Demo",
+        component: () => import("@/views/project/demo"),
+        meta: {
+          title: "demo",
+          icon: "parking",
+        },
+      },
+    ],
+  },
+  {
     path: "/produce",
     component: Layout,
     hidden: true,
