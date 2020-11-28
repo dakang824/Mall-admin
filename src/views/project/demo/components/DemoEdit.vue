@@ -3,7 +3,6 @@
     v-model="formData"
     label-position="left"
     :form-desc="formDesc"
-    :request-fn="handleSubmit"
     :rules="rules"
     :visible.sync="dialogFormVisible"
     :title="title"
@@ -53,16 +52,7 @@
         },
       };
     },
-    created() {
-      console.log(this);
-    },
     methods: {
-      handleSubmit(data) {
-        // 模拟异步请求
-        return new Promise((resolve) => {
-          resolve(data);
-        });
-      },
       showEdit(row) {
         if (!row) {
           this.title = "添加";
