@@ -27,32 +27,22 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table
-      v-loading="listLoading"
+    <lb-table
+      v-loading="loading"
+      border
+      :column="tableData.column"
       :data="list"
-      :element-loading-text="elementLoadingText"
-      @selection-change="setSelectRows"
-    >
-      <el-table-column show-overflow-tooltip type="selection"></el-table-column>
-      <el-table-column show-overflow-tooltip prop="id" label="id" />
-      <el-table-column fixed="right" label="操作" width="200">
-        <template v-slot="scope">
-          <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button type="text" @click="handleDelete(scope.row)">
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
+      align="center"
+      pagination
       background
-      :current-page="queryForm.pageNo"
-      :page-size="queryForm.pageSize"
       :layout="layout"
+      :current-page.sync="queryForm.pageNo"
       :total="total"
+      :page-size="queryForm.pageSize"
       @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    ></el-pagination>
+      @p-current-change="handleCurrentChange"
+      @selection-change="setSelectRows"
+    ></lb-table>
     <edit ref="edit" @fetchData="fetchData"></edit>
   </div>
 </template>
@@ -67,15 +57,71 @@
     data() {
       return {
         list: null,
-        listLoading: true,
+        loading: true,
         layout: "total, sizes, prev, pager, next, jumper",
         total: 0,
         selectRows: "",
-        elementLoadingText: "正在加载...",
         queryForm: {
           pageNo: 1,
           pageSize: 10,
           id: "",
+        },
+
+        tableData: {
+          column: [
+            {
+              type: "selection",
+            },
+            {
+              prop: "id",
+              label: "序号",
+            },
+            {
+              prop: "erp",
+              label: "ERP",
+            },
+            {
+              prop: "company",
+              label: "所属公司",
+            },
+            {
+              prop: "type",
+              label: "用户类型",
+              width: "100",
+            },
+            {
+              prop: "group",
+              label: "专业组",
+              width: "100",
+            },
+            {
+              label: "操作",
+              width: "230",
+              render: (h, scope) => {
+                return (
+                  <div>
+                    <el-button
+                      type="primary"
+                      onClick={() => {
+                        this.handleEdit(scope.row);
+                      }}
+                    >
+                      编辑
+                    </el-button>
+                    <el-button
+                      type="danger"
+                      onClick={() => {
+                        this.handleDelete(scope.row);
+                      }}
+                    >
+                      删除
+                    </el-button>
+                    <el-button type="warning">未绑定</el-button>
+                  </div>
+                );
+              },
+            },
+          ],
         },
       };
     },
@@ -127,12 +173,12 @@
         this.fetchData();
       },
       async fetchData() {
-        this.listLoading = true;
+        this.loading = true;
         const { data, totalCount } = await getList(this.queryForm);
         this.list = data;
         this.total = totalCount;
         setTimeout(() => {
-          this.listLoading = false;
+          this.loading = false;
         }, 300);
       },
     },

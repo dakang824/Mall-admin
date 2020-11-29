@@ -1,3 +1,9 @@
+/*
+ * @Author: yukang 1172248038@qq.com
+ * @Description:
+ * @Date: 2020-11-27 18:28:09
+ * @LastEditTime: 2020-11-29 23:48:59
+ */
 import { mock } from "mockjs";
 
 export default [
@@ -13,6 +19,11 @@ export default [
           "data|10": [
             {
               id: "@id",
+              name: "@cname",
+              erp: "@id",
+              company: "@cname",
+              type: "@cname",
+              group: "@cname",
             },
           ],
         }).data,
