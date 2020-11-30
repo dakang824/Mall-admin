@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 16:12:52
- * @LastEditTime: 2020-11-07 23:30:27
+ * @LastEditTime: 2020-11-30 12:51:36
 -->
 <template>
   <div class="storeSet-container">
@@ -38,7 +38,6 @@
             :action="action"
             :before-upload="handleBeforeUpload"
             list-type="picture-card"
-            :limit="1"
             :on-success="handleSuccess"
             :on-remove="handleRemove"
           >
@@ -132,7 +131,7 @@
         } = response;
         if (tempUrl) {
           this.formData.logo_path = tempUrl;
-          this.formData.fileList.push({
+          this.$set(this.formData.fileList, 0, {
             url: filters.imgBaseUrl(tempUrl),
           });
           this.$refs.elForm.clearValidate("fileList");

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-11-25 21:45:55
+ * @LastEditTime: 2020-11-30 12:59:45
 -->
 
 <template>
@@ -248,6 +248,9 @@
         } else {
           this.title = "编辑";
           var row = JSON.parse(JSON.stringify(row));
+          row.desScore = row.desScore.toFixed(1);
+          row.serScore = row.serScore.toFixed(1);
+          row.postStore = row.postStore.toFixed(1);
 
           row.address = [
             TextToCode[row.province].code,

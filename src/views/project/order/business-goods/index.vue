@@ -152,8 +152,9 @@
 </template>
 
 <script>
-  import { queryOrders } from "@/api/order/goods";
+  import { queryOrders, exportOrders } from "@/api/order/goods";
   import Edit from "./components/OrderGoodsEdit";
+  import filters from "@/filters";
 
   export default {
     name: "OrderGoods",
