@@ -31,7 +31,7 @@
       v-loading="loading"
       border
       :column="tableData.column"
-      :data="list"
+      :data="tableData.data"
       align="center"
       pagination
       background
@@ -56,17 +56,10 @@
     components: { Edit },
     data() {
       return {
-        list: null,
         loading: true,
         layout: "total, sizes, prev, pager, next, jumper",
         total: 0,
         selectRows: "",
-        queryForm: {
-          pageNo: 1,
-          pageSize: 10,
-          id: "",
-        },
-
         tableData: {
           column: [
             {
@@ -122,6 +115,12 @@
               },
             },
           ],
+          list: null,
+        },
+        queryForm: {
+          pageNo: 1,
+          pageSize: 10,
+          id: "",
         },
       };
     },
@@ -175,7 +174,7 @@
       async fetchData() {
         this.loading = true;
         const { data, totalCount } = await getList(this.queryForm);
-        this.list = data;
+        this.tableData.data = data;
         this.total = totalCount;
         setTimeout(() => {
           this.loading = false;

@@ -58,7 +58,7 @@
       </vab-query-form-left-panel>
     </vab-query-form>
     <vab-query-form>
-      <vab-query-form-left-panel :span="4">
+      <vab-query-form-left-panel :span="12">
         <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
           添加
         </el-button>
