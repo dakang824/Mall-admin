@@ -116,7 +116,7 @@
   import Edit from "./components/OrderRechargeEdit";
   import filters from "@/filters";
   export default {
-    name: "OrderRecharge",
+    name: "Recharge",
     components: { Edit },
     filters: {
       getPayName(v) {

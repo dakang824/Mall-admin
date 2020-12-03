@@ -181,43 +181,39 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: "/recharge",
+        path: "recharge",
         name: "Recharge",
         component: () => import("@/views/project/order/recharge"),
         meta: {
           title: "充值订单",
           icon: "funnel-dollar",
-          noKeepAlive: true,
         },
       },
       {
-        path: "/orderGoods",
+        path: "orderGoods",
         name: "OrderGoods",
         component: () => import("@/views/project/order/goods"),
         meta: {
           title: "商品订单",
           icon: "shopping-bag",
-          noKeepAlive: true,
         },
       },
       {
-        path: "/remittance",
+        path: "remittance",
         name: "Remittance",
         component: () => import("@/views/project/order/remittance"),
         meta: {
           title: "汇款订单",
           icon: "file-invoice-dollar",
-          noKeepAlive: true,
         },
       },
       {
-        path: "/businessGoods",
+        path: "businessGoods",
         name: "BusinessGoods",
         component: () => import("@/views/project/order/business-goods"),
         meta: {
           title: "商家订单查询",
           icon: "shopping-bag",
-          noKeepAlive: true,
         },
       },
     ],
@@ -233,7 +229,7 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: "/banner",
+        path: "banner",
         name: "Banner",
         component: () => import("@/views/project/banner/index"),
         meta: {
@@ -242,7 +238,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: "/ads",
+        path: "ads",
         name: "Ads",
         component: () => import("@/views/project/ads/index"),
         meta: {
@@ -251,7 +247,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: "/setting",
+        path: "setting",
         name: "Setting",
         component: () => import("@/views/project/storeSet/index"),
         meta: {
@@ -280,7 +276,6 @@ export const asyncRoutes = [
         meta: {
           title: "文章列表",
           icon: "list-ul",
-          noKeepAlive: true,
         },
       },
       {
@@ -290,7 +285,6 @@ export const asyncRoutes = [
         meta: {
           title: "编辑文章",
           icon: "edit",
-          noKeepAlive: true,
         },
       },
     ],

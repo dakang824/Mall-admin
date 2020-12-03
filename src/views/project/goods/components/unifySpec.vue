@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 统一规格
  * @Date: 2020-10-07 16:23:22
- * @LastEditTime: 2020-10-24 13:31:14
+ * @LastEditTime: 2020-12-02 20:14:12
 -->
 <template>
   <div class="unifySpec">
@@ -13,22 +13,31 @@
       size="medium"
       label-width="100px"
     >
-      <el-form-item label="原价" prop="oriPrice">
+      <el-form-item label="零售价" prop="oriPrice">
         <el-input
           v-model="form.oriPrice"
-          placeholder="请输入原价"
+          placeholder="请输入零售价"
           clearable
           :style="{ width: '100%' }"
         ></el-input>
       </el-form-item>
-      <el-form-item label="销售价" prop="sellPrice">
+      <el-form-item label="批发价" prop="sellPrice">
         <el-input
           v-model="form.sellPrice"
-          placeholder="请输入销售价"
+          placeholder="请输入批发价"
           clearable
           :style="{ width: '100%' }"
         ></el-input>
       </el-form-item>
+      <el-form-item label="起批量" prop="sellPrice">
+        <el-input
+          v-model="form.sellPrice"
+          placeholder="请输入起批量"
+          clearable
+          :style="{ width: '100%' }"
+        ></el-input>
+      </el-form-item>
+
       <el-form-item label="单前库存" prop="stock">
         <el-input
           v-model="form.stock"

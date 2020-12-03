@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-11-30 12:59:45
+ * @LastEditTime: 2020-12-02 20:08:11
 -->
 
 <template>
@@ -12,148 +12,170 @@
     width="500px"
     @close="close"
   >
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="店铺名称" prop="name">
-        <el-input v-model="form.name" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="店铺账号" prop="account">
-        <el-input v-model="form.account" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="pwd">
-        <el-input
-          v-model="form.pwd"
-          autocomplete="off"
-          type="password"
-        ></el-input>
-      </el-form-item>
-      <el-form-item prop="prodPri" label="店铺权限">
-        <el-select
-          v-model="form.prodPri"
-          placeholder="请选择权限"
-          multiple
-          style="width: 100%"
-        >
-          <el-option
-            v-for="item in roles"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="地址" prop="address">
-        <el-cascader
-          v-model="form.address"
-          style="width: 100%"
-          :options="options"
-          @change="handleAddress"
-        ></el-cascader>
-      </el-form-item>
-      <el-form-item label="电话" prop="mobile">
-        <el-input v-model="form.mobile" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="联系人" prop="contact">
-        <el-input v-model="form.contact" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item prop="status" label="状态">
-        <el-select
-          v-model="form.status"
-          placeholder="请选择店铺状态"
-          style="width: 100%"
-        >
-          <el-option
-            v-for="item in status"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="描述相符" prop="desScore" label-width="89px">
-            <el-input
-              v-model.number="form.desScore"
-              autocomplete="off"
-              type="number"
-              max="5"
-              min="0"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item
-            label="与同行业相比"
-            prop="desCompare"
-            label-width="100px"
+    <div
+      style="
+        height: 540px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 8px;
+      "
+    >
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="店铺名称" prop="name">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="店铺账号" prop="account">
+          <el-input v-model="form.account" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="pwd">
+          <el-input
+            v-model="form.pwd"
+            autocomplete="off"
+            type="password"
+          ></el-input>
+        </el-form-item>
+        <el-form-item prop="prodPri" label="店铺权限">
+          <el-select
+            v-model="form.prodPri"
+            placeholder="请选择权限"
+            multiple
+            style="width: 100%"
           >
-            <el-input
-              v-model.number="form.desCompare"
-              autocomplete="off"
-              type="number"
-              max="100"
-              min="0"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="服务态度" prop="serScore" label-width="89px">
-            <el-input
-              v-model.number="form.serScore"
-              autocomplete="off"
-              type="number"
-              max="5"
-              min="0"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item
-            label="与同行业相比"
-            prop="serCompare"
-            label-width="100px"
+            <el-option
+              v-for="item in roles"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="地址" prop="address">
+          <el-cascader
+            v-model="form.address"
+            style="width: 100%"
+            :options="options"
+            @change="handleAddress"
+          ></el-cascader>
+        </el-form-item>
+        <el-form-item label="电话" prop="mobile">
+          <el-input v-model="form.mobile" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="联系人" prop="contact">
+          <el-input v-model="form.contact" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item prop="status" label="状态">
+          <el-select
+            v-model="form.status"
+            placeholder="请选择店铺状态"
+            style="width: 100%"
           >
-            <el-input
-              v-model.number="form.serCompare"
-              autocomplete="off"
-              type="number"
-              max="100"
-              min="0"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="物流服务" prop="postStore" label-width="89px">
-            <el-input
-              v-model.number="form.postStore"
-              autocomplete="off"
-              type="number"
-              max="5"
-              min="0"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item
-            label="与同行业相比"
-            prop="postCompare"
-            label-width="100px"
-          >
-            <el-input
-              v-model.number="form.postCompare"
-              autocomplete="off"
-              type="number"
-              max="100"
-              min="0"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
+            <el-option
+              v-for="item in status"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="描述相符" prop="desScore" label-width="89px">
+              <el-input
+                v-model.number="form.desScore"
+                autocomplete="off"
+                type="number"
+                max="5"
+                min="0"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="与同行业相比"
+              prop="desCompare"
+              label-width="100px"
+            >
+              <el-input
+                v-model.number="form.desCompare"
+                autocomplete="off"
+                type="number"
+                max="100"
+                min="0"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="服务态度" prop="serScore" label-width="89px">
+              <el-input
+                v-model.number="form.serScore"
+                autocomplete="off"
+                type="number"
+                max="5"
+                min="0"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="与同行业相比"
+              prop="serCompare"
+              label-width="100px"
+            >
+              <el-input
+                v-model.number="form.serCompare"
+                autocomplete="off"
+                type="number"
+                max="100"
+                min="0"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="物流服务" prop="postStore" label-width="89px">
+              <el-input
+                v-model.number="form.postStore"
+                autocomplete="off"
+                type="number"
+                max="5"
+                min="0"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="与同行业相比"
+              prop="postCompare"
+              label-width="100px"
+            >
+              <el-input
+                v-model.number="form.postCompare"
+                autocomplete="off"
+                type="number"
+                max="100"
+                min="0"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="店铺资质" prop="account">
+          <upload />
+        </el-form-item>
+        <el-form-item label="食品安全" prop="account">
+          <upload />
+        </el-form-item>
+        <el-form-item label="溯源" prop="account">
+          <upload />
+        </el-form-item>
+        <el-form-item label="其他" prop="account">
+          <upload />
+        </el-form-item>
+      </el-form>
+    </div>
+
     <div slot="footer" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
       <el-button type="primary" @click="save">确 定</el-button>
@@ -163,6 +185,7 @@
 
 <script>
   import { addStore, modifyStore } from "@/api/store";
+  import Upload from "@/components/upload";
   import {
     provinceAndCityData,
     CodeToText,
@@ -170,6 +193,7 @@
   } from "element-china-area-data";
   export default {
     name: "StoreEdit",
+    components: { Upload },
     props: {
       roles: {
         type: Array,
@@ -241,6 +265,7 @@
         this.form.province = address[0];
         this.form.city = address[1];
       },
+
       showEdit(row) {
         if (!row) {
           this.title = "添加";
@@ -308,3 +333,11 @@
     },
   };
 </script>
+
+<style lang="scss" scoped>
+  ::v-deep {
+    .el-dialog__body {
+      padding: 20px 0px 0 20px;
+    }
+  }
+</style>
