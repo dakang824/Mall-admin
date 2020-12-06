@@ -1,6 +1,70 @@
 <template>
   <div class="demo-container">
     <vab-query-form>
+      <vab-query-form-left-panel :span="24">
+        <el-form
+          ref="queryForm"
+          :inline="true"
+          :model="queryForm"
+          @submit.native.prevent
+        >
+          <el-form-item prop="roles">
+            <el-select
+              v-model="queryForm.roles"
+              placeholder="请选择角色"
+              multiple
+            >
+              <el-option
+                v-for="item in roles"
+                :key="item.id"
+                :label="item.name"
+                :value="item.no"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="name">
+            <el-input
+              v-model.trim="queryForm.name"
+              placeholder="请输入用户名称"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item prop="account">
+            <el-input
+              v-model.trim="queryForm.account"
+              placeholder="请输入账号"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item prop="mobile">
+            <el-input
+              v-model.trim="queryForm.mobile"
+              placeholder="请输入手机号"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item prop="status">
+            <el-select
+              v-model="queryForm.status"
+              placeholder="请选择用户状态"
+              clearable
+            >
+              <el-option
+                v-for="item in status"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button icon="el-icon-search" type="primary" @click="queryData">
+              查询
+            </el-button>
+            <el-button @click="resetForm('queryForm')">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-left-panel>
       <vab-query-form-left-panel :span="12">
         <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
           添加
@@ -48,7 +112,7 @@
 </template>
 
 <script>
-  import { getList, doDelete } from "@/api/demo";
+  import { findUsers, doDelete } from "@/api/demo";
   import Edit from "./components/DemoEdit";
 
   export default {
@@ -68,6 +132,10 @@
             {
               prop: "id",
               label: "序号",
+            },
+            {
+              prop: "name",
+              label: "姓名",
             },
             {
               prop: "erp",
@@ -173,7 +241,7 @@
       },
       async fetchData() {
         this.loading = true;
-        const { data, totalCount } = await getList(this.queryForm);
+        const { data, totalCount } = await findUsers(this.queryForm);
         this.tableData.data = data;
         this.total = totalCount;
         setTimeout(() => {
