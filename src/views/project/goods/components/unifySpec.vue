@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 统一规格
  * @Date: 2020-10-07 16:23:22
- * @LastEditTime: 2020-12-02 20:14:12
+ * @LastEditTime: 2020-12-06 15:32:17
 -->
 <template>
   <div class="unifySpec">
@@ -13,25 +13,25 @@
       size="medium"
       label-width="100px"
     >
-      <el-form-item label="零售价" prop="oriPrice">
+      <el-form-item label="零售价" prop="sellPrice">
         <el-input
-          v-model="form.oriPrice"
+          v-model="form.sellPrice"
           placeholder="请输入零售价"
           clearable
           :style="{ width: '100%' }"
         ></el-input>
       </el-form-item>
-      <el-form-item label="批发价" prop="sellPrice">
+      <el-form-item label="批发价" prop="w_price">
         <el-input
-          v-model="form.sellPrice"
+          v-model="form.w_price"
           placeholder="请输入批发价"
           clearable
           :style="{ width: '100%' }"
         ></el-input>
       </el-form-item>
-      <el-form-item label="起批量" prop="sellPrice">
+      <el-form-item label="起批量" prop="w_num">
         <el-input
-          v-model="form.sellPrice"
+          v-model="form.w_num"
           placeholder="请输入起批量"
           clearable
           :style="{ width: '100%' }"
@@ -81,11 +81,12 @@
           recipeRate: 1,
         },
         rules: {
-          oriPrice: [
-            { required: true, message: "请输入原价", trigger: "blur" },
+          w_price: [
+            { required: true, message: "请输入批发价", trigger: "blur" },
           ],
+          w_num: [{ required: true, message: "请输入起批量", trigger: "blur" }],
           sellPrice: [
-            { required: true, message: "请输入销售价", trigger: "blur" },
+            { required: true, message: "请输入零售价", trigger: "blur" },
           ],
           stock: [
             { required: true, message: "请输入单前库存", trigger: "blur" },
