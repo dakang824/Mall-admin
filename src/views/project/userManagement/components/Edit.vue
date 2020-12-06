@@ -1,3 +1,9 @@
+<!--
+ * @Author: yukang 1172248038@qq.com
+ * @Description: 编辑用户信息表单
+ * @Date: 2020-12-06 18:40:37
+ * @LastEditTime: 2020-12-06 23:18:25
+-->
 <template>
   <ele-form-dialog
     v-model="formData"
@@ -15,6 +21,9 @@
 <script>
   export default {
     name: "FormDialog",
+    props: {
+      options: { type: Object, default: () => {} },
+    },
     data() {
       return {
         title: "添加",
@@ -25,30 +34,41 @@
             type: "input",
             label: "姓名",
           },
-          date: {
-            type: "date",
-            label: "年龄",
-            valueFormatter(value) {
-              const date = new Date(value * 1000);
-              return (
-                date.getFullYear() +
-                "/" +
-                date.getMonth() +
-                "/" +
-                date.getDate()
-              );
-            },
-          },
-          address: {
+          account: {
             type: "input",
-            label: "地址",
+            label: "ERP号",
+          },
+          role: {
+            type: "select",
+            label: "角色",
+            isOptions: true,
+            options: [],
+          },
+          comp_id: {
+            type: "select",
+            label: "所属公司",
+            prop: { text: "name", value: "id" },
+            options: [],
+          },
+          prof_group_id: {
+            type: "select",
+            label: "专业组",
+            options: [],
+          },
+          type: {
+            type: "select",
+            label: "用户类型",
+            options: [],
           },
         },
         // 校检规则
         rules: {
           name: { required: true, message: "姓名必填" },
-          date: { required: true, message: "日期必填" },
-          address: { required: true, message: "地址必填" },
+          account: { required: true, message: "ERP号必填" },
+          role: { required: true, message: "角色必选" },
+          comp_id: { required: true, message: "所属公司必选" },
+          prof_group_id: { required: true, message: "专业组必选" },
+          type: { required: true, message: "用户类型必选" },
         },
       };
     },
@@ -58,16 +78,21 @@
           this.title = "添加";
         } else {
           this.title = "编辑";
-          row.name = "测试";
+          row.role = row.roles;
           this.formData = Object.assign({}, row);
         }
+        const { roles, companys, typeOptions, professions } = this.options;
+        this.formDesc.roles.options = roles;
+        this.formDesc.comp_id.options = companys;
+        this.formDesc.type.options = typeOptions;
+        this.formDesc.prof_group_id = professions;
         this.dialogFormVisible = true;
       },
       handleClosed() {
         this.formData = {};
       },
+
       handleSuccess(data) {
-        console.log(data);
         // 关闭弹窗
         this.dialogFormVisible = false;
         // 重置formData

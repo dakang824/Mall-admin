@@ -274,5 +274,15 @@ html {
     }
 
     /* 下拉树样式-----------结束 */
+
+    .clear-col-6 {
+      .el-col-6 {
+        width: auto;
+        padding-right: 0 !important;
+      }
+      .ele-form-btns {
+        padding-left: 0 !important;
+      }
+    }
   }
 }

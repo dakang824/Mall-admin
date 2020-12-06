@@ -2,68 +2,16 @@
   <div class="demo-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="24">
-        <el-form
-          ref="queryForm"
-          :inline="true"
-          :model="queryForm"
-          @submit.native.prevent
-        >
-          <el-form-item prop="roles">
-            <el-select
-              v-model="queryForm.roles"
-              placeholder="请选择角色"
-              multiple
-            >
-              <el-option
-                v-for="item in roles"
-                :key="item.id"
-                :label="item.name"
-                :value="item.no"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item prop="name">
-            <el-input
-              v-model.trim="queryForm.name"
-              placeholder="请输入用户名称"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item prop="account">
-            <el-input
-              v-model.trim="queryForm.account"
-              placeholder="请输入账号"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item prop="mobile">
-            <el-input
-              v-model.trim="queryForm.mobile"
-              placeholder="请输入手机号"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item prop="status">
-            <el-select
-              v-model="queryForm.status"
-              placeholder="请选择用户状态"
-              clearable
-            >
-              <el-option
-                v-for="item in status"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button icon="el-icon-search" type="primary" @click="queryData">
-              查询
-            </el-button>
-            <el-button @click="resetForm('queryForm')">重置</el-button>
-          </el-form-item>
-        </el-form>
+        <ele-form
+          v-model="queryForm"
+          class="clear-col-6"
+          v-bind="formConfig"
+          is-show-reset-btn
+          inline
+          :is-show-label="false"
+          :request-fn="handleRequest"
+          @request-success="handleRequestSuccess"
+        />
       </vab-query-form-left-panel>
       <vab-query-form-left-panel :span="12">
         <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
@@ -91,13 +39,18 @@
       @p-current-change="handleCurrentChange"
       @selection-change="setSelectRows"
     ></lb-table>
-    <edit ref="edit" @fetchData="fetchData"></edit>
+    <edit
+      ref="edit"
+      :options="{ roles, typeOptions, companys, professions }"
+      @fetchData="fetchData"
+    ></edit>
   </div>
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import { findUsers, doDelete } from "@/api/userManagement";
-  import Edit from "./components/DemoEdit";
+  import Edit from "./components/Edit";
 
   export default {
     name: "UserManagement",
@@ -122,22 +75,39 @@
               label: "姓名",
             },
             {
-              prop: "erp",
+              prop: "per",
               label: "ERP",
             },
             {
               prop: "company",
               label: "所属公司",
+              render: (h, scope) => {
+                return <span>{scope.row.company.name}</span>;
+              },
             },
             {
               prop: "type",
               label: "用户类型",
               width: "100",
+              render: (h, scope) => {
+                return (
+                  <span>
+                    {scope.row.type === 1
+                      ? "临时工"
+                      : scope.row.type === 2
+                      ? "正式工"
+                      : ""}
+                  </span>
+                );
+              },
             },
             {
               prop: "group",
               label: "专业组",
               width: "100",
+              render: (h, scope) => {
+                return <span>{scope.row.prof_group.name}</span>;
+              },
             },
             {
               label: "操作",
@@ -169,12 +139,89 @@
           ],
           list: null,
         },
+        formConfig: {
+          formDesc: {
+            name: {
+              type: "input",
+              label: "姓名",
+              attrs: {
+                clearable: true,
+              },
+            },
+            account: {
+              type: "input",
+              label: "ERP号",
+            },
+            role: {
+              type: "select",
+              label: "角色",
+              isOptions: true,
+              options: [
+                {
+                  text: "学生",
+                  value: 1,
+                },
+                {
+                  text: "老师",
+                  value: 2,
+                },
+              ],
+            },
+            comp_id: {
+              type: "select",
+              label: "所属公司",
+              prop: { text: "name", value: "id" },
+              options: [],
+            },
+            prof_group_id: {
+              type: "select",
+              label: "专业组",
+              prop: { text: "name", value: "id" },
+              options: [],
+            },
+            type: {
+              type: "select",
+              label: "用户类型",
+              options: [
+                {
+                  text: "临时工",
+                  value: 1,
+                },
+                {
+                  text: "正式工",
+                  value: 2,
+                },
+              ],
+            },
+          },
+        },
         queryForm: {
           pageNo: 1,
           pageSize: 10,
-          id: "",
+          name: "",
+          account: "",
+          role: "",
+          comp_id: "",
+          prof_group_id: "",
+          type: "",
         },
       };
+    },
+    computed: {
+      ...mapState({
+        professions: (state) => state.userManagement.professions,
+        companys: (state) => state.userManagement.companys,
+      }),
+    },
+    watch: {
+      companys: {
+        handler: function () {
+          this.$store.dispatch("userManagement/getData");
+          this.formConfig.formDesc.comp_id.options = this.companys;
+          this.formConfig.formDesc.prof_group_id.options = this.professions;
+        },
+        immediate: true,
+      },
     },
     created() {
       this.fetchData();
@@ -184,6 +231,7 @@
         this.selectRows = val;
       },
       handleEdit(row) {
+        this.$store.dispatch("userManagement/getData");
         if (row.id) {
           this.$refs["edit"].showEdit(row);
         } else {
@@ -211,6 +259,9 @@
           }
         }
       },
+      handleResetForm(e) {
+        this.$refs[e].resetFields();
+      },
       handleSizeChange(val) {
         this.queryForm.pageSize = val;
         this.fetchData();
@@ -225,9 +276,13 @@
       },
       async fetchData() {
         this.loading = true;
-        const { data, totalCount } = await findUsers(this.queryForm);
-        this.tableData.data = data;
-        this.total = totalCount;
+        const {
+          data: {
+            userList: { list, total },
+          },
+        } = await findUsers(this.queryForm);
+        this.tableData.data = list;
+        this.total = total;
         setTimeout(() => {
           this.loading = false;
         }, 300);
