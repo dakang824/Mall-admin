@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 统一规格
  * @Date: 2020-10-07 16:23:22
- * @LastEditTime: 2020-12-06 15:32:17
+ * @LastEditTime: 2020-12-06 16:02:51
 -->
 <template>
   <div class="unifySpec">

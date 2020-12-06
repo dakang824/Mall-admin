@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-11-25 20:09:52
+ * @LastEditTime: 2020-12-06 16:35:56
 -->
 <template>
   <el-drawer
@@ -520,7 +520,6 @@
             } else {
               form.pics = JSON.stringify(form.pics);
               form.introPics = JSON.stringify(form.introPics);
-              console.log(form);
               const {
                 msg,
                 data: { product },

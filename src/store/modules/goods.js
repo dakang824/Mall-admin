@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 全局商品类型
  * @Date: 2020-10-07 11:23:12
- * @LastEditTime: 2020-11-30 13:15:51
+ * @LastEditTime: 2020-12-06 16:36:18
  */
 import { findAllCategory, findSubCategoryByCateId } from "@/api/goods";
 import { data } from "autoprefixer";
@@ -50,7 +50,6 @@ const actions = {
         name: "全部",
       });
     });
-    console.log(category);
     commit("ChangeCategory", category);
   },
   async findSubCategoryByCateId({ commit }, params) {

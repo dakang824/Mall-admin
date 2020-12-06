@@ -200,9 +200,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="200" align="center">
         <template #default="scope">
-          <el-button type="primary" @click="handleEdit(scope.row)">
-            编辑
-          </el-button>
+          <el-button type="primary" @click="handleEdit(scope)">编辑</el-button>
           <el-button type="danger" @click="handleDelete(scope.row)">
             删除
           </el-button>
@@ -322,7 +320,7 @@
       },
       update(e) {
         const index = this.list.findIndex((item) => item.id === e.id);
-        this.$set(this.list, index, e);
+        this.list.splice(index, 1, e);
       },
       handleDblclick(row, column, cell, event) {
         this.list.map((item) => {
@@ -349,7 +347,7 @@
         this.selectRows = val;
       },
       handleEdit(row) {
-        console.log(row);
+        row = this.list[row.$index];
         if (row.id) {
           this.$refs["edit"].showEdit(row);
         } else {
