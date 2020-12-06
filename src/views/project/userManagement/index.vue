@@ -73,22 +73,6 @@
           批量删除
         </el-button>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel :span="12">
-        <el-form :inline="true" :model="queryForm" @submit.native.prevent>
-          <el-form-item>
-            <el-input
-              v-model.trim="queryForm.id"
-              placeholder="请输入查询条件"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button icon="el-icon-search" type="primary" @click="queryData">
-              查询
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </vab-query-form-right-panel>
     </vab-query-form>
 
     <lb-table
@@ -112,11 +96,11 @@
 </template>
 
 <script>
-  import { findUsers, doDelete } from "@/api/demo";
+  import { findUsers, doDelete } from "@/api/userManagement";
   import Edit from "./components/DemoEdit";
 
   export default {
-    name: "Demo",
+    name: "UserManagement",
     components: { Edit },
     data() {
       return {

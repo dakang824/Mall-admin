@@ -57,23 +57,6 @@ export const asyncRoutes = [
     ],
   },
   {
-    path: "/userManagement",
-    component: Layout,
-    redirect: "/userManagement",
-    children: [
-      {
-        path: "/userManagement",
-        name: "UserManagement",
-        component: () =>
-          import("@/views/project/personnelManagement/userManagement/index"),
-        meta: {
-          title: "用户管理",
-          icon: "user-cog",
-        },
-      },
-    ],
-  },
-  {
     path: "/category",
     component: Layout,
     redirect: "/category",
@@ -125,14 +108,14 @@ export const asyncRoutes = [
     ],
   },
   {
-    path: "/demo",
+    path: "/userManagement",
     component: Layout,
-    redirect: "/demo",
+    redirect: "/userManagement",
     children: [
       {
-        path: "/demo",
-        name: "Demo",
-        component: () => import("@/views/project/demo"),
+        path: "/userManagement",
+        name: "UserManagement",
+        component: () => import("@/views/project/userManagement"),
         meta: {
           title: "用户管理",
           icon: "user-cog",
