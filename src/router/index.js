@@ -134,8 +134,8 @@ export const asyncRoutes = [
         name: "Demo",
         component: () => import("@/views/project/demo"),
         meta: {
-          title: "demo",
-          icon: "parking",
+          title: "用户管理",
+          icon: "user-cog",
         },
       },
     ],
