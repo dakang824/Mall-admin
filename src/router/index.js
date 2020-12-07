@@ -137,6 +137,75 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/article",
+    component: Layout,
+    redirect: "noRedirect",
+    name: "Article",
+    meta: {
+      title: "文章管理",
+      icon: "users-cog",
+    },
+    children: [
+      {
+        path: "list",
+        name: "List",
+        component: () => import("@/views/project/article/list.vue"),
+        meta: {
+          title: "文章管理",
+          icon: "list-ul",
+        },
+      },
+      {
+        path: "editor",
+        hidden: true,
+        component: () => import("@/views/project/article/editor.vue"),
+        meta: {
+          title: "编辑文章",
+          noKeepAlive: true,
+        },
+      },
+    ],
+  },
+  {
+    path: "/finance",
+    component: Layout,
+    redirect: "noRedirect",
+    name: "Order",
+    meta: {
+      title: "系统设置",
+      icon: "cogs",
+    },
+    children: [
+      {
+        path: "/navigation",
+        name: "Navigation",
+        component: () => import("@/views/project/navigation"),
+        meta: {
+          title: "导航管理",
+          icon: "location-arrow",
+        },
+      },
+      {
+        path: "/opinion",
+        name: "Opinion",
+        component: () => import("@/views/project/opinion"),
+        meta: {
+          title: "意见反馈",
+          icon: "envelope",
+        },
+      },
+      {
+        path: "/setting",
+        name: "Setting",
+        component: () => import("@/views/project/account"),
+        meta: {
+          title: "后台账号管理",
+          icon: "cog",
+        },
+      },
+    ],
+  },
+  {
     path: "/goods",
     component: Layout,
     redirect: "/goods",
@@ -244,76 +313,7 @@ export const asyncRoutes = [
       },
     ],
   },
-  {
-    path: "/finance",
-    component: Layout,
-    redirect: "noRedirect",
-    name: "Order",
-    hidden: true,
-    meta: {
-      title: "系统设置",
-      icon: "cog",
-    },
-    children: [
-      {
-        path: "/banner",
-        name: "Banner",
-        component: () => import("@/views/project/banner/index"),
-        meta: {
-          title: "banner设置",
-          icon: "images",
-        },
-      },
-      {
-        path: "/ads",
-        name: "Ads",
-        component: () => import("@/views/project/ads/index"),
-        meta: {
-          title: "广告设置",
-          icon: "image",
-        },
-      },
-      {
-        path: "/setting",
-        name: "Setting",
-        component: () => import("@/views/project/storeSet/index"),
-        meta: {
-          title: "店铺设置",
-          icon: "store-alt",
-        },
-      },
-    ],
-  },
-  {
-    path: "/article",
-    component: Layout,
-    redirect: "noRedirect",
-    name: "Article",
-    meta: {
-      title: "文章管理",
-      icon: "users-cog",
-    },
-    children: [
-      {
-        path: "list",
-        name: "List",
-        component: () => import("@/views/project/article/list.vue"),
-        meta: {
-          title: "文章管理",
-          icon: "list-ul",
-        },
-      },
-      {
-        path: "editor",
-        hidden: true,
-        component: () => import("@/views/project/article/editor.vue"),
-        meta: {
-          title: "编辑文章",
-          noKeepAlive: true,
-        },
-      },
-    ],
-  },
+
   {
     path: "/personnelManagement",
     component: Layout,

@@ -43,7 +43,7 @@
       @size-change="handleSizeChange"
       @p-current-change="handleCurrentChange"
       @selection-change="setSelectRows"
-    ></lb-table>
+    />
     <edit
       ref="edit"
       :options="{ formDesc: formConfig.formDesc }"

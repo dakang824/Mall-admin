@@ -2,59 +2,15 @@
   <div class="curd-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="24">
-        <el-form :inline="true" :model="queryForm" @submit.native.prevent>
-          <el-form-item>
-            <el-input
-              v-model.trim="queryForm.id"
-              placeholder="请输入文章标题"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-input
-              v-model.trim="queryForm.id"
-              placeholder="请输入文章作者"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-select v-model="value" placeholder="请选择一级栏目">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-select v-model="value" placeholder="请选择二级栏目">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-select v-model="value" placeholder="请选择三级栏目">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item>
-            <el-button icon="el-icon-search" type="primary" @click="queryData">
-              查询
-            </el-button>
-            <el-button @click="queryData">重置</el-button>
-          </el-form-item>
-        </el-form>
+        <ele-form
+          v-model="queryForm"
+          class="clear-col-6"
+          v-bind="formConfig"
+          is-show-reset-btn
+          inline
+          :is-show-label="false"
+          :request-fn="queryData"
+        />
       </vab-query-form-left-panel>
     </vab-query-form>
     <vab-query-form>
@@ -67,65 +23,24 @@
         </el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
-    <el-table
-      v-loading="listLoading"
-      :data="list"
+
+    <lb-table
+      v-loading="loading"
       border
-      :element-loading-text="elementLoadingText"
-      @selection-change="setSelectRows"
-    >
-      <el-table-column show-overflow-tooltip type="selection"></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="id"
-        label="序号"
-        align="center"
-      />
-      <el-table-column
-        prop="name"
-        label="内容"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="name"
-        label="栏目"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="name"
-        label="作者"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="name"
-        label="更新时间"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="name"
-        label="状态"
-        align="center"
-      ></el-table-column>
-      <el-table-column fixed="right" label="操作" width="150" align="center">
-        <template v-slot="scope">
-          <el-button type="primary" @click="handleEdit(scope.row)">
-            编辑
-          </el-button>
-          <el-button type="danger" @click="handleDelete(scope.row)">
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
+      :column="tableData.column"
+      :data="tableData.data"
+      align="center"
+      pagination
       background
-      :current-page="queryForm.pageNo"
-      :page-size="queryForm.pageSize"
       :layout="layout"
+      :current-page.sync="queryForm.pageNo"
       :total="total"
+      :page-size="queryForm.pageSize"
       @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    ></el-pagination>
+      @p-current-change="handleCurrentChange"
+      @selection-change="setSelectRows"
+    />
+
     <edit ref="edit" @fetchData="fetchData"></edit>
   </div>
 </template>
@@ -148,31 +63,211 @@
         queryForm: {
           pageNo: 1,
           pageSize: 10,
-          id: "",
         },
-        options: [
-          {
-            value: "选项1",
-            label: "黄金糕",
+        formConfig: {
+          formDesc: {
+            name: {
+              type: "input",
+              label: "文章标题",
+              attrs: {
+                clearable: true,
+              },
+            },
+            account: {
+              type: "input",
+              label: "文章作者",
+              attrs: {
+                clearable: true,
+              },
+            },
+            role: {
+              type: "select",
+              label: "文章状态",
+              isOptions: true,
+              attrs: {
+                clearable: true,
+              },
+              options: [
+                {
+                  text: "发布中",
+                  value: 1,
+                },
+                {
+                  text: "审核中",
+                  value: 2,
+                },
+                {
+                  text: "已下架",
+                  value: 3,
+                },
+                {
+                  text: "未发布",
+                  value: 4,
+                },
+              ],
+            },
+            comp_id: {
+              type: "select",
+              label: "一级栏目",
+              attrs: {
+                clearable: true,
+              },
+              options: [
+                {
+                  text: "首页",
+                  value: 1,
+                },
+                {
+                  text: "课件",
+                  value: 2,
+                },
+              ],
+            },
+            prof_group_id: {
+              type: "select",
+              label: "二级栏目",
+              attrs: {
+                clearable: true,
+              },
+              options: [
+                {
+                  text: "公共",
+                  value: 1,
+                },
+                {
+                  text: "标准",
+                  value: 2,
+                },
+                {
+                  text: "技能树",
+                  value: 3,
+                },
+                {
+                  text: "影像",
+                  value: 4,
+                },
+                {
+                  text: "总结",
+                  value: 5,
+                },
+              ],
+            },
+            type: {
+              type: "select",
+              label: "三级栏目",
+              attrs: {
+                clearable: true,
+              },
+              options: [
+                {
+                  text: "公共",
+                  value: 1,
+                },
+                {
+                  text: "标准",
+                  value: 2,
+                },
+                {
+                  text: "技能树",
+                  value: 3,
+                },
+                {
+                  text: "影像",
+                  value: 4,
+                },
+                {
+                  text: "总结",
+                  value: 5,
+                },
+              ],
+            },
           },
-          {
-            value: "选项2",
-            label: "双皮奶",
-          },
-          {
-            value: "选项3",
-            label: "蚵仔煎",
-          },
-          {
-            value: "选项4",
-            label: "龙须面",
-          },
-          {
-            value: "选项5",
-            label: "北京烤鸭",
-          },
-        ],
-        value: "",
+        },
+        tableData: {
+          column: [
+            {
+              type: "selection",
+            },
+            {
+              prop: "id",
+              label: "序号",
+              width: "80",
+            },
+            {
+              prop: "name",
+              label: "内容",
+            },
+            {
+              prop: "account",
+              label: "栏目",
+            },
+            {
+              prop: "company",
+              label: "作者",
+              render: (h, scope) => {
+                return (
+                  <span>
+                    {scope.row.roles === 1
+                      ? "学生"
+                      : scope.row.roles === 2
+                      ? "老师"
+                      : ""}
+                  </span>
+                );
+              },
+            },
+            {
+              prop: "company",
+              label: "更新时间",
+              render: (h, scope) => {
+                return <span>{scope.row.company.name}</span>;
+              },
+            },
+            {
+              prop: "type",
+              label: "状态",
+              render: (h, scope) => {
+                return (
+                  <span>
+                    {scope.row.type === 1
+                      ? "临时工"
+                      : scope.row.type === 2
+                      ? "正式工"
+                      : ""}
+                  </span>
+                );
+              },
+            },
+            {
+              label: "操作",
+              width: "230",
+              render: (h, scope) => {
+                return (
+                  <div>
+                    <el-button
+                      type="primary"
+                      onClick={() => {
+                        this.handleEdit(scope.row);
+                      }}
+                    >
+                      编辑
+                    </el-button>
+                    <el-button
+                      type="danger"
+                      onClick={() => {
+                        this.handleDelete(scope.row);
+                      }}
+                    >
+                      删除
+                    </el-button>
+                    <el-button type="warning">未绑定</el-button>
+                  </div>
+                );
+              },
+            },
+          ],
+          data: [],
+        },
       };
     },
     created() {
@@ -228,9 +323,9 @@
       },
       async fetchData() {
         this.listLoading = true;
-        const { data, totalCount } = await getList(this.queryForm);
-        this.list = data;
-        this.total = totalCount;
+        // const { data, totalCount } = await getList(this.queryForm);
+        // this.list = data;
+        // this.total = totalCount;
         setTimeout(() => {
           this.listLoading = false;
         }, 300);
