@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2020-12-07 22:28:38
+ * @LastEditTime: 2020-12-07 22:39:49
 -->
 <template>
   <ele-form-dialog
@@ -14,13 +14,12 @@
     :title="title"
     width="620px"
     :request-fn="handleSubmit"
-    :order="['name', 'account', 'pwd', 'pwdTwo']"
     @closed="handleClosed"
   ></ele-form-dialog>
 </template>
 
 <script>
-  import { addUser, modifyUser } from "@/api/userManagement";
+  import { addModule, modifyModule } from "@/api/module";
   export default {
     props: {
       options: { type: Object, default: () => {} },
@@ -31,43 +30,27 @@
         dialogFormVisible: false,
         formData: {},
         formDesc: {
-          pwd: {
+          name: {
             type: "input",
-            label: "密码",
+            label: "专业名称",
             attrs: {
               clearable: true,
-              type: "password",
-            },
-          },
-          pwdTwo: {
-            type: "input",
-            label: "确认密码",
-            attrs: {
-              clearable: true,
-              type: "password",
             },
           },
         },
         rules: {
-          name: { required: true, message: "姓名必填" },
-          account: { required: true, message: "账号必填" },
-          role: { required: true, message: "角色必选" },
-          comp_id: { required: true, message: "所属公司必选" },
-          prof_group_id: { required: true, message: "专业组必选" },
-          type: { required: true, message: "用户类型必选" },
-          pwd: { required: true, message: "密码必填" },
-          pwdTwo: { required: true, message: "确认密码必填" },
+          name: { required: true, message: "模块名称必填" },
+          prof_id: { required: true, message: "所属专业必选" },
         },
       };
     },
     methods: {
       showEdit(row) {
         if (!row) {
-          this.title = "添加用户";
+          this.title = "添加模块";
         } else {
-          this.title = "编辑用户";
+          this.title = "编辑模块";
           row.role = row.roles;
-          row.pwdTwo = row.pwd;
           this.formData = JSON.parse(JSON.stringify(row));
         }
         this.formDesc = { ...this.formDesc, ...this.options.formDesc };
@@ -78,25 +61,21 @@
       },
 
       async handleSubmit(data) {
-        if (this.formData.pwd !== this.formData.pwdTwo) {
-          this.$baseMessage("密码不匹配,请重新输入", "error");
-          return false;
-        }
-
         if (this.title.includes("添加")) {
           const {
             msg,
-            data: { user },
-          } = await addUser(this.formData);
+            data: { module },
+          } = await addModule(this.formData);
           this.$baseMessage(msg, "success");
+          // this.$emit("add", module);
           this.$emit("fetchData", false);
         } else {
           const {
             msg,
-            data: { user },
-          } = await modifyUser(this.formData);
+            data: { module },
+          } = await modifyModule(this.formData);
           this.$baseMessage(msg, "success");
-          this.$emit("update", user);
+          this.$emit("fetchData", false);
         }
         // 关闭弹窗
         this.dialogFormVisible = false;

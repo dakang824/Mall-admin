@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 16:12:52
- * @LastEditTime: 2020-11-07 23:30:27
+ * @LastEditTime: 2020-12-07 17:35:12
 -->
 <template>
   <div class="storeSet-container">
@@ -63,7 +63,6 @@
   import { getList, doDelete } from "@/api/storeSet";
   import { fileUpload } from "@/config/settings";
   import { regionData, CodeToText, TextToCode } from "element-china-area-data";
-  import { modifyStore } from "@/api/store";
   import { mapState } from "vuex";
   import filters from "@/filters";
   export default {
@@ -145,15 +144,6 @@
             form.address = `${CodeToText[form.address[0]]}/${
               CodeToText[form.address[1]]
             }/${CodeToText[form.address[2]]}`;
-            const {
-              msg,
-              data: { store },
-            } = await modifyStore(form);
-            this.$store.dispatch(
-              "user/getUserInfo",
-              this.$store.getters["user/accessToken"]
-            );
-            this.$baseMessage(msg, "success");
           } else {
             return;
           }

@@ -2,12 +2,13 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2020-12-06 18:31:15
+ * @LastEditTime: 2020-12-07 20:58:25
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
  * @description 全局变量配置
  */
+const baseURL = "http://47.101.210.167:9999/";
 module.exports = {
   // 开发以及部署时的URL 如"/test/"
   publicPath: "/storeAdmin/",
@@ -21,9 +22,8 @@ module.exports = {
   transpileDependencies: ["vue-echarts", "resize-detector", "zx-layouts"],
   // 默认的接口地址 如果是开发环境和生产环境走vab-mock-server，当然你也可以选择自己配置成需要的接口地址
   baseURL:
-    process.env.NODE_ENV === "development"
-      ? "/"
-      : "http://47.101.210.167/" || "vab-mock-server",
+    process.env.NODE_ENV === "development" ? "/" : baseURL || "vab-mock-server",
+  target: baseURL,
   //标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）
   title: "学习平台",
   //简写

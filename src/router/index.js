@@ -57,18 +57,81 @@ export const asyncRoutes = [
     ],
   },
   {
-    path: "/category",
+    path: "/userManagement",
     component: Layout,
-    redirect: "/category",
-    hidden: true,
+    redirect: "/userManagement",
     children: [
       {
-        path: "/category",
-        name: "Category",
-        component: () => import("@/views/project/category/index"),
+        path: "/userManagement",
+        name: "UserManagement",
+        component: () => import("@/views/project/userManagement"),
         meta: {
-          title: "分类管理",
-          icon: "puzzle-piece",
+          title: "用户管理",
+          icon: "user-cog",
+        },
+      },
+    ],
+  },
+  {
+    path: "/company",
+    component: Layout,
+    redirect: "/company",
+    children: [
+      {
+        path: "/company",
+        name: "Company",
+        component: () => import("@/views/project/company"),
+        meta: {
+          title: "单位管理",
+          icon: "school",
+        },
+      },
+    ],
+  },
+  {
+    path: "/professions",
+    component: Layout,
+    redirect: "professions",
+    children: [
+      {
+        path: "/professions",
+        name: "Professions",
+        component: () => import("@/views/project/professions"),
+        meta: {
+          title: "专业管理",
+          icon: "sitemap",
+        },
+      },
+    ],
+  },
+  {
+    path: "/module",
+    component: Layout,
+    redirect: "/module",
+    children: [
+      {
+        path: "/module",
+        name: "Module",
+        component: () => import("@/views/project/module"),
+        meta: {
+          title: "模块管理",
+          icon: "boxes",
+        },
+      },
+    ],
+  },
+  {
+    path: "/group",
+    component: Layout,
+    redirect: "/group",
+    children: [
+      {
+        path: "/group",
+        name: "Group",
+        component: () => import("@/views/project/group"),
+        meta: {
+          title: "专业组管理",
+          icon: "layer-group",
         },
       },
     ],
@@ -107,74 +170,7 @@ export const asyncRoutes = [
       },
     ],
   },
-  {
-    path: "/userManagement",
-    component: Layout,
-    redirect: "/userManagement",
-    children: [
-      {
-        path: "/userManagement",
-        name: "UserManagement",
-        component: () => import("@/views/project/userManagement"),
-        meta: {
-          title: "用户管理",
-          icon: "user-cog",
-        },
-      },
-    ],
-  },
-  {
-    path: "/produce",
-    component: Layout,
-    hidden: true,
-    redirect: "/produce",
-    children: [
-      {
-        path: "/produce",
-        name: "Produce",
-        component: () => import("@/views/project/produce/index"),
-        meta: {
-          title: "产地管理",
-          icon: "parking",
-        },
-      },
-    ],
-  },
-  {
-    path: "/store",
-    component: Layout,
-    hidden: true,
-    redirect: "store",
-    children: [
-      {
-        path: "/store",
-        name: "Store",
-        component: () => import("@/views/project/store/index"),
-        meta: {
-          title: "店铺管理",
-          icon: "store",
-        },
-      },
-    ],
-  },
-  {
-    path: "/finance",
-    component: Layout,
-    redirect: "/finance",
-    hidden: true,
-    children: [
-      {
-        path: "/finance",
-        name: "Finance",
-        component: () => import("@/views/project/finance/index"),
-        meta: {
-          title: "财务管理",
-          icon: "money-bill-alt",
-          permissions: ["financial", "admin"],
-        },
-      },
-    ],
-  },
+
   {
     path: "/order",
     component: Layout,

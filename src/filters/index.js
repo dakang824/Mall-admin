@@ -1,13 +1,11 @@
 /*
  * @Author: yukang 1172248038@qq.com
  * @Date: 2020-09-20 22:25:48
- * @LastEditTime: 2020-11-25 19:36:15
+ * @LastEditTime: 2020-12-07 21:03:16
  */
-import { baseURL } from "@/config/settings";
+import { target } from "@/config/settings";
 function imgBaseUrl(val) {
-  return process.env.NODE_ENV === "development"
-    ? `http://47.101.210.167/${val}` || `/service/${val}`
-    : baseURL + val;
+  return `${target}${val}`;
 }
 function toFixed(val, num = 2) {
   return val ? Number(val).toFixed(num) : "0.00";

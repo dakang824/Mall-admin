@@ -1,7 +1,15 @@
 <template>
   <div class="demo-container">
     <vab-query-form>
-      <vab-query-form-left-panel :span="24">
+      <vab-query-form-left-panel :span="12">
+        <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
+          添加
+        </el-button>
+        <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
+          批量删除
+        </el-button>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel :span="12">
         <ele-form
           v-model="queryForm"
           class="clear-col-6"
@@ -11,21 +19,7 @@
           :is-show-label="false"
           :request-fn="queryData"
         />
-      </vab-query-form-left-panel>
-      <vab-query-form-left-panel :span="12">
-        <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
-          添加
-        </el-button>
-        <el-button icon="el-icon-upload2" type="warning" @click="handleImport">
-          用户导入
-        </el-button>
-        <el-button icon="el-icon-download" type="success" @click="handleExport">
-          用户导出
-        </el-button>
-        <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
-          批量删除
-        </el-button>
-      </vab-query-form-left-panel>
+      </vab-query-form-right-panel>
     </vab-query-form>
 
     <lb-table
@@ -48,27 +42,20 @@
       ref="edit"
       :options="{ formDesc: formConfig.formDesc }"
       @fetchData="fetchData"
+      @add="addData"
       @update="updateData"
     ></edit>
-    <import-template ref="import" title="用户导入" />
   </div>
 </template>
 
 <script>
-  import {
-    findUsers,
-    deleteUser,
-    findAllCompany,
-    findAllProfGroup,
-    exportUsers,
-  } from "@/api/userManagement";
-  import filters from "@/filters";
+  import { findModule, deleteModule } from "@/api/module";
+  import { findAllProfession } from "@/api/professions";
   import Edit from "./components/Edit";
-  import ImportTemplate from "./components/importTemplate";
 
   export default {
-    name: "UserManagement",
-    components: { Edit, ImportTemplate },
+    name: "Module",
+    components: { Edit },
     data() {
       return {
         loading: true,
@@ -87,54 +74,13 @@
             },
             {
               prop: "name",
-              label: "姓名",
+              label: "模块名称",
             },
             {
-              prop: "account",
-              label: "账户",
-            },
-            {
-              prop: "company",
-              label: "角色",
+              prop: "prof",
+              label: "所属专业",
               render: (h, scope) => {
-                return (
-                  <span>
-                    {scope.row.roles === 1
-                      ? "学生"
-                      : scope.row.roles === 2
-                      ? "老师"
-                      : ""}
-                  </span>
-                );
-              },
-            },
-            {
-              prop: "company",
-              label: "所属公司",
-              render: (h, scope) => {
-                return <span>{scope.row.company.name}</span>;
-              },
-            },
-            {
-              prop: "type",
-              label: "用户类型",
-              render: (h, scope) => {
-                return (
-                  <span>
-                    {scope.row.type === 1
-                      ? "临时工"
-                      : scope.row.type === 2
-                      ? "正式工"
-                      : ""}
-                  </span>
-                );
-              },
-            },
-            {
-              prop: "group",
-              label: "专业组",
-              render: (h, scope) => {
-                return <span>{scope.row.prof_group.name}</span>;
+                return <span>{scope.row.prof.name}</span>;
               },
             },
             {
@@ -159,7 +105,6 @@
                     >
                       删除
                     </el-button>
-                    <el-button type="warning">未绑定</el-button>
                   </div>
                 );
               },
@@ -169,100 +114,28 @@
         },
         formConfig: {
           formDesc: {
-            name: {
-              type: "input",
-              label: "姓名",
-              attrs: {
-                clearable: true,
-              },
-            },
-            account: {
-              type: "input",
-              label: "账户",
-              attrs: {
-                clearable: true,
-              },
-            },
-            role: {
+            prof_id: {
               type: "select",
-              label: "角色",
-              isOptions: true,
-              attrs: {
-                clearable: true,
-              },
-              options: [
-                {
-                  text: "学生",
-                  value: 1,
-                },
-                {
-                  text: "老师",
-                  value: 2,
-                },
-              ],
-            },
-            comp_id: {
-              type: "select",
-              label: "所属公司",
+              label: "所属专业",
               attrs: {
                 clearable: true,
               },
               options: async () => {
                 const {
                   data: {
-                    companyList: { list },
+                    professionList: { list },
                   },
-                } = await findAllCompany({ pageNo: 1, pageSize: 50 });
+                } = await findAllProfession({ pageNo: 1, pageSize: 50 });
                 return list.map((item) => {
                   return { text: item.name, value: item.id };
                 });
               },
-            },
-            prof_group_id: {
-              type: "select",
-              label: "专业组",
-              attrs: {
-                clearable: true,
-              },
-              options: async () => {
-                const {
-                  data: {
-                    profGroup: { list },
-                  },
-                } = await findAllProfGroup({ pageNo: 1, pageSize: 50 });
-                return list.map((item) => {
-                  return { text: item.name, value: item.id };
-                });
-              },
-            },
-            type: {
-              type: "select",
-              label: "用户类型",
-              attrs: {
-                clearable: true,
-              },
-              options: [
-                {
-                  text: "临时工",
-                  value: 1,
-                },
-                {
-                  text: "正式工",
-                  value: 2,
-                },
-              ],
             },
           },
         },
         queryForm: {
           pageNo: 1,
           pageSize: 10,
-          name: "",
-          account: "",
-          role: "",
-          comp_id: "",
-          prof_group_id: "",
-          type: "",
         },
       };
     },
@@ -280,15 +153,7 @@
         const index = this.tableData.data.findIndex((item) => item.id === e.id);
         this.$set(this.tableData.data, index, e);
       },
-      async handleExport() {
-        const {
-          data: { excel_path },
-        } = await exportUsers(this.queryForm);
-        window.open(filters.imgBaseUrl(excel_path), "_parent");
-      },
-      handleImport() {
-        this.$refs["import"].showImport();
-      },
+
       handleEdit(row) {
         if (row.id) {
           this.$refs["edit"].showEdit(row);
@@ -299,7 +164,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await deleteUser({ ids: row.id });
+            const { msg } = await deleteModule({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.tableData.data.splice(
               this.tableData.data.findIndex((item) => item.id === row.id),
@@ -310,7 +175,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await deleteUser({ ids });
+              const { msg } = await deleteModule({ ids });
               this.$baseMessage(msg, "success");
               this.selectRows.map((item) => {
                 this.tableData.data.splice(
@@ -344,9 +209,9 @@
         this.loading = loading;
         const {
           data: {
-            userList: { list, total },
+            moduleList: { list, total },
           },
-        } = await findUsers(this.queryForm);
+        } = await findModule(this.queryForm);
         this.tableData.data = list;
         this.total = total;
         setTimeout(() => {

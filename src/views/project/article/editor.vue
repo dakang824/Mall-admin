@@ -19,7 +19,7 @@
         </el-form-item>
 
         <el-row :gutter="24">
-          <el-col :span="4">
+          <el-col :md="24" :lg="4" :xl="3">
             <el-form-item label="上传封面" prop="module">
               <el-upload
                 class="avatar-uploader"
@@ -33,7 +33,7 @@
               </el-upload>
             </el-form-item>
           </el-col>
-          <el-col :span="10">
+          <el-col :md="24" :lg="10">
             <el-form-item
               label="请选择一级栏目"
               prop="module"
@@ -56,7 +56,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="10">
+          <el-col :md="24" :lg="10">
             <el-form-item
               label="请选择二级栏目"
               prop="module"

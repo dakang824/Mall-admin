@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:用户管理
  * @Date: 2020-12-06 18:25:36
- * @LastEditTime: 2020-12-06 22:51:06
+ * @LastEditTime: 2020-12-07 16:22:04
  */
 import request from "@/utils/request";
 
@@ -46,9 +46,9 @@ export function exportUsers(data) {
   });
 }
 
-export function findAllProfession(data) {
+export function findAllProfGroup(data) {
   return request({
-    url: "/service/plat/admin/findAllProfession",
+    url: "/service/plat/admin/findAllProfGroup",
     method: "post",
     data,
   });

@@ -12,6 +12,7 @@ const {
   build7z,
   donation,
   copyright,
+  target,
 } = require("./src/config/settings");
 const { webpackBanner, donationConsole } = require("zx-layouts");
 
@@ -61,7 +62,7 @@ module.exports = {
     after: mockServer(),
     proxy: {
       "/service": {
-        target: "http://47.101.210.167:9999/",
+        target,
         changeOrigin: true,
       },
     },
