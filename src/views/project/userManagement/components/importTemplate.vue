@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2020-12-09 00:26:47
+ * @LastEditTime: 2020-12-09 00:35:39
 -->
 <template>
   <ele-import
@@ -22,6 +22,7 @@
 
 <script>
   import filters from "@/filters";
+  import { addUser } from "@/api/userManagement";
   import { findAllCompany, findAllProfGroup } from "@/api/userManagement";
   import UserTemplate from "@/assets/files/user-template.xlsx";
   export default {
@@ -88,22 +89,22 @@
         arr1.map((item) => {
           this.formatter.comp_id[item.value] = item.text;
         });
-        console.log(this.formatter);
         this.dialogFormVisible = true;
       },
       async requestFn(data) {
-        console.log(data);
-        // this.tableData = JSON.stringify(data);
+        data.map(async (item) => {
+          const {
+            msg,
+            data: { user },
+          } = await addUser(item);
+        });
         return Promise.resolve();
       },
       handleClosed() {
         this.dialogFormVisible = false;
       },
       handleFinishImport() {
-        console.log("导入完毕了~");
-      },
-      handleSubmit(e) {
-        console.log(e);
+        this.$emit("fetchData", false);
       },
     },
   };
