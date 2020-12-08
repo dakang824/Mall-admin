@@ -53,6 +53,7 @@
 <script>
   import { findArticle, deleteArticle } from "@/api/list";
   import Edit from "./components/Edit";
+  import filters from "@/filters";
 
   export default {
     name: "Curd",
@@ -214,6 +215,10 @@
       setSelectRows(val) {
         this.selectRows = val;
       },
+      updateData(e) {
+        const index = this.tableData.data.findIndex((item) => item.id === e.id);
+        this.$set(this.tableData.data, index, e);
+      },
       handleEdit(row) {
         if (row.id) {
           this.$refs["edit"].showEdit(row);
@@ -273,6 +278,10 @@
             articles: { list, total },
           },
         } = await findArticle(this.queryForm);
+        list.map((item) => {
+          item.cover_pic = filters.imgBaseUrl(item.cover_pic);
+        });
+        console.log(list);
         this.tableData.data = list;
         this.total = total;
         this.$store.commit("article/ChangeArticleList", list);

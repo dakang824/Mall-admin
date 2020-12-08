@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2020-12-08 21:09:07
+ * @LastEditTime: 2020-12-09 01:04:19
 -->
 <template>
   <ele-form-drawer
@@ -53,21 +53,10 @@
           end_time: "",
           group_id: "",
           content_pic: "",
+          cover_pic1: "",
+          content_pic1: "",
         },
         formDesc: {
-          cover_pic: {
-            label: "封面图片",
-            type: "image-uploader",
-            attrs: {
-              size: 80,
-              fileType: ["png", "jpg", "jpeg"],
-              accept: "image/*",
-              action: filters.imgBaseUrl(fileUpload),
-              handleResponse(response, file, fileList) {
-                return "https://xxx.xxx.com/image/" + response.id;
-              },
-            },
-          },
           start_time: {
             type: "datetime",
             label: "开始日期",
@@ -99,13 +88,30 @@
               });
             },
           },
+          cover_pic: {
+            label: "封面图片",
+            type: "image-uploader",
+            attrs: {
+              size: 80,
+              fileType: ["png", "jpg", "jpeg", "gif"],
+              accept: "image/*",
+              action: fileUpload,
+              responseFn: (response, file) => {
+                const url = filters.imgBaseUrl(response.data.tempUrl);
+                this.formData.cover_pic1 = response.data.tempUrl;
+                return url;
+              },
+            },
+          },
           content_pic: {
             type: "upload-file",
             attrs: {
               fileType: ["zip"],
               accept: "zip/*",
-              action: filters.imgBaseUrl(fileUpload),
-              responseFn(response, file) {
+              action: fileUpload,
+              limit: 1,
+              responseFn: (response, file) => {
+                this.formData.content_pic1 = response.data.tempUrl;
                 return {
                   name: file.name,
                   url: URL.createObjectURL(file.raw),
@@ -132,7 +138,6 @@
         }
         const formDesc = this.options.formDesc;
         delete formDesc.status;
-        console.log(formDesc);
         this.formDesc = {
           ...this.formDesc,
           ...formDesc,
@@ -144,18 +149,26 @@
       },
 
       async handleSubmit(data) {
+        const formData = JSON.parse(JSON.stringify(this.formData));
+        if (formData.cover_pic1 !== "") {
+          formData.cover_pic = formData.cover_pic1;
+        }
+        if (formData.content_pic1 !== "") {
+          formData.content_pic = formData.content_pic1;
+        }
+
         if (this.title.includes("添加")) {
           const {
             msg,
             data: { user },
-          } = await addArticle(this.formData);
+          } = await addArticle(formData);
           this.$baseMessage(msg, "success");
           this.$emit("fetchData", false);
         } else {
           const {
             msg,
             data: { user },
-          } = await modifyArticle(this.formData);
+          } = await modifyArticle(formData);
           this.$baseMessage(msg, "success");
           this.$emit("update", user);
         }
@@ -204,7 +217,7 @@
         background: #fff;
       }
       .el-radio-group {
-        line-height: auto;
+        line-height: inherit;
       }
     }
   }
