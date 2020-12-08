@@ -1,24 +1,38 @@
+/*
+ * @Author: yukang 1172248038@qq.com
+ * @Description:文章管理
+ * @Date: 2020-12-07 23:26:57
+ * @LastEditTime: 2020-12-08 17:20:50
+ */
 import request from "@/utils/request";
 
-export function getList(data) {
+export function findArticle(data) {
   return request({
-    url: "/curd/getList",
+    url: "/service/plat/admin/findArticle",
     method: "post",
     data,
   });
 }
 
-export function doEdit(data) {
+export function modifyArticle(data) {
   return request({
-    url: "/curd/doEdit",
+    url: "/service/plat/admin/modifyArticle",
     method: "post",
     data,
   });
 }
 
-export function doDelete(data) {
+export function addArticle(data) {
   return request({
-    url: "/curd/doDelete",
+    url: "/service/plat/admin/addArticle",
+    method: "post",
+    data,
+  });
+}
+
+export function deleteArticle(data) {
+  return request({
+    url: "/service/plat/admin/deleteArticle",
     method: "post",
     data,
   });

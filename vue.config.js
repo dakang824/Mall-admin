@@ -92,6 +92,12 @@ module.exports = {
       .add(resolve("src/colorfulIcon"))
       .end();
     config.module
+      .rule("xlsx")
+      .test(/\.xlsx$/)
+      .use("file-loader")
+      .loader("file-loader")
+      .end();
+    config.module
       .rule("remixIcon")
       .test(/\.svg$/)
       .include.add(resolve("src/remixIcon"))

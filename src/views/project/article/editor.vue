@@ -1,6 +1,13 @@
 <template>
   <div class="editor-container">
     <el-page-header :content="content" title="返回" @back="goBack" />
+    <ele-form
+      v-model="form"
+      class="clear-col-6"
+      v-bind="formConfig"
+      is-show-reset-btn
+      :request-fn="queryData"
+    />
     <div>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="标题" prop="title">
@@ -10,9 +17,9 @@
             placeholder="请输入标题"
           ></el-input>
         </el-form-item>
-        <el-form-item label="作者" prop="title">
+        <el-form-item label="作者" prop="author">
           <el-input
-            v-model="form.title"
+            v-model="form.author"
             maxlength="20"
             placeholder="请输入作者"
           ></el-input>
@@ -20,13 +27,14 @@
 
         <el-row :gutter="24">
           <el-col :md="24" :lg="4" :xl="3">
-            <el-form-item label="上传封面" prop="module">
+            <el-form-item label="上传封面" prop="cover_pic">
               <el-upload
                 class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                :action="fileUpload"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload"
+                :before-upload="handleBeforeUpload"
+                accept="image/*"
               >
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i class="el-icon-plus avatar-uploader-icon"></i>
@@ -36,35 +44,47 @@
           <el-col :md="24" :lg="10">
             <el-form-item
               label="请选择一级栏目"
-              prop="module"
+              prop="cate1"
               label-width="140px"
             >
-              <el-select v-model="form.module" :style="{ width: '100%' }">
-                <el-option label="新闻动态" value="1"></el-option>
-                <el-option label="实时热点" value="2"></el-option>
+              <el-select v-model="form.cate1" :style="{ width: '100%' }">
+                <el-option
+                  v-for="(item, index) in cate1"
+                  :key="index"
+                  :label="item.text"
+                  :value="item.value"
+                ></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item
               label="请选择三级栏目"
-              prop="module"
+              prop="cate3"
               label-width="140px"
             >
-              <el-select v-model="form.module" :style="{ width: '100%' }">
-                <el-option label="新闻动态" value="1"></el-option>
-                <el-option label="实时热点" value="2"></el-option>
+              <el-select v-model="form.cate3" :style="{ width: '100%' }">
+                <el-option
+                  v-for="(item, index) in cate3"
+                  :key="index"
+                  :label="item.text"
+                  :value="item.value"
+                ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :md="24" :lg="10">
             <el-form-item
               label="请选择二级栏目"
-              prop="module"
+              prop="cate2"
               label-width="140px"
             >
-              <el-select v-model="form.module" :style="{ width: '100%' }">
-                <el-option label="新闻动态" value="1"></el-option>
-                <el-option label="实时热点" value="2"></el-option>
+              <el-select v-model="form.cate2" :style="{ width: '100%' }">
+                <el-option
+                  v-for="(item, index) in cate2"
+                  :key="index"
+                  :label="item.text"
+                  :value="item.value"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="发布日期" prop="field101">
@@ -94,9 +114,9 @@
           </el-checkbox-group>
         </el-form-item>
 
-        <el-form-item label="内容" prop="content" style="margin-bottom: 30px">
+        <!-- <el-form-item label="内容" prop="content" style="margin-bottom: 30px">
           <Tinymce ref="editor" v-model="form.content" :height="400" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="success" @click="handleSave">保存</el-button>
           <el-button type="primary" @click="handleSave">提交审核</el-button>
@@ -113,29 +133,87 @@
 </template>
 
 <script>
-  import Tinymce from "@/components/Tinymce";
+  // import Tinymce from "@/components/Tinymce";
+  import { mapState } from "vuex";
+  import { fileUpload } from "@/config/settings";
+  import filters from "@/filters";
   export default {
     name: "Editor",
-    components: { Tinymce },
+    components: {
+      //  Tinymce
+    },
     data() {
       return {
+        fileUpload,
         borderColor: "#dcdfe6",
         dialogTableVisible: false,
         form: {
           title: "",
+          author: "",
           module: "",
           content: "",
           time: [],
         },
         content: "添加文章",
-        checkedUsers: [],
-        users: [
-          "用户类型A",
-          "用户类型B",
-          "用户类型C",
-          "用户类型D",
-          "用户类型E",
-        ],
+        formConfig: {
+          formDesc: {
+            title: {
+              type: "input",
+              label: "文章标题",
+              attrs: {
+                clearable: true,
+              },
+            },
+            author: {
+              type: "input",
+              label: "文章作者",
+              attrs: {
+                clearable: true,
+              },
+            },
+            status: {
+              type: "select",
+              label: "文章状态",
+              isOptions: true,
+              attrs: {
+                clearable: true,
+              },
+              options: () => {
+                return this.$store.state.article.status;
+              },
+            },
+            cate1: {
+              type: "select",
+              label: "一级栏目",
+              attrs: {
+                clearable: true,
+              },
+              options: () => {
+                return this.$store.state.article.cate1;
+              },
+            },
+            cate2: {
+              type: "select",
+              label: "二级栏目",
+              attrs: {
+                clearable: true,
+              },
+              options: () => {
+                return this.$store.state.article.cate2;
+              },
+            },
+            cate3: {
+              type: "select",
+              label: "三级栏目",
+              attrs: {
+                clearable: true,
+              },
+              options: () => {
+                return this.$store.state.article.cate3;
+              },
+            },
+          },
+        },
         rules: {
           title: [
             {
@@ -144,31 +222,69 @@
               trigger: "blur",
             },
           ],
-          module: [
+          author: [
             {
               required: true,
-              message: "请选择模块",
+              message: "请输入作者",
               trigger: "change",
             },
           ],
-          content: [
+          cover_pic: [
             {
               required: true,
-              message: "请输入内容",
+              message: "请上传封面",
+              trigger: "blur",
+            },
+          ],
+          cate1: [
+            {
+              required: true,
+              message: "请选择一级栏目",
+              trigger: "blur",
+            },
+          ],
+          cate2: [
+            {
+              required: true,
+              message: "请选择二级栏目",
+              trigger: "blur",
+            },
+          ],
+          cate3: [
+            {
+              required: true,
+              message: "请选择三级栏目",
               trigger: "blur",
             },
           ],
         },
       };
     },
+    computed: {
+      ...mapState({
+        articleList: (state) => state.article.articleList,
+        cate1: (state) => state.article.cate1,
+        cate2: (state) => state.article.cate2,
+        cate3: (state) => state.article.cate3,
+      }),
+    },
     created() {
       this.content = this.$route.query.id ? "编辑文章" : "添加文章";
+      if (this.$route.query.id) {
+        const current = this.articleList.find(
+          (x) => this.$route.query.id == x.id
+        );
+        this.form = current;
+      }
     },
     methods: {
       goBack() {
         this.$router.back(-1);
       },
       handleCheckedUsersChange(e) {
+        console.log(e);
+      },
+      handleBeforeUpload(e) {
         console.log(e);
       },
       handleSave() {

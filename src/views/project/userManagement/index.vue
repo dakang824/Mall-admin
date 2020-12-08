@@ -287,7 +287,7 @@
         window.open(filters.imgBaseUrl(excel_path), "_parent");
       },
       handleImport() {
-        this.$refs["import"].showImport();
+        this.$refs["import"].showImport(this.formConfig.formDesc);
       },
       handleEdit(row) {
         if (row.id) {

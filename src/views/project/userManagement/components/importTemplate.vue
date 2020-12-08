@@ -2,27 +2,28 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2020-12-07 16:20:00
+ * @LastEditTime: 2020-12-09 00:26:47
 -->
 <template>
-  <ele-form-dialog
-    v-model="formData"
-    label-position="left"
-    :form-desc="formDesc"
+  <ele-import
+    :fields="fields"
+    :filepath="filepath"
+    dialog-width="700px"
+    :formatter="formatter"
+    :request-fn="requestFn"
     :rules="rules"
-    :visible.sync="dialogFormVisible"
+    :tips="tips"
     :title="title"
-    width="620px"
-    :request-fn="handleSubmit"
-    :form-btns="formBtns"
-    :is-show-cancel-btn="false"
-    @closed="handleClosed"
-  ></ele-form-dialog>
+    :visible.sync="dialogFormVisible"
+    @close="handleClosed"
+    @finish="handleFinishImport"
+  />
 </template>
 
 <script>
   import filters from "@/filters";
-  import { fileUpload } from "@/config/settings";
+  import { findAllCompany, findAllProfGroup } from "@/api/userManagement";
+  import UserTemplate from "@/assets/files/user-template.xlsx";
   export default {
     components: {},
     props: {
@@ -34,43 +35,72 @@
     data() {
       return {
         dialogFormVisible: false,
-        formData: {},
-        formBtns: [
-          {
-            text: "下载模板",
-            click: () => {
-              alert("点击下一步了!");
-            },
-          },
+        tips: [
+          "姓名必填",
+          "账号必填",
+          "密码必填",
+          "角色必选",
+          "所属公司必选",
+          "专业组必选",
+          "用户类型必选",
         ],
-        formDesc: {
-          files: {
-            label: "选择文件:",
-            type: "upload-file",
-            attrs: {
-              action: filters.imgBaseUrl(fileUpload),
-              responseFn(response, file) {
-                return {
-                  name: file.name,
-                  url: URL.createObjectURL(file.raw),
-                  size: file.size,
-                };
-              },
-            },
+        fields: {
+          name: "姓名",
+          account: "账号",
+          role: "角色",
+          comp_id: "所属公司",
+          prof_group_id: "专业组",
+          type: "用户类型",
+          pwd: "密码",
+        },
+        formatter: {
+          role: {
+            1: "学生",
+            2: "老师",
           },
+          type: {
+            1: "临时工",
+            2: "正式工",
+          },
+          prof_group_id: {},
+          comp_id: {},
         },
         rules: {
-          files: { required: true, message: "请选择文件" },
+          name: { required: true, message: "姓名必填" },
+          account: { required: true, message: "账号必填" },
+          role: { required: true, message: "角色必选" },
+          comp_id: { required: true, message: "所属公司必选" },
+          prof_group_id: { required: true, message: "专业组必选" },
+          type: { required: true, message: "用户类型必选" },
+          pwd: { required: true, message: "密码必填" },
         },
+        // 注意, 只能是.xlsx的文件, .xls或者.cvs都会报错
+        filepath: UserTemplate,
       };
     },
     methods: {
-      showImport(e) {
-        this.formDesc = { ...e, ...this.formDesc };
+      async showImport(e) {
+        const arr = await e.prof_group_id.options();
+        arr.map((item) => {
+          this.formatter.prof_group_id[item.value] = item.text;
+        });
+        const arr1 = await e.comp_id.options();
+        arr1.map((item) => {
+          this.formatter.comp_id[item.value] = item.text;
+        });
+        console.log(this.formatter);
         this.dialogFormVisible = true;
+      },
+      async requestFn(data) {
+        console.log(data);
+        // this.tableData = JSON.stringify(data);
+        return Promise.resolve();
       },
       handleClosed() {
         this.dialogFormVisible = false;
+      },
+      handleFinishImport() {
+        console.log("导入完毕了~");
       },
       handleSubmit(e) {
         console.log(e);
@@ -79,15 +109,9 @@
   };
 </script>
 
-<style lang="scss" scoped>
-  ::v-deep {
-    .el-dialog {
-      .ele-form-btns {
-        text-align: right;
-      }
-      .el-dialog__body {
-        padding: 20px 20px 5px;
-      }
-    }
+<style>
+  .el-table {
+    max-height: 450px;
+    overflow: auto;
   }
 </style>

@@ -41,13 +41,18 @@
       @selection-change="setSelectRows"
     />
 
-    <edit ref="edit" @fetchData="fetchData"></edit>
+    <edit
+      ref="edit"
+      :options="{ formDesc: formConfig.formDesc }"
+      @fetchData="fetchData"
+      @update="updateData"
+    ></edit>
   </div>
 </template>
 
 <script>
-  import { getList, doDelete } from "@/api/list";
-  import Edit from "./components/CurdEdit";
+  import { findArticle, deleteArticle } from "@/api/list";
+  import Edit from "./components/Edit";
 
   export default {
     name: "Curd",
@@ -55,131 +60,75 @@
     data() {
       return {
         list: null,
-        listLoading: true,
+        loading: true,
         layout: "total, sizes, prev, pager, next, jumper",
         total: 0,
         selectRows: "",
-        elementLoadingText: "正在加载...",
         queryForm: {
           pageNo: 1,
           pageSize: 10,
+          title: "",
+          author: "",
+          cate1: "",
+          cate2: "",
+          cate3: "",
         },
         formConfig: {
           formDesc: {
-            name: {
+            title: {
               type: "input",
-              label: "文章标题",
+              label: "标题",
               attrs: {
                 clearable: true,
               },
             },
-            account: {
+            author: {
               type: "input",
-              label: "文章作者",
+              label: "作者",
               attrs: {
                 clearable: true,
               },
             },
-            role: {
+            status: {
               type: "select",
-              label: "文章状态",
+              label: "状态",
               isOptions: true,
               attrs: {
                 clearable: true,
               },
-              options: [
-                {
-                  text: "发布中",
-                  value: 1,
-                },
-                {
-                  text: "审核中",
-                  value: 2,
-                },
-                {
-                  text: "已下架",
-                  value: 3,
-                },
-                {
-                  text: "未发布",
-                  value: 4,
-                },
-              ],
+              options: () => {
+                return this.$store.state.article.status;
+              },
             },
-            comp_id: {
+            cate1: {
               type: "select",
               label: "一级栏目",
               attrs: {
                 clearable: true,
               },
-              options: [
-                {
-                  text: "首页",
-                  value: 1,
-                },
-                {
-                  text: "课件",
-                  value: 2,
-                },
-              ],
+              options: () => {
+                return this.$store.state.article.cate1;
+              },
             },
-            prof_group_id: {
+            cate2: {
               type: "select",
               label: "二级栏目",
               attrs: {
                 clearable: true,
               },
-              options: [
-                {
-                  text: "公共",
-                  value: 1,
-                },
-                {
-                  text: "标准",
-                  value: 2,
-                },
-                {
-                  text: "技能树",
-                  value: 3,
-                },
-                {
-                  text: "影像",
-                  value: 4,
-                },
-                {
-                  text: "总结",
-                  value: 5,
-                },
-              ],
+              options: () => {
+                return this.$store.state.article.cate2;
+              },
             },
-            type: {
+            cate3: {
               type: "select",
               label: "三级栏目",
               attrs: {
                 clearable: true,
               },
-              options: [
-                {
-                  text: "公共",
-                  value: 1,
-                },
-                {
-                  text: "标准",
-                  value: 2,
-                },
-                {
-                  text: "技能树",
-                  value: 3,
-                },
-                {
-                  text: "影像",
-                  value: 4,
-                },
-                {
-                  text: "总结",
-                  value: 5,
-                },
-              ],
+              options: () => {
+                return this.$store.state.article.cate3;
+              },
             },
           },
         },
@@ -198,41 +147,30 @@
               label: "内容",
             },
             {
-              prop: "account",
-              label: "栏目",
+              prop: "title",
+              label: "标题",
             },
             {
-              prop: "company",
+              prop: "author",
               label: "作者",
-              render: (h, scope) => {
-                return (
-                  <span>
-                    {scope.row.roles === 1
-                      ? "学生"
-                      : scope.row.roles === 2
-                      ? "老师"
-                      : ""}
-                  </span>
-                );
-              },
             },
             {
-              prop: "company",
+              prop: "create_time",
               label: "更新时间",
               render: (h, scope) => {
-                return <span>{scope.row.company.name}</span>;
+                return <span>{scope.row.create_time.substr(0, 18)}</span>;
               },
             },
             {
-              prop: "type",
+              prop: "status",
               label: "状态",
               render: (h, scope) => {
                 return (
                   <span>
-                    {scope.row.type === 1
-                      ? "临时工"
-                      : scope.row.type === 2
-                      ? "正式工"
+                    {scope.row.status === 0
+                      ? "未发布"
+                      : scope.row.status === 1
+                      ? "已发布"
                       : ""}
                   </span>
                 );
@@ -240,7 +178,7 @@
             },
             {
               label: "操作",
-              width: "230",
+              width: "160",
               render: (h, scope) => {
                 return (
                   <div>
@@ -260,7 +198,6 @@
                     >
                       删除
                     </el-button>
-                    <el-button type="warning">未绑定</el-button>
                   </div>
                 );
               },
@@ -278,30 +215,38 @@
         this.selectRows = val;
       },
       handleEdit(row) {
-        // if (row.id) {
-        //   this.$refs["edit"].showEdit(row);
-        // } else {
-        //   this.$refs["edit"].showEdit();
-        // }
-        this.$router.push({
-          path: "/article/editor",
-          query: { id: row.id || "" },
-        });
+        if (row.id) {
+          this.$refs["edit"].showEdit(row);
+        } else {
+          this.$refs["edit"].showEdit();
+        }
+        // this.$router.push({
+        //   path: "/article/editor",
+        //   query: { id: row.id || "" },
+        // });
       },
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗?", null, async () => {
-            const { msg } = await doDelete({ ids: row.id });
+            const { msg } = await deleteArticle({ ids: row.id });
             this.$baseMessage(msg, "success");
-            this.fetchData();
+            this.tableData.data.splice(
+              this.tableData.data.findIndex((item) => item.id === row.id),
+              1
+            );
           });
         } else {
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗?", null, async () => {
-              const { msg } = await doDelete({ ids });
+              const { msg } = await deleteArticle({ ids });
               this.$baseMessage(msg, "success");
-              this.fetchData();
+              this.selectRows.map((item) => {
+                this.tableData.data.splice(
+                  this.tableData.data.findIndex((it) => it.id === item.id),
+                  1
+                );
+              });
             });
           } else {
             this.$baseMessage("未选中任何行", "error");
@@ -321,13 +266,18 @@
         this.queryForm.pageNo = 1;
         this.fetchData();
       },
-      async fetchData() {
-        this.listLoading = true;
-        // const { data, totalCount } = await getList(this.queryForm);
-        // this.list = data;
-        // this.total = totalCount;
+      async fetchData(loading = true) {
+        this.loading = loading;
+        const {
+          data: {
+            articles: { list, total },
+          },
+        } = await findArticle(this.queryForm);
+        this.tableData.data = list;
+        this.total = total;
+        this.$store.commit("article/ChangeArticleList", list);
         setTimeout(() => {
-          this.listLoading = false;
+          this.loading = false;
         }, 300);
       },
     },
