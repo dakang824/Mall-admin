@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-12-07 16:40:01
+ * @LastEditTime: 2020-12-09 18:12:00
 -->
 <template>
   <el-drawer
@@ -214,7 +214,7 @@
   import { addProduct, modifyProduct, findProduct } from "@/api/goods";
   import { mapState } from "vuex";
   import { fileUpload } from "@/config/settings";
-  import { findAllPostTemplate } from "@/api/freight";
+  // import { findAllPostTemplate } from "@/api/freight";
   import prodSpec from "./prodSpec";
   import prodRecipes from "./prodRecipes";
   import unifySpec from "./unifySpec";

@@ -137,6 +137,22 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/questions",
+    component: Layout,
+    redirect: "/questions",
+    children: [
+      {
+        path: "/questions",
+        name: "Questions",
+        component: () => import("@/views/project/questions"),
+        meta: {
+          title: "题库管理",
+          icon: "question-circle",
+        },
+      },
+    ],
+  },
+  {
     path: "/article",
     component: Layout,
     redirect: "noRedirect",
@@ -218,23 +234,6 @@ export const asyncRoutes = [
         meta: {
           title: "商品管理",
           icon: "gifts",
-        },
-      },
-    ],
-  },
-  {
-    path: "/freight",
-    component: Layout,
-    redirect: "/freight",
-    hidden: true,
-    children: [
-      {
-        path: "/freight",
-        name: "Freight",
-        component: () => import("@/views/project/freight/index"),
-        meta: {
-          title: "运费管理",
-          icon: "donate",
         },
       },
     ],

@@ -58,6 +58,7 @@
     "vue": "^2.6.11",
     "vue-echarts": "^5.0.0-beta.0",
     "vue-ele-form": "^0.8.55",
+    "vue-ele-form-dynamic": "^0.4.3",
     "vue-ele-form-image-uploader": "^0.1.8",
     "vue-ele-form-upload-file": "0.0.7",
     "vue-ele-import": "^1.1.1",
