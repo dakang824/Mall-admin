@@ -285,7 +285,7 @@
                       item.rig == 1 ? "正确" : "错误"
                     }`;
                   })
-                  .join("##");
+                  .join("/##/");
               } else if (j === "type") {
                 return v[j] === 1
                   ? "单选"
