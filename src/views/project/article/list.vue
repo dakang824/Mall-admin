@@ -158,8 +158,9 @@
             {
               prop: "create_time",
               label: "更新时间",
+              width: "160",
               render: (h, scope) => {
-                return <span>{scope.row.create_time.substr(0, 18)}</span>;
+                return <span>{scope.row.create_time.substr(0, 19)}</span>;
               },
             },
             {
