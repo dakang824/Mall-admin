@@ -19,7 +19,12 @@
         <el-button icon="el-icon-upload2" type="warning" @click="handleImport">
           用户导入
         </el-button>
-        <el-button icon="el-icon-download" type="success" @click="handleExport">
+        <el-button
+          icon="el-icon-download"
+          type="success"
+          :loading="downloadLoading"
+          @click="handleExport"
+        >
           用户导出
         </el-button>
         <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
@@ -72,6 +77,7 @@
     data() {
       return {
         loading: true,
+        downloadLoading: false,
         layout: "total, sizes, prev, pager, next, jumper",
         total: 0,
         selectRows: "",
@@ -281,10 +287,53 @@
         this.$set(this.tableData.data, index, e);
       },
       async handleExport() {
-        const {
-          data: { excel_path },
-        } = await exportUsers(this.queryForm);
-        window.open(filters.imgBaseUrl(excel_path), "_parent");
+        // const {
+        //   data: { excel_path },
+        // } = await exportUsers(this.queryForm);
+        // window.open(filters.imgBaseUrl(excel_path), "_parent");
+
+        this.downloadLoading = true;
+        import("@/components/vendor/Export2Excel").then((excel) => {
+          excel.export_json_to_excel({
+            header: [
+              "序号",
+              "姓名",
+              "账号",
+              "角色",
+              "所属公司",
+              "用户类型",
+              "专业组",
+            ],
+            data: this.formatJson(),
+            filename: "users",
+            autoWidth: true,
+            bookType: "xlsx",
+          });
+          this.downloadLoading = false;
+        });
+      },
+      formatJson() {
+        return this.tableData.data.map((v) =>
+          [
+            "id",
+            "name",
+            "account",
+            "roles",
+            "company",
+            "type",
+            "prof_group",
+          ].map((j) => {
+            if (j === "roles") {
+              return v[j] === 1 ? "学生" : v[j] === 2 ? "老师" : "";
+            } else if (j === "company" || j === "prof_group") {
+              return v[j].name;
+            } else if (j === "type") {
+              return v[j] === 1 ? "临时工" : v[j] === 2 ? "正式工" : "";
+            } else {
+              return v[j];
+            }
+          })
+        );
       },
       handleImport() {
         this.$refs["import"].showImport(this.formConfig.formDesc);
