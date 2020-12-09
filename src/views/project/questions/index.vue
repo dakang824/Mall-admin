@@ -261,7 +261,7 @@
         this.downloadLoading = true;
         import("@/components/vendor/Export2Excel").then((excel) => {
           excel.export_json_to_excel({
-            header: ["序号", "题目", "专业", "模块", "类型"],
+            header: ["序号", "题目", "专业", "模块", "题目类型", "答案"],
             data: this.formatJson(),
             filename: "questions",
             autoWidth: true,
@@ -272,23 +272,33 @@
       },
       formatJson() {
         return this.tableData.data.map((v) =>
-          ["id", "content", "prof_id", "module_id", "type"].map((j) => {
-            if (j === "prof_id") {
-              return this.prof_name[v[j]];
-            } else if (j === "module_id") {
-              return this.module_name[v[j]];
-            } else if (j === "type") {
-              return v[j] === 1
-                ? "单选"
-                : v[j] === 2
-                ? "多选"
-                : v[j] === 3
-                ? "判断"
-                : "";
-            } else {
-              return v[j];
+          ["id", "content", "prof_id", "module_id", "type", "queOptions"].map(
+            (j) => {
+              if (j === "prof_id") {
+                return this.prof_name[v[j]];
+              } else if (j === "module_id") {
+                return this.module_name[v[j]];
+              } else if (j === "queOptions") {
+                return v[j]
+                  .map((item) => {
+                    return `${item.content}--${
+                      item.rig == 1 ? "正确" : "错误"
+                    }`;
+                  })
+                  .join("##");
+              } else if (j === "type") {
+                return v[j] === 1
+                  ? "单选"
+                  : v[j] === 2
+                  ? "多选"
+                  : v[j] === 3
+                  ? "判断"
+                  : "";
+              } else {
+                return v[j];
+              }
             }
-          })
+          )
         );
       },
       handleImport() {
