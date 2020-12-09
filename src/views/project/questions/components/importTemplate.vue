@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2020-12-09 22:02:01
+ * @LastEditTime: 2020-12-09 23:13:55
 -->
 <template>
   <ele-import
@@ -22,81 +22,67 @@
 
 <script>
   import filters from "@/filters";
-  import { addUser } from "@/api/userManagement";
+  import { addQuestion } from "@/api/questions";
   import { findAllCompany, findAllProfGroup } from "@/api/userManagement";
-  import UserTemplate from "@/assets/files/user-template.xlsx";
+  import QuestionsTemplate from "@/assets/files/questions-template.xlsx";
   export default {
     components: {},
     props: {
       title: {
         type: String,
-        default: "导入文件",
+        default: "题库导入",
       },
     },
     data() {
       return {
         dialogFormVisible: false,
-        tips: [
-          "姓名必填",
-          "账号必填",
-          "密码必填",
-          "角色必选",
-          "所属公司必选",
-          "专业组必选",
-          "用户类型必选",
-        ],
+        tips: ["题目类型", "题目", "专业", "模块", "答案"],
         fields: {
-          name: "姓名",
-          account: "账号",
-          role: "角色",
-          comp_id: "所属公司",
-          prof_group_id: "专业组",
-          type: "用户类型",
-          pwd: "密码",
+          content: "题目",
+          prof_id: "专业",
+          module_id: "模块",
+          type: "题目类型",
+          options: "答案",
         },
-        formatter: {
-          role: {
-            1: "学生",
-            2: "老师",
-          },
-          type: {
-            1: "临时工",
-            2: "正式工",
-          },
-          prof_group_id: {},
-          comp_id: {},
-        },
+        formatter: {},
         rules: {
-          name: { required: true, message: "姓名必填" },
-          account: { required: true, message: "账号必填" },
-          role: { required: true, message: "角色必选" },
-          comp_id: { required: true, message: "所属公司必选" },
-          prof_group_id: { required: true, message: "专业组必选" },
-          type: { required: true, message: "用户类型必选" },
-          pwd: { required: true, message: "密码必填" },
+          content: { required: true, message: "题目必填" },
+          prof_id: { required: true, message: "专业必填" },
+          module_id: { required: true, message: "模块必填" },
+          type: { required: true, message: "题目类型必填" },
+          options: { required: true, message: "答案必填" },
         },
         // 注意, 只能是.xlsx的文件, .xls或者.cvs都会报错
-        filepath: UserTemplate,
+        filepath: QuestionsTemplate,
       };
     },
     methods: {
       async showImport(e) {
-        // const arr = await e.prof_group_id.options();
-        // arr.map((item) => {
-        //   this.formatter.prof_group_id[item.value] = item.text;
-        // });
-        // const arr1 = await e.comp_id.options();
-        // arr1.map((item) => {
-        //   this.formatter.comp_id[item.value] = item.text;
-        // });
+        this.formatter = {
+          type: this.getValue(e.type.options),
+          prof_id: this.getValue(e.prof_id.options),
+          module_id: this.getValue(e.module_id.options),
+        };
         this.dialogFormVisible = true;
+      },
+      getValue(arr) {
+        return arr.reduce((a, b) => {
+          a[b.value] = b.text;
+          return a;
+        }, {});
       },
       async requestFn(data) {
         data.map(async (item) => {
-          const {
-            msg,
-            data: { user },
-          } = await addUser(item);
+          item.options = JSON.stringify(
+            item.options.split("/##/").map((item) => {
+              const arr = item.split("--");
+              return {
+                content: arr[0],
+                right: arr[1] == "正确" ? 1 : 0,
+              };
+            })
+          );
+          await addQuestion(item);
         });
         return Promise.resolve();
       },

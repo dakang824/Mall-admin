@@ -55,7 +55,7 @@
       @fetchData="fetchData"
       @update="updateData"
     ></edit>
-    <import-template ref="import" title="用户导入" @fetchData="fetchData" />
+    <import-template ref="import" @fetchData="fetchData" />
   </div>
 </template>
 

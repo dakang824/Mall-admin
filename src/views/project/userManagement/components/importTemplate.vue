@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2020-12-09 00:35:39
+ * @LastEditTime: 2020-12-09 22:24:34
 -->
 <template>
   <ele-import
@@ -30,7 +30,7 @@
     props: {
       title: {
         type: String,
-        default: "导入文件",
+        default: "用户导入",
       },
     },
     data() {
