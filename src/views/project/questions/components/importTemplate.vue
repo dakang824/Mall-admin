@@ -2,13 +2,13 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2020-12-09 23:13:55
+ * @LastEditTime: 2020-12-10 20:22:07
 -->
 <template>
   <ele-import
     :fields="fields"
     :filepath="filepath"
-    dialog-width="700px"
+    dialog-width="750px"
     :formatter="formatter"
     :request-fn="requestFn"
     :rules="rules"
@@ -97,7 +97,7 @@
 </script>
 
 <style>
-  .el-table {
+  .el-dialog__wrapper .el-table {
     max-height: 450px;
     overflow: auto;
   }

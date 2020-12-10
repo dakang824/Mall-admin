@@ -96,6 +96,7 @@
             {
               prop: "prof_id",
               label: "专业",
+              width: "90",
               render: (h, scope) => {
                 return <span>{this.prof_name[scope.row.prof_id]}</span>;
               },
@@ -103,6 +104,7 @@
             {
               prop: "module_id",
               label: "模块",
+              width: "90",
               render: (h, scope) => {
                 return <span>{this.module_name[scope.row.module_id]}</span>;
               },
@@ -110,6 +112,7 @@
             {
               prop: "type",
               label: "类型",
+              width: "80",
               render: (h, scope) => {
                 return (
                   <span>
@@ -126,7 +129,7 @@
             },
             {
               label: "操作",
-              width: "230",
+              width: "150",
               render: (h, scope) => {
                 return (
                   <div>
