@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2020-12-10 20:22:07
+ * @LastEditTime: 2020-12-11 20:48:25
 -->
 <template>
   <ele-import
@@ -57,11 +57,11 @@
       };
     },
     methods: {
-      async showImport(e) {
+      async showImport(e, professions, moduleLists) {
         this.formatter = {
           type: this.getValue(e.type.options),
-          prof_id: this.getValue(e.prof_id.options),
-          module_id: this.getValue(e.module_id.options),
+          prof_id: this.getValue(professions),
+          module_id: this.getValue(moduleLists),
         };
         this.dialogFormVisible = true;
       },

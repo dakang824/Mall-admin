@@ -287,7 +287,11 @@
         );
       },
       handleImport() {
-        this.$refs["import"].showImport(this.formConfig.formDesc);
+        this.$refs["import"].showImport(
+          this.formConfig.formDesc,
+          this.professions,
+          this.moduleLists
+        );
       },
       handleEdit(row) {
         if (row.id) {

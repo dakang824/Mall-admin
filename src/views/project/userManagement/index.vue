@@ -63,10 +63,10 @@
   import {
     findUsers,
     deleteUser,
-    findAllCompany,
     findAllProfGroup,
     exportUsers,
   } from "@/api/userManagement";
+  import { mapState } from "vuex";
   import filters from "@/filters";
   import Edit from "./components/Edit";
   import ImportTemplate from "./components/importTemplate";
@@ -214,14 +214,8 @@
                 clearable: true,
               },
               options: async () => {
-                const {
-                  data: {
-                    companyList: { list },
-                  },
-                } = await findAllCompany({ pageNo: 1, pageSize: 50 });
-                return list.map((item) => {
-                  return { text: item.name, value: item.id };
-                });
+                await this.$store.dispatch("globalRequest/findAllCompany");
+                return this.companyLists;
               },
             },
             prof_group_id: {
@@ -271,6 +265,12 @@
           type: "",
         },
       };
+    },
+    computed: {
+      ...mapState({
+        companyLists: (state) => state.globalRequest.companyLists,
+        companyListsKeyVal: (state) => state.globalRequest.companyListsKeyVal,
+      }),
     },
     async created() {
       this.fetchData();
