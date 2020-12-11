@@ -153,6 +153,39 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/mockTest",
+    component: Layout,
+    redirect: "/mockTest",
+    children: [
+      {
+        path: "/mockTest",
+        name: "MockTest",
+        component: () => import("@/views/project/mockTest"),
+        meta: {
+          title: "模拟考配置",
+          icon: "pen-nib",
+        },
+      },
+    ],
+  },
+  {
+    path: "/userScore",
+    component: Layout,
+    redirect: "/userScore",
+    children: [
+      {
+        path: "/userScore",
+        name: "UserScore",
+        component: () => import("@/views/project/userScore"),
+        meta: {
+          title: "成绩管理",
+          icon: "marker",
+        },
+      },
+    ],
+  },
+
+  {
     path: "/article",
     component: Layout,
     redirect: "noRedirect",
@@ -221,23 +254,6 @@ export const asyncRoutes = [
       },
     ],
   },
-  {
-    path: "/goods",
-    component: Layout,
-    redirect: "/goods",
-    hidden: true,
-    children: [
-      {
-        path: "/goods",
-        name: "Goods",
-        component: () => import("@/views/project/goods/index"),
-        meta: {
-          title: "商品管理",
-          icon: "gifts",
-        },
-      },
-    ],
-  },
 
   {
     path: "/order",
@@ -291,23 +307,6 @@ export const asyncRoutes = [
           title: "商家订单查询",
           icon: "shopping-bag",
           noKeepAlive: true,
-        },
-      },
-    ],
-  },
-  {
-    path: "/payBackOrders",
-    component: Layout,
-    hidden: true,
-    redirect: "/payBackOrders",
-    children: [
-      {
-        path: "/payBackOrders",
-        name: "PayBackOrders",
-        component: () => import("@/views/project/payBackOrders/index"),
-        meta: {
-          title: "退款订单",
-          icon: "money-bill-alt",
         },
       },
     ],

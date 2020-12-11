@@ -16,17 +16,6 @@
         <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
           添加
         </el-button>
-        <el-button icon="el-icon-upload2" type="warning" @click="handleImport">
-          题库导入
-        </el-button>
-        <el-button
-          icon="el-icon-download"
-          type="success"
-          :loading="downloadLoading"
-          @click="handleExport"
-        >
-          题库导出
-        </el-button>
         <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
           批量删除
         </el-button>
@@ -55,20 +44,21 @@
       @fetchData="fetchData"
       @update="updateData"
     ></edit>
-    <import-template ref="import" @fetchData="fetchData" />
+    <test-table ref="testTable" />
+    <result-table ref="resultTable" />
   </div>
 </template>
 
 <script>
-  import { findQuestions, deleteQuestion } from "@/api/questions";
-  import filters from "@/filters";
-  import Edit from "./components/Edit";
-  import ImportTemplate from "./components/importTemplate";
   import { mapState } from "vuex";
+  import { findTest, deleteTest } from "@/api/mockTest";
+  import Edit from "./components/Edit";
+  import TestTable from "./components/testTable";
+  import ResultTable from "./components/resultTable";
 
   export default {
-    name: "Questions",
-    components: { Edit, ImportTemplate },
+    name: "MockTest",
+    components: { Edit, TestTable, ResultTable },
     data() {
       return {
         loading: true,
@@ -87,14 +77,12 @@
               width: "80",
             },
             {
-              prop: "content",
-              label: "题目",
-              showOverflowTooltip: true,
+              prop: "name",
+              label: "名称",
             },
             {
               prop: "prof_id",
               label: "专业",
-              width: "90",
               render: (h, scope) => {
                 return <span>{this.professionsKeyVal[scope.row.prof_id]}</span>;
               },
@@ -102,7 +90,6 @@
             {
               prop: "module_id",
               label: "模块",
-              width: "90",
               render: (h, scope) => {
                 return (
                   <span>{this.moduleListsKeyVal[scope.row.module_id]}</span>
@@ -110,26 +97,33 @@
               },
             },
             {
-              prop: "type",
-              label: "类型",
-              width: "80",
+              prop: "company_id",
+              label: "单位",
               render: (h, scope) => {
                 return (
-                  <span>
-                    {scope.row.type === 1
-                      ? "单选"
-                      : scope.row.type === 2
-                      ? "多选"
-                      : scope.row.type === 3
-                      ? "判断"
-                      : ""}
-                  </span>
+                  <span>{this.companyListsKeyVal[scope.row.company_id]}</span>
                 );
               },
             },
             {
+              prop: "start_time",
+              label: "开始时间",
+              width: "140",
+              render: (h, scope) => {
+                return <span>{scope.row.start_time.substr(0, 16)}</span>;
+              },
+            },
+            {
+              prop: "end_time",
+              label: "结束时间",
+              width: "140",
+              render: (h, scope) => {
+                return <span>{scope.row.end_time.substr(0, 16)}</span>;
+              },
+            },
+            {
               label: "操作",
-              width: "150",
+              width: "280",
               render: (h, scope) => {
                 return (
                   <div>
@@ -140,6 +134,22 @@
                       }}
                     >
                       编辑
+                    </el-button>
+                    <el-button
+                      type="warning"
+                      onClick={() => {
+                        this.handleLookTests(scope.row);
+                      }}
+                    >
+                      试题
+                    </el-button>
+                    <el-button
+                      type="success"
+                      onClick={() => {
+                        this.handleLookResult(scope.row);
+                      }}
+                    >
+                      记录
                     </el-button>
                     <el-button
                       type="danger"
@@ -180,30 +190,20 @@
                 return this.moduleLists;
               },
             },
-            type: {
+            company_id: {
               type: "select",
-              label: "题目类型",
+              label: "单位",
               attrs: {
                 clearable: true,
               },
-              options: [
-                {
-                  text: "单选",
-                  value: 1,
-                },
-                {
-                  text: "多选",
-                  value: 2,
-                },
-                {
-                  text: "判断",
-                  value: 3,
-                },
-              ],
+              options: async () => {
+                await this.$store.dispatch("globalRequest/findAllCompany");
+                return this.companyLists;
+              },
             },
-            content: {
+            name: {
               type: "input",
-              label: "题目",
+              label: "考试名称",
               attrs: {
                 clearable: true,
               },
@@ -213,8 +213,8 @@
         queryForm: {
           pageNo: 1,
           pageSize: 10,
-          type: "",
-          content: "",
+          name: "",
+          company_id: "",
           prof_id: "",
           module_id: "",
         },
@@ -226,6 +226,8 @@
         professionsKeyVal: (state) => state.globalRequest.professionsKeyVal,
         moduleLists: (state) => state.globalRequest.moduleLists,
         moduleListsKeyVal: (state) => state.globalRequest.moduleListsKeyVal,
+        companyLists: (state) => state.globalRequest.companyLists,
+        companyListsKeyVal: (state) => state.globalRequest.companyListsKeyVal,
       }),
     },
     async created() {
@@ -242,52 +244,11 @@
         const index = this.tableData.data.findIndex((item) => item.id === e.id);
         this.$set(this.tableData.data, index, e);
       },
-      async handleExport() {
-        this.downloadLoading = true;
-        import("@/components/vendor/Export2Excel").then((excel) => {
-          excel.export_json_to_excel({
-            header: ["序号", "题目", "专业", "模块", "题目类型", "答案"],
-            data: this.formatJson(),
-            filename: "questions",
-            autoWidth: true,
-            bookType: "xlsx",
-          });
-          this.downloadLoading = false;
-        });
+      handleLookTests(row) {
+        this.$refs["testTable"].showEdit(row);
       },
-      formatJson() {
-        return this.tableData.data.map((v) =>
-          ["id", "content", "prof_id", "module_id", "type", "queOptions"].map(
-            (j) => {
-              if (j === "prof_id") {
-                return this.prof_name[v[j]];
-              } else if (j === "module_id") {
-                return this.module_name[v[j]];
-              } else if (j === "queOptions") {
-                return v[j]
-                  .map((item) => {
-                    return `${item.content}--${
-                      item.rig == 1 ? "正确" : "错误"
-                    }`;
-                  })
-                  .join("/##/");
-              } else if (j === "type") {
-                return v[j] === 1
-                  ? "单选"
-                  : v[j] === 2
-                  ? "多选"
-                  : v[j] === 3
-                  ? "判断"
-                  : "";
-              } else {
-                return v[j];
-              }
-            }
-          )
-        );
-      },
-      handleImport() {
-        this.$refs["import"].showImport(this.formConfig.formDesc);
+      handleLookResult(row) {
+        this.$refs["resultTable"].showEdit(row);
       },
       handleEdit(row) {
         if (row.id) {
@@ -299,7 +260,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await deleteQuestion({ ids: row.id });
+            const { msg } = await deleteTest({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.tableData.data.splice(
               this.tableData.data.findIndex((item) => item.id === row.id),
@@ -310,7 +271,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await deleteQuestion({ ids });
+              const { msg } = await deleteTest({ ids });
               this.$baseMessage(msg, "success");
               this.selectRows.map((item) => {
                 this.tableData.data.splice(
@@ -344,9 +305,9 @@
         this.loading = loading;
         const {
           data: {
-            questions: { list, total },
+            tests: { list, total },
           },
-        } = await findQuestions(this.queryForm);
+        } = await findTest(this.queryForm);
         this.tableData.data = list;
         this.total = total;
         setTimeout(() => {

@@ -17,7 +17,7 @@
           添加
         </el-button>
         <el-button icon="el-icon-upload2" type="warning" @click="handleImport">
-          题库导入
+          成绩导入
         </el-button>
         <el-button
           icon="el-icon-download"
@@ -25,7 +25,7 @@
           :loading="downloadLoading"
           @click="handleExport"
         >
-          题库导出
+          成绩导出
         </el-button>
         <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
           批量删除
@@ -60,14 +60,14 @@
 </template>
 
 <script>
-  import { findQuestions, deleteQuestion } from "@/api/questions";
+  import { findUserScore, deleteUserScore } from "@/api/userScore";
   import filters from "@/filters";
   import Edit from "./components/Edit";
   import ImportTemplate from "./components/importTemplate";
   import { mapState } from "vuex";
 
   export default {
-    name: "Questions",
+    name: "UserScore",
     components: { Edit, ImportTemplate },
     data() {
       return {
@@ -87,49 +87,65 @@
               width: "80",
             },
             {
-              prop: "content",
-              label: "题目",
-              showOverflowTooltip: true,
+              prop: "name",
+              label: "姓名",
             },
             {
-              prop: "prof_id",
-              label: "专业",
-              width: "90",
-              render: (h, scope) => {
-                return <span>{this.professionsKeyVal[scope.row.prof_id]}</span>;
-              },
+              prop: "user_account",
+              label: "erp账户",
             },
             {
-              prop: "module_id",
-              label: "模块",
-              width: "90",
-              render: (h, scope) => {
-                return (
-                  <span>{this.moduleListsKeyVal[scope.row.module_id]}</span>
-                );
-              },
+              prop: "test_name",
+              label: "试卷名称",
             },
             {
               prop: "type",
               label: "类型",
-              width: "80",
               render: (h, scope) => {
                 return (
                   <span>
                     {scope.row.type === 1
-                      ? "单选"
+                      ? "理论"
                       : scope.row.type === 2
-                      ? "多选"
-                      : scope.row.type === 3
-                      ? "判断"
+                      ? "实操"
                       : ""}
                   </span>
                 );
               },
             },
             {
+              prop: "prof_name",
+              label: "专业",
+            },
+            {
+              prop: "company_name",
+              label: "单位",
+            },
+
+            {
+              prop: "score",
+              label: "得分",
+            },
+            {
+              prop: "test_time",
+              label: "考试时间",
+              width: "140",
+            },
+            {
+              prop: "pic_path",
+              label: "图片",
+              width: "140",
+              render: (h, scope) => {
+                return (
+                  <el-image
+                    src={filters.imgBaseUrl(scope.row.pic_path)}
+                  ></el-image>
+                );
+              },
+            },
+            {
               label: "操作",
-              width: "150",
+              width: "230",
               render: (h, scope) => {
                 return (
                   <div>
@@ -140,6 +156,14 @@
                       }}
                     >
                       编辑
+                    </el-button>
+                    <el-button
+                      type="warning"
+                      onClick={() => {
+                        this.handleUpload(scope.row);
+                      }}
+                    >
+                      上传
                     </el-button>
                     <el-button
                       type="danger"
@@ -169,41 +193,45 @@
                 return this.professions;
               },
             },
-            module_id: {
+            company_id: {
               type: "select",
-              label: "模块",
+              label: "公司",
               attrs: {
                 clearable: true,
               },
               options: async () => {
-                await this.$store.dispatch("globalRequest/findModule");
-                return this.moduleLists;
+                await this.$store.dispatch("globalRequest/findAllCompany");
+                return this.companyLists;
               },
             },
             type: {
               type: "select",
-              label: "题目类型",
+              label: "类型",
+              isOptions: true,
               attrs: {
                 clearable: true,
               },
               options: [
                 {
-                  text: "单选",
+                  text: "理论",
                   value: 1,
                 },
                 {
-                  text: "多选",
+                  text: "实操",
                   value: 2,
-                },
-                {
-                  text: "判断",
-                  value: 3,
                 },
               ],
             },
-            content: {
+            name: {
               type: "input",
-              label: "题目",
+              label: "姓名",
+              attrs: {
+                clearable: true,
+              },
+            },
+            test_name: {
+              type: "input",
+              label: "试卷名称",
               attrs: {
                 clearable: true,
               },
@@ -213,10 +241,11 @@
         queryForm: {
           pageNo: 1,
           pageSize: 10,
+          name: "",
+          test_name: "",
           type: "",
-          content: "",
           prof_id: "",
-          module_id: "",
+          company_id: "",
         },
       };
     },
@@ -224,8 +253,8 @@
       ...mapState({
         professions: (state) => state.globalRequest.professions,
         professionsKeyVal: (state) => state.globalRequest.professionsKeyVal,
-        moduleLists: (state) => state.globalRequest.moduleLists,
-        moduleListsKeyVal: (state) => state.globalRequest.moduleListsKeyVal,
+        companyLists: (state) => state.globalRequest.companyLists,
+        companyListsKeyVal: (state) => state.globalRequest.companyListsKeyVal,
       }),
     },
     async created() {
@@ -243,12 +272,25 @@
         this.$set(this.tableData.data, index, e);
       },
       async handleExport() {
+        // const {
+        //   data: { excel_path },
+        // } = await exportUsers(this.queryForm);
+        // window.open(filters.imgBaseUrl(excel_path), "_parent");
+
         this.downloadLoading = true;
         import("@/components/vendor/Export2Excel").then((excel) => {
           excel.export_json_to_excel({
-            header: ["序号", "题目", "专业", "模块", "题目类型", "答案"],
+            header: [
+              "序号",
+              "姓名",
+              "账号",
+              "角色",
+              "所属公司",
+              "用户类型",
+              "专业组",
+            ],
             data: this.formatJson(),
-            filename: "questions",
+            filename: "users",
             autoWidth: true,
             bookType: "xlsx",
           });
@@ -257,33 +299,25 @@
       },
       formatJson() {
         return this.tableData.data.map((v) =>
-          ["id", "content", "prof_id", "module_id", "type", "queOptions"].map(
-            (j) => {
-              if (j === "prof_id") {
-                return this.prof_name[v[j]];
-              } else if (j === "module_id") {
-                return this.module_name[v[j]];
-              } else if (j === "queOptions") {
-                return v[j]
-                  .map((item) => {
-                    return `${item.content}--${
-                      item.rig == 1 ? "正确" : "错误"
-                    }`;
-                  })
-                  .join("/##/");
-              } else if (j === "type") {
-                return v[j] === 1
-                  ? "单选"
-                  : v[j] === 2
-                  ? "多选"
-                  : v[j] === 3
-                  ? "判断"
-                  : "";
-              } else {
-                return v[j];
-              }
+          [
+            "id",
+            "name",
+            "account",
+            "roles",
+            "company",
+            "type",
+            "prof_group",
+          ].map((j) => {
+            if (j === "roles") {
+              return v[j] === 1 ? "学生" : v[j] === 2 ? "老师" : "";
+            } else if (j === "company" || j === "prof_group") {
+              return v[j].name;
+            } else if (j === "type") {
+              return v[j] === 1 ? "临时工" : v[j] === 2 ? "正式工" : "";
+            } else {
+              return v[j];
             }
-          )
+          })
         );
       },
       handleImport() {
@@ -299,7 +333,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await deleteQuestion({ ids: row.id });
+            const { msg } = await deleteUserScore({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.tableData.data.splice(
               this.tableData.data.findIndex((item) => item.id === row.id),
@@ -310,7 +344,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await deleteQuestion({ ids });
+              const { msg } = await deleteUserScore({ ids });
               this.$baseMessage(msg, "success");
               this.selectRows.map((item) => {
                 this.tableData.data.splice(
@@ -344,9 +378,9 @@
         this.loading = loading;
         const {
           data: {
-            questions: { list, total },
+            userScores: { list, total },
           },
-        } = await findQuestions(this.queryForm);
+        } = await findUserScore(this.queryForm);
         this.tableData.data = list;
         this.total = total;
         setTimeout(() => {
