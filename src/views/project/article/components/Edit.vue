@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2020-12-09 01:04:19
+ * @LastEditTime: 2020-12-11 23:15:43
 -->
 <template>
   <ele-form-drawer
@@ -25,12 +25,13 @@
       'end_time',
       'group_id',
     ]"
+    :form-btns="formBtns"
     @closed="handleClosed"
   ></ele-form-drawer>
 </template>
 
 <script>
-  import { addArticle, modifyArticle } from "@/api/list";
+  import { addArticle, modifyArticle, auditArticle } from "@/api/list";
   import { findAllProfession } from "@/api/professions";
   import { fileUpload } from "@/config/settings";
   import filters from "@/filters";
@@ -124,16 +125,36 @@
         rules: {
           title: { required: true, message: "标题必填" },
         },
+        formBtns: [],
       };
     },
     methods: {
       showEdit(row) {
         if (!row) {
           this.title = "添加文章";
+          this.formBtns = [];
         } else {
           this.title = "编辑文章";
           row.role = row.roles;
           row.pwdTwo = row.pwd;
+          this.formBtns = [
+            {
+              text: "提交审核",
+              type: "primary",
+              attrs: {
+                disabled: false,
+              },
+              click: async () => {
+                const { id, status } = this.formData;
+                const {
+                  msg,
+                  data: { user },
+                } = await auditArticle({ id, status });
+                this.$baseMessage(msg, "success");
+                this.$emit("fetchData", false);
+              },
+            },
+          ];
           this.formData = JSON.parse(JSON.stringify(row));
         }
         const formDesc = this.options.formDesc;
