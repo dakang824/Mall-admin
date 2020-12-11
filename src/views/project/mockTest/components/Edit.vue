@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑模拟考配置表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2020-12-11 15:56:53
+ * @LastEditTime: 2020-12-11 19:59:25
 -->
 <template>
   <ele-form-dialog
@@ -45,34 +45,52 @@
             },
           },
           judge_count: {
-            type: "input",
+            type: "number",
             label: "判断题数量",
             layout: 12,
+            attrs: {
+              min: 0,
+            },
           },
           judge_score: {
-            type: "input",
+            type: "number",
             label: "判断题分数",
             layout: 12,
+            attrs: {
+              min: 0,
+            },
           },
           radio_count: {
-            type: "input",
+            type: "number",
             label: "单选题数量",
             layout: 12,
+            attrs: {
+              min: 0,
+            },
           },
           radio_score: {
-            type: "input",
+            type: "number",
             label: "单选题分数",
             layout: 12,
+            attrs: {
+              min: 0,
+            },
           },
           check_count: {
-            type: "input",
+            type: "number",
             label: "多选题数量",
             layout: 12,
+            attrs: {
+              min: 0,
+            },
           },
           check_score: {
-            type: "input",
+            type: "number",
             label: "多选题分数",
             layout: 12,
+            attrs: {
+              min: 0,
+            },
           },
 
           que_orders: {
@@ -116,34 +134,13 @@
           module_id: { required: true, message: "模块必选" },
           prof_id: { required: true, message: "专业必选" },
           company_id: { required: true, message: "专业必选" },
-          time: [
-            { type: "number", message: "必须为数字值" },
-            { required: true, message: "开始时长必填" },
-          ],
-          judge_count: [
-            { type: "number", message: "必须为数字值" },
-            { required: true, message: "判断题数量必填" },
-          ],
-          judge_score: [
-            { type: "number", message: "必须为数字值" },
-            { required: true, message: "判断题分数必填" },
-          ],
-          radio_count: [
-            { type: "number", message: "必须为数字值" },
-            { required: true, message: "单选题数量必填" },
-          ],
-          radio_score: [
-            { type: "number", message: "必须为数字值" },
-            { required: true, message: "单选题分数必填" },
-          ],
-          check_count: [
-            { type: "number", message: "必须为数字值" },
-            { required: true, message: "多选题数量必填" },
-          ],
-          check_score: [
-            { type: "number", message: "必须为数字值" },
-            { required: true, message: "多选题分数必填" },
-          ],
+          time: { required: true, message: "开始时长必填" },
+          judge_count: { required: true, message: "判断题数量必填" },
+          judge_score: { required: true, message: "判断题分数必填" },
+          radio_count: { required: true, message: "单选题数量必填" },
+          radio_score: { required: true, message: "单选题分数必填" },
+          check_count: { required: true, message: "多选题数量必填" },
+          check_score: { required: true, message: "多选题分数必填" },
         },
       };
     },
