@@ -41,8 +41,8 @@
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import { findAllProfGroup, deleteProfGroup } from "@/api/group";
-  import { findAllProfession } from "@/api/professions";
   import Edit from "./components/Edit";
 
   export default {
@@ -124,15 +124,8 @@
                 clearable: true,
               },
               options: async () => {
-                const {
-                  data: {
-                    professionList: { list },
-                  },
-                } = await findAllProfession({ pageNo: 1, pageSize: 50 });
-
-                return list.map((item) => {
-                  return { text: item.name, value: item.id };
-                });
+                await this.$store.dispatch("globalRequest/findAllProfession");
+                return this.professions;
               },
             },
           },
@@ -142,6 +135,12 @@
           pageSize: 10,
         },
       };
+    },
+    computed: {
+      ...mapState({
+        professions: (state) => state.globalRequest.professions,
+        professionsKeyVal: (state) => state.globalRequest.professionsKeyVal,
+      }),
     },
     async created() {
       this.fetchData();

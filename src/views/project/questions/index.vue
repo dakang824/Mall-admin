@@ -260,9 +260,9 @@
           ["id", "content", "prof_id", "module_id", "type", "queOptions"].map(
             (j) => {
               if (j === "prof_id") {
-                return this.prof_name[v[j]];
+                return this.professionsKeyVal[v[j]];
               } else if (j === "module_id") {
-                return this.module_name[v[j]];
+                return this.moduleListsKeyVal[v[j]];
               } else if (j === "queOptions") {
                 return v[j]
                   .map((item) => {

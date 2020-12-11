@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:用户管理
  * @Date: 2020-12-06 18:25:36
- * @LastEditTime: 2020-12-11 20:13:49
+ * @LastEditTime: 2020-12-11 22:22:49
  */
 import request from "@/utils/request";
 
@@ -41,14 +41,6 @@ export function deleteUser(data) {
 export function exportUsers(data) {
   return request({
     url: "/service/plat/admin/exportUsers",
-    method: "post",
-    data,
-  });
-}
-
-export function findAllProfGroup(data) {
-  return request({
-    url: "/service/plat/admin/findAllProfGroup",
     method: "post",
     data,
   });

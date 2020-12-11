@@ -167,15 +167,7 @@
               prop: "status",
               label: "状态",
               render: (h, scope) => {
-                return (
-                  <span>
-                    {scope.row.status === 0
-                      ? "未发布"
-                      : scope.row.status === 1
-                      ? "已发布"
-                      : ""}
-                  </span>
-                );
+                return <span>{this.statusTxt[scope.row.status]}</span>;
               },
             },
             {
@@ -207,9 +199,15 @@
           ],
           data: [],
         },
+        statusTxt: {},
       };
     },
     created() {
+      const status = this.$store.state.article.status;
+      this.statusTxt = status.reduce((a, b) => {
+        a[b.value] = b.text;
+        return a;
+      }, {});
       this.fetchData();
     },
     methods: {
@@ -282,7 +280,6 @@
         list.map((item) => {
           item.cover_pic = filters.imgBaseUrl(item.cover_pic);
         });
-        console.log(list);
         this.tableData.data = list;
         this.total = total;
         this.$store.commit("article/ChangeArticleList", list);

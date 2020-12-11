@@ -60,12 +60,7 @@
 </template>
 
 <script>
-  import {
-    findUsers,
-    deleteUser,
-    findAllProfGroup,
-    exportUsers,
-  } from "@/api/userManagement";
+  import { findUsers, deleteUser, exportUsers } from "@/api/userManagement";
   import { mapState } from "vuex";
   import filters from "@/filters";
   import Edit from "./components/Edit";
@@ -225,14 +220,8 @@
                 clearable: true,
               },
               options: async () => {
-                const {
-                  data: {
-                    profGroup: { list },
-                  },
-                } = await findAllProfGroup({ pageNo: 1, pageSize: 50 });
-                return list.map((item) => {
-                  return { text: item.name, value: item.id };
-                });
+                await this.$store.dispatch("globalRequest/findAllProfGroup");
+                return this.profGroups;
               },
             },
             type: {
@@ -270,6 +259,7 @@
       ...mapState({
         companyLists: (state) => state.globalRequest.companyLists,
         companyListsKeyVal: (state) => state.globalRequest.companyListsKeyVal,
+        profGroups: (state) => state.globalRequest.profGroups,
       }),
     },
     async created() {

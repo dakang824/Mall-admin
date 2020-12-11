@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 全局商品类型
  * @Date: 2020-10-07 11:23:12
- * @LastEditTime: 2020-12-08 18:12:46
+ * @LastEditTime: 2020-12-11 20:59:26
  */
 const state = {
   articleList: [],
@@ -63,20 +63,28 @@ const state = {
 
   status: [
     {
-      text: "发布中",
-      value: 1,
+      text: "未提交",
+      value: 0,
     },
     {
       text: "审核中",
+      value: 1,
+    },
+    {
+      text: "审核通过",
       value: 2,
     },
     {
-      text: "已下架",
+      text: "已发布",
       value: 3,
     },
     {
-      text: "未发布",
+      text: "已退回",
       value: 4,
+    },
+    {
+      text: "已下架",
+      value: 5,
     },
   ],
 };

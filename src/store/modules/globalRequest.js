@@ -2,11 +2,12 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 全局请求数据缓存
  * @Date: 2020-10-07 11:23:12
- * @LastEditTime: 2020-12-11 14:51:04
+ * @LastEditTime: 2020-12-11 22:25:33
  */
 import { findAllProfession } from "@/api/professions";
 import { findModule } from "@/api/module";
 import { findAllCompany } from "@/api/company";
+import { findAllProfGroup } from "@/api/group";
 
 const state = {
   professions: [],
@@ -15,6 +16,8 @@ const state = {
   moduleListsKeyVal: {},
   companyLists: [],
   companyListsKeyVal: {},
+  profGroups: [],
+  profGroupsKeyVal: {},
 };
 const getters = {
   errorLogs: (state) => state.errorLogs,
@@ -39,6 +42,13 @@ const mutations = {
   },
   companyListsKeyVal: (state, data) => {
     state.companyListsKeyVal = data;
+  },
+
+  addProfGroups: (state, data) => {
+    state.profGroups = data;
+  },
+  profGroupsKeyVal: (state, data) => {
+    state.profGroupsKeyVal = data;
   },
 };
 const actions = {
@@ -102,6 +112,27 @@ const actions = {
 
     commit("addCompanyLists", companyLists);
     commit("companyListsKeyVal", companyListsKeyVal);
+  },
+
+  // 获取专业组数据
+  async findAllProfGroup({ commit }) {
+    const {
+      data: {
+        profGroup: { list },
+      },
+    } = await findAllProfGroup({ pageNo: 1, pageSize: 50 });
+
+    const profGroups = list.map((item) => {
+      return { text: item.name, value: item.id };
+    });
+
+    const profGroupsKeyVal = profGroups.reduce((a, b) => {
+      a[b.value] = b.text;
+      return a;
+    }, {});
+
+    commit("addProfGroups", profGroups);
+    commit("profGroupsKeyVal", profGroupsKeyVal);
   },
 };
 export default { state, getters, mutations, actions };
