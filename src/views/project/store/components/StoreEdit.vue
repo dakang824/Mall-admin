@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-12-02 20:08:11
+ * @LastEditTime: 2020-12-12 15:00:11
 -->
 
 <template>
@@ -162,16 +162,54 @@
           </el-col>
         </el-row>
         <el-form-item label="店铺资质" prop="account">
-          <upload />
+          <ele-upload-image
+            v-model="path1"
+            :action="fileUpload"
+            :response-fn="handleResponse"
+            :before-remove="handleDelete"
+            multiple
+            :size="100"
+          />
         </el-form-item>
         <el-form-item label="食品安全" prop="account">
-          <upload />
+          <ele-upload-image
+            v-model="path2"
+            :action="fileUpload"
+            :response-fn="handleResponse"
+            :before-remove="handleDelete"
+            multiple
+            :size="100"
+          />
         </el-form-item>
         <el-form-item label="溯源" prop="account">
-          <upload />
+          <ele-upload-image
+            v-model="path3"
+            :action="fileUpload"
+            :response-fn="handleResponse"
+            :before-remove="handleDelete"
+            multiple
+            :size="100"
+          />
+        </el-form-item>
+        <el-form-item label="运营" prop="account">
+          <ele-upload-image
+            v-model="path4"
+            :action="fileUpload"
+            :response-fn="handleResponse"
+            :before-remove="handleDelete"
+            multiple
+            :size="100"
+          />
         </el-form-item>
         <el-form-item label="其他" prop="account">
-          <upload />
+          <ele-upload-image
+            v-model="path5"
+            :action="fileUpload"
+            :response-fn="handleResponse"
+            :before-remove="handleDelete"
+            multiple
+            :size="100"
+          />
         </el-form-item>
       </el-form>
     </div>
@@ -184,8 +222,15 @@
 </template>
 
 <script>
-  import { addStore, modifyStore } from "@/api/store";
-  import Upload from "@/components/upload";
+  import {
+    addStore,
+    modifyStore,
+    addStorePic,
+    deleteStorePic,
+  } from "@/api/store";
+  import EleUploadImage from "vue-ele-upload-image";
+  import { fileUpload } from "@/config/settings";
+  import filters from "@/filters";
   import {
     provinceAndCityData,
     CodeToText,
@@ -193,7 +238,7 @@
   } from "element-china-area-data";
   export default {
     name: "StoreEdit",
-    components: { Upload },
+    components: { EleUploadImage },
     props: {
       roles: {
         type: Array,
@@ -212,6 +257,7 @@
       return {
         options: provinceAndCityData,
         oldPwd: "",
+        fileUpload,
         form: {
           name: "",
           account: "",
@@ -229,6 +275,7 @@
           postCompare: "",
           province: "",
           city: "",
+          storePics: [],
         },
         rules: {
           name: [
@@ -256,26 +303,51 @@
         },
         title: "",
         dialogFormVisible: false,
+        path1: [],
+        path2: [],
+        path3: [],
+        path4: [],
+        path5: [],
       };
     },
     created() {},
     methods: {
+      handleResponse(response, file, fileList) {
+        return filters.imgBaseUrl(response.data.tempUrl);
+      },
       handleAddress(value) {
         let address = value.map((item) => CodeToText[`${item}`]);
         this.form.province = address[0];
         this.form.city = address[1];
       },
-
+      async handleDelete(e) {
+        const len = filters.imgBaseUrl("").length;
+        console.log(e, this.form.storePics);
+        const current = this.form.storePics.find(
+          (item) => item.pic_path === e.substr(len)
+        );
+        await deleteStorePic({ id: current.id });
+        this.$emit("fetchData", false);
+      },
       showEdit(row) {
         if (!row) {
-          this.title = "添加";
+          this.title = "添加店铺";
           this.form.status = 1;
         } else {
-          this.title = "编辑";
+          this.title = "编辑店铺";
           var row = JSON.parse(JSON.stringify(row));
           row.desScore = row.desScore.toFixed(1);
           row.serScore = row.serScore.toFixed(1);
           row.postStore = row.postStore.toFixed(1);
+          Array.from(
+            { length: 5 },
+            (e, i) =>
+              (this[`path${i + 1}`] = row.storePics
+                .filter((item) => item.type === i + 1)
+                .map((item) => filters.imgBaseUrl(item.pic_path)))
+          )
+            .filter((item) => item.length)
+            .flat();
 
           row.address = [
             TextToCode[row.province].code,
@@ -297,14 +369,64 @@
       close() {
         this.$refs["form"].resetFields();
         this.form = this.$options.data().form;
+        this.path1 = [];
+        this.path2 = [];
+        this.path3 = [];
+        this.path4 = [];
+        this.path5 = [];
+        this.$emit("fetchData", false);
         this.dialogFormVisible = false;
+      },
+      getImgPath(arr, type) {
+        const len = filters.imgBaseUrl("").length;
+        return arr.map((item) => {
+          return {
+            type,
+            pic_path: item.substr(len),
+          };
+        });
       },
       save() {
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
+            const len = filters.imgBaseUrl("").length;
             const form = JSON.parse(JSON.stringify(this.form));
             form.prodPri = form.prodPri.reduce((a, b) => a + b);
             form.address = form.province + " " + form.city;
+            const arr = Array.from({ length: 5 }, (e, i) =>
+              this.getImgPath(this[`path${i + 1}`], i + 1)
+            )
+              .filter((item) => item.length)
+              .flat();
+
+            // 判断哪些图片是新添加的
+            if (this.title.includes("编辑")) {
+              const storePics = form.storePics.map((item) => {
+                const arr = item.pic_path.split("/");
+                return arr[arr.length - 1];
+              });
+              const currentData = arr.map((item) => {
+                const arr = item.pic_path.split("/");
+                return arr[arr.length - 1];
+              });
+              const newData = currentData.filter(
+                (item) => !storePics.includes(item)
+              );
+
+              newData.map((item) => {
+                arr
+                  .filter((i) => i.pic_path.endsWith(item))
+                  .map(async (e) => {
+                    await addStorePic({
+                      store_id: form.id,
+                      ...e,
+                      ignoreStoreId: true,
+                    });
+                  });
+              });
+            }
+
+            form.storePics = JSON.stringify(arr);
             if (this.oldPwd === form.pwd) {
               delete form.pwd;
             }
@@ -322,8 +444,8 @@
                 data: { store },
               } = await modifyStore(form);
               this.$baseMessage(msg, "success");
-              this.$emit("update", store);
               this.close();
+              this.$emit("update", store);
             }
           } else {
             return false;
