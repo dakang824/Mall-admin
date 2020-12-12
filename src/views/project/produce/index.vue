@@ -52,7 +52,7 @@
         align="center"
       />
       <el-table-column fixed="right" label="操作" width="200" align="center">
-        <template v-slot="scope">
+        <template #default="scope">
           <el-button type="primary" @click="handleEdit(scope.row)">
             编辑
           </el-button>

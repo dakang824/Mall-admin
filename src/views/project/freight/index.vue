@@ -45,13 +45,13 @@
         align="center"
       />
       <el-table-column show-overflow-tooltip label="可配送区域" align="center">
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.areas | getName(province) }}
         </template>
       </el-table-column>
 
       <el-table-column fixed="right" label="操作" width="200" align="center">
-        <template v-slot="scope">
+        <template #default="scope">
           <div v-if="'areas' in scope.row">
             <el-button type="primary" @click="handleEdit(scope.row)">
               编辑

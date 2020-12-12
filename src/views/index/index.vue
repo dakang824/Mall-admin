@@ -1,75 +1,30 @@
 <template>
   <div class="index-container">
     <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-        <el-alert v-if="noticeList[0]" :closable="noticeList[0].closable">
-          <div
-            style="display: flex; align-items: center; justify-content: center"
+      <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+        <el-card shadow="never">
+          <div slot="header">
+            <span>昨日关键指标</span>
+          </div>
+          <ul
+            style="
+              display: flex;
+              justify-content: space-around;
+              color: #0099ff;
+              list-style-type: none;
+              text-align: center;
+              font-size: 20px;
+            "
           >
-            <a
-              target="_blank"
-              href="https://github.com/chuzhixin/vue-admin-beautiful"
-            >
-              <img
-                style="margin-right: 10px"
-                src="https://img.shields.io/github/stars/chuzhixin/vue-admin-beautiful?style=flat-square&label=Stars&logo=github"
-              />
-            </a>
-            {{ noticeList[0].title }}
-          </div>
-        </el-alert>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-        <el-card shadow="never">
-          <div slot="header">
-            <span>访问量</span>
-          </div>
-          <vab-chart
-            :autoresize="true"
-            theme="vab-echarts-theme"
-            :options="fwl"
-          />
-          <div class="bottom">
-            <span>
-              日均访问量:
-
-              <vab-count
-                :start-val="config1.startVal"
-                :end-val="config1.endVal"
-                :duration="config1.duration"
-                :separator="config1.separator"
-                :prefix="config1.prefix"
-                :suffix="config1.suffix"
-                :decimals="config1.decimals"
-              />
-            </span>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-        <el-card shadow="never">
-          <div slot="header">
-            <span>授权数</span>
-          </div>
-          <vab-chart
-            :autoresize="true"
-            theme="vab-echarts-theme"
-            :options="sqs"
-          />
-          <div class="bottom">
-            <span>
-              总授权数:
-              <vab-count
-                :start-val="config2.startVal"
-                :end-val="config2.endVal"
-                :duration="config2.duration"
-                :separator="config2.separator"
-                :prefix="config2.prefix"
-                :suffix="config2.suffix"
-                :decimals="config2.decimals"
-              />
-            </span>
-          </div>
+            <li>
+              <span>订单数</span>
+              <p style="font-weight: bold; font-size: 40px">100</p>
+            </li>
+            <li>
+              <span>订单金额(元)</span>
+              <p style="font-weight: bold; font-size: 40px">100</p>
+            </li>
+          </ul>
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
@@ -85,40 +40,9 @@
             @click="handleClick"
           />
           <div class="bottom">
-            <span>
-              用户总数量:
-              <vab-count
-                :start-val="config3.startVal"
-                :end-val="config3.endVal"
-                :duration="config3.duration"
-                :separator="config3.separator"
-                :prefix="config3.prefix"
-                :suffix="config3.suffix"
-                :decimals="config3.decimals"
-              />
-            </span>
+            <span>用户总数量:</span>
           </div>
         </el-card>
-      </el-col>
-
-      <el-col
-        v-for="(item, index) in iconList"
-        :key="index"
-        :xs="12"
-        :sm="6"
-        :md="3"
-        :lg="3"
-        :xl="3"
-      >
-        <router-link :to="item.link" target="_blank">
-          <el-card class="icon-panel" shadow="never">
-            <vab-icon
-              :style="{ color: item.color }"
-              :icon="['fas', item.icon]"
-            ></vab-icon>
-            <p>{{ item.title }}</p>
-          </el-card>
-        </router-link>
       </el-col>
     </el-row>
 
@@ -211,31 +135,13 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="12">
-        <el-card class="card" shadow="never">
-          <div slot="header">
-            <span>更新日志</span>
-          </div>
-          <el-timeline :reverse="reverse">
-            <el-timeline-item
-              v-for="(activity, index) in activities"
-              :key="index"
-              :timestamp="activity.timestamp"
-              :color="activity.color"
-            >
-              {{ activity.content }}
-            </el-timeline-item>
-          </el-timeline>
-        </el-card>
-      </el-col>
-    </el-row>
   </div>
 </template>
 
 <script>
   import * as echarts from "echarts";
   import VabChart from "@/plugins/echarts";
+
   import { dependencies, devDependencies } from "../../../package.json";
   export default {
     name: "Index",
@@ -267,6 +173,13 @@
           separator: ",",
           duration: 8000,
         },
+        startVal: 0,
+        endVal: 111,
+        decimals: 2,
+        prefix: "$",
+        suffix: "美元",
+        separator: ",",
+        duration: 3000,
         config3: {
           startVal: 0,
           endVal: this.$baseLodash.random(1000, 20000),
@@ -291,7 +204,7 @@
             },
           },
           legend: {
-            data: ["销售水量", "主营业务"],
+            data: ["菜盒", "菜谱"],
           },
           xAxis: {
             data: [
@@ -377,34 +290,27 @@
           ],
           series: [
             {
-              name: "销售水量",
-              type: "line",
-              smooth: true, //平滑曲线显示
+              name: "菜谱",
+              type: "bar",
+              barWidth: 15,
+              stack: "1",
               itemStyle: {
-                color: "#058cff",
-              },
-              areaStyle: {
-                color: "rgba(5,140,255, 0.2)",
+                normal: {
+                  color: "#0099ff",
+                },
               },
               data: [4.2, 3.8, 4.8, 3.5, 2.9, 2.8, 3, 5],
             },
             {
-              name: "主营业务",
+              name: "菜盒",
               type: "bar",
-              barWidth: 15,
+              stack: "1",
+              smooth: true, //平滑曲线显示
               itemStyle: {
-                normal: {
-                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                    {
-                      offset: 0,
-                      color: "#00FFE3",
-                    },
-                    {
-                      offset: 1,
-                      color: "#4693EC",
-                    },
-                  ]),
-                },
+                color: "#33ccff",
+              },
+              areaStyle: {
+                color: "rgba(5,140,255, 0.2)",
               },
               data: [4.2, 3.8, 4.8, 3.5, 2.9, 2.8, 3, 5],
             },
@@ -858,78 +764,8 @@
           ],
         },
 
-        //更新日志
-        reverse: false,
-        activities: [
-          {
-            content: "活动按期开始",
-            color: "#0bbd87",
-            timestamp: "2018-04-15",
-          },
-          {
-            content: "通过审核",
-            timestamp: "2018-04-13",
-          },
-          {
-            content: "创建成功",
-            timestamp: "2018-04-11",
-          },
-        ],
-        noticeList: [],
         //其他信息
         userAgent: navigator.userAgent,
-        //卡片图标
-        iconList: [
-          {
-            icon: "video",
-            title: "视频播放器",
-            link: "/vab/player",
-            color: "#ffc069",
-          },
-          {
-            icon: "table",
-            title: "表格",
-            link: "/vab/table/comprehensiveTable",
-            color: "#5cdbd3",
-          },
-          {
-            icon: "laptop-code",
-            title: "源码",
-            link: "https://github.com/chuzhixin/vue-admin-beautiful",
-            color: "#b37feb",
-          },
-          {
-            icon: "book",
-            title: "书籍",
-            link: "",
-            color: "#69c0ff",
-          },
-          {
-            icon: "bullhorn",
-            title: "公告",
-            link: "",
-            color: "#ff85c0",
-          },
-          {
-            icon: "gift",
-            title: "礼物",
-            link: "",
-            color: "#ffd666",
-          },
-
-          {
-            icon: "balance-scale-left",
-            title: "公平的世界",
-            link: "",
-            color: "#ff9c6e",
-          },
-          {
-            icon: "coffee",
-            title: "休息一下",
-            link: "",
-            color: "#95de64",
-          },
-        ],
       };
     },
     created() {

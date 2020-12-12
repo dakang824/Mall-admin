@@ -106,7 +106,7 @@
             label="操作"
             width="200"
           >
-            <template v-slot="scope">
+            <template #default="scope">
               <el-button type="text" @click="handleEdit(scope.row)">
                 编辑
               </el-button>

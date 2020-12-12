@@ -124,7 +124,7 @@
       </el-table-column>
 
       <el-table-column fixed="right" label="操作" width="90" align="center">
-        <template v-slot="scope">
+        <template #default="scope">
           <el-button type="text" @click="handleEdit(scope.row)">
             查看订单
           </el-button>

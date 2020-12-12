@@ -37,7 +37,7 @@
       <el-table-column show-overflow-tooltip prop="id" label="id" />
       <el-table-column prop="name" label="姓名" width="180"></el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
-        <template v-slot="scope">
+        <template #default="scope">
           <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
           <el-button type="text" @click="handleDelete(scope.row)">
             删除
