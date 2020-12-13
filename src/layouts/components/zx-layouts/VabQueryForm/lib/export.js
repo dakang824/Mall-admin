@@ -32,16 +32,10 @@ function _interopRequireDefault(obj) {
 
 exports.default = {
   install: function install(Vue) {
-    Vue.component("vab-query-form", _VabQueryForm2.default);
-    Vue.component("vab-query-form-left-panel", _VabQueryFormLeftPanel2.default);
-    Vue.component(
-      "vab-query-form-right-panel",
-      _VabQueryFormRightPanel2.default
-    );
-    Vue.component("vab-query-form-top-panel", _VabQueryFormTopPanel2.default);
-    Vue.component(
-      "vab-query-form-bottom-panel",
-      _VabQueryFormBottomPanel2.default
-    );
+    Vue.component("VabQueryForm", _VabQueryForm2.default);
+    Vue.component("VabQueryFormLeftPanel", _VabQueryFormLeftPanel2.default);
+    Vue.component("VabQueryFormRightPanel", _VabQueryFormRightPanel2.default);
+    Vue.component("VabQueryFormTopPanel", _VabQueryFormTopPanel2.default);
+    Vue.component("VabQueryFormBottomPanel", _VabQueryFormBottomPanel2.default);
   },
 };

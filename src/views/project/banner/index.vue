@@ -53,7 +53,7 @@
         label="图片"
         align="center"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <el-image :src="scope.row.img_path | imgBaseUrl"></el-image>
         </template>
       </el-table-column>
@@ -64,7 +64,7 @@
         align="center"
       />
       <el-table-column fixed="right" label="操作" width="200" align="center">
-        <template v-slot="scope">
+        <template #default="scope">
           <el-button type="primary" @click="handleEdit(scope.row)">
             编辑
           </el-button>

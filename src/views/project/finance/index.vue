@@ -82,7 +82,7 @@
         align="center"
       />
       <el-table-column fixed="right" label="操作" width="80">
-        <template v-slot="scope">
+        <template #default="scope">
           <el-button type="text" @click="handleEdit(scope.row)">充值</el-button>
         </template>
       </el-table-column>

@@ -77,12 +77,12 @@
         align="center"
       />
       <el-table-column show-overflow-tooltip label="支付方式" align="center">
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.pay_type | getPayName }}
         </template>
       </el-table-column>
       <el-table-column show-overflow-tooltip label="下单时间" align="center">
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.create_time | slice(0, 19) }}
         </template>
       </el-table-column>
@@ -93,7 +93,7 @@
         align="center"
       />
       <el-table-column fixed="right" label="状态" align="center">
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.status | getStatusStr }}
         </template>
       </el-table-column>

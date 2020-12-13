@@ -77,7 +77,7 @@
 
       <el-table :data="postTempArea" stripe style="width: 100%" border>
         <el-table-column prop="name" label="可配送区域" align="center">
-          <template v-slot="scope">
+          <template #default="scope">
             {{ scope.row.area | getName(province) }}
           </template>
         </el-table-column>
@@ -90,7 +90,7 @@
           align="center"
         />
         <el-table-column fixed="right" label="操作" width="80" align="center">
-          <template v-slot="scope">
+          <template #default="scope">
             <el-button
               type="danger"
               @click="handleDelete(scope.row, scope.$index)"

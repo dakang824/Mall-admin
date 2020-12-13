@@ -1,166 +1,110 @@
 <template>
   <div class="index-container">
     <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-        <el-alert v-if="noticeList[0]" :closable="noticeList[0].closable">
-          <div
-            style="display: flex; align-items: center; justify-content: center"
+      <el-col :xs="24" :sm="24" :md="12">
+        <el-card shadow="never">
+          <div slot="header">
+            <span>昨日关键指标</span>
+          </div>
+          <ul
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-around;
+              color: #0099ff;
+              list-style-type: none;
+              text-align: center;
+              font-size: 20px;
+              min-height: 243px;
+            "
           >
-            <a
-              target="_blank"
-              href="https://github.com/chuzhixin/vue-admin-beautiful"
-            >
-              <img
-                style="margin-right: 10px"
-                src="https://img.shields.io/github/stars/chuzhixin/vue-admin-beautiful?style=flat-square&label=Stars&logo=github"
-              />
-            </a>
-            {{ noticeList[0].title }}
-          </div>
-        </el-alert>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-        <el-card shadow="never">
-          <div slot="header">
-            <span>访问量</span>
-          </div>
-          <vab-chart
-            :autoresize="true"
-            theme="vab-echarts-theme"
-            :options="fwl"
-          />
-          <div class="bottom">
-            <span>
-              日均访问量:
-
-              <vab-count
-                :start-val="config1.startVal"
-                :end-val="config1.endVal"
-                :duration="config1.duration"
-                :separator="config1.separator"
-                :prefix="config1.prefix"
-                :suffix="config1.suffix"
-                :decimals="config1.decimals"
-              />
-            </span>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-        <el-card shadow="never">
-          <div slot="header">
-            <span>授权数</span>
-          </div>
-          <vab-chart
-            :autoresize="true"
-            theme="vab-echarts-theme"
-            :options="sqs"
-          />
-          <div class="bottom">
-            <span>
-              总授权数:
-              <vab-count
-                :start-val="config2.startVal"
-                :end-val="config2.endVal"
-                :duration="config2.duration"
-                :separator="config2.separator"
-                :prefix="config2.prefix"
-                :suffix="config2.suffix"
-                :decimals="config2.decimals"
-              />
-            </span>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
-        <el-card shadow="never">
-          <div slot="header">
-            <span>用户名称</span>
-          </div>
-          <vab-chart
-            :autoresize="true"
-            theme="vab-echarts-theme"
-            :options="cy"
-            @zr:click="handleZrClick"
-            @click="handleClick"
-          />
-          <div class="bottom">
-            <span>
-              用户总数量:
-              <vab-count
-                :start-val="config3.startVal"
-                :end-val="config3.endVal"
-                :duration="config3.duration"
-                :separator="config3.separator"
-                :prefix="config3.prefix"
-                :suffix="config3.suffix"
-                :decimals="config3.decimals"
-              />
-            </span>
-          </div>
-        </el-card>
-      </el-col>
-
-      <el-col
-        v-for="(item, index) in iconList"
-        :key="index"
-        :xs="12"
-        :sm="6"
-        :md="3"
-        :lg="3"
-        :xl="3"
-      >
-        <router-link :to="item.link" target="_blank">
-          <el-card class="icon-panel" shadow="never">
-            <vab-icon
-              :style="{ color: item.color }"
-              :icon="['fas', item.icon]"
-            ></vab-icon>
-            <p>{{ item.title }}</p>
-          </el-card>
-        </router-link>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="12">
-        <el-card class="card" shadow="never">
-          <div slot="header">
-            <span>GDP分布图</span>
-          </div>
-          <vab-chart
-            :autoresize="true"
-            theme="vab-echarts-theme"
-            :options="zgdt"
-          />
+            <li>
+              <span>订单数</span>
+              <p style="font-weight: bold; font-size: 40px">
+                {{ yesterdayData.total_count | toFixed }}
+              </p>
+            </li>
+            <li>
+              <span>订单金额(元)</span>
+              <p style="font-weight: bold; font-size: 40px">
+                {{ yesterdayData.total_amount | toFixed }}
+              </p>
+            </li>
+          </ul>
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :md="12">
         <el-card class="card" shadow="never">
-          <div slot="header">环形图</div>
-          <div>
-            <vab-chart
-              ref="myCircle"
-              theme="vab-echarts-theme"
-              :options="chart2"
-              class="my-circle"
-            />
+          <div slot="header">
+            <el-form ref="elForm" :model="orderByDay" inline>
+              <!-- <el-form-item>
+                <el-input
+                  v-model.lazy="orderByDay.store_account"
+                  placeholder="请输入店铺账号"
+                  clearable
+                  :style="{ width: '100%' }"
+                  @keyup.enter.native="getDaysData"
+                  @clear="getDaysData"
+                />
+              </el-form-item> -->
+              <el-date-picker
+                v-model="orderByDay.time"
+                type="daterange"
+                align="right"
+                unlink-panels
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :picker-options="dayPickerOptions"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                @change="getDaysData"
+              ></el-date-picker>
+            </el-form>
           </div>
-        </el-card>
-      </el-col>
-    </el-row>
-    <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="12">
-        <el-card class="card" shadow="never">
-          <div slot="header">柱状图</div>
           <div>
             <vab-chart autoresize :options="chart1" />
           </div>
         </el-card>
       </el-col>
-
+    </el-row>
+    <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="12">
         <el-card class="card" shadow="never">
+          <div slot="header">
+            <el-form ref="elForm" :model="orderByMonth" inline>
+              <!-- <el-form-item>
+                <el-input
+                  v-model.lazy="orderByMonth.store_account"
+                  placeholder="请输入店铺账号"
+                  clearable
+                  :style="{ width: '100%' }"
+                  @keyup.enter.native="statOrderByMonth"
+                  @clear="statOrderByMonth"
+                />
+              </el-form-item> -->
+              <el-date-picker
+                v-model="orderByMonth.time"
+                type="monthrange"
+                align="right"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="开始月份"
+                end-placeholder="结束月份"
+                :picker-options="monthPickerOptions"
+                format="yyyy-MM"
+                value-format="yyyy-MM"
+                @change="statOrderByMonth"
+              ></el-date-picker>
+            </el-form>
+          </div>
+          <div>
+            <vab-chart autoresize :options="chart2" />
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :xs="24" :sm="24" :md="12">
+        <el-card shadow="never">
           <div slot="header">
             <span>依赖信息</span>
             <div style="float: right">部署时间:{{ updateTime }}</div>
@@ -199,7 +143,7 @@
               <td>sass版本</td>
               <td>{{ devDependencies["sass"] }}</td>
               <td>mockjs版本</td>
-              <td>{{ dependencies["mockjs"] }}</td>
+              <td>{{ devDependencies["mockjs"] }}</td>
             </tr>
             <tr>
               <td>zx-layouts版本</td>
@@ -211,31 +155,14 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="12">
-        <el-card class="card" shadow="never">
-          <div slot="header">
-            <span>更新日志</span>
-          </div>
-          <el-timeline :reverse="reverse">
-            <el-timeline-item
-              v-for="(activity, index) in activities"
-              :key="index"
-              :timestamp="activity.timestamp"
-              :color="activity.color"
-            >
-              {{ activity.content }}
-            </el-timeline-item>
-          </el-timeline>
-        </el-card>
-      </el-col>
-    </el-row>
   </div>
 </template>
 
 <script>
   import * as echarts from "echarts";
   import VabChart from "@/plugins/echarts";
+  const dayjs = require("dayjs");
+  import { statOrderByDay, statOrderByMonth } from "@/api/index";
   import { dependencies, devDependencies } from "../../../package.json";
   export default {
     name: "Index",
@@ -244,42 +171,19 @@
     },
     data() {
       return {
-        timer: 0,
         updateTime: process.env.VUE_APP_UPDATE_TIME,
         nodeEnv: process.env.NODE_ENV,
         dependencies: dependencies,
         devDependencies: devDependencies,
-        config1: {
-          startVal: 0,
-          endVal: this.$baseLodash.random(20000, 60000),
-          decimals: 0,
-          prefix: "",
-          suffix: "",
-          separator: ",",
-          duration: 8000,
+        yesterdayData: {
+          total_amount: 0,
+          total_count: 0,
         },
-        config2: {
-          startVal: 0,
-          endVal: this.$baseLodash.random(1000, 20000),
-          decimals: 0,
-          prefix: "",
-          suffix: "",
-          separator: ",",
-          duration: 8000,
-        },
-        config3: {
-          startVal: 0,
-          endVal: this.$baseLodash.random(1000, 20000),
-          decimals: 0,
-          prefix: "",
-          suffix: "",
-          separator: ",",
-          duration: 8000,
-        },
+        // 按日统计
         chart1: {
           grid: {
-            top: "25%",
-            bottom: "10%",
+            top: "20%",
+            bottom: "8%",
           },
           tooltip: {
             trigger: "axis",
@@ -291,19 +195,10 @@
             },
           },
           legend: {
-            data: ["销售水量", "主营业务"],
+            data: ["菜品金额", "菜盒金额", "菜品数量", "菜盒数量"],
           },
           xAxis: {
-            data: [
-              "当年完成水量",
-              "去年同期水量",
-              "滚动目标值水量",
-              "全年目标值水量",
-              "当年完成金额",
-              "去年同期金额",
-              "滚动目标金额",
-              "全年目标值",
-            ],
+            data: [],
             axisLine: {
               show: true, //隐藏X轴轴线
             },
@@ -317,9 +212,9 @@
           yAxis: [
             {
               type: "value",
-              name: "亿元",
+              name: "元",
               splitLine: {
-                show: false,
+                show: true,
               },
               axisTick: {
                 show: true,
@@ -329,657 +224,288 @@
               },
               axisLabel: {
                 show: true,
-              },
-            },
-            {
-              type: "value",
-              name: "同比",
-              position: "right",
-              splitLine: {
-                show: false,
-              },
-              axisTick: {
-                show: false,
-              },
-              axisLine: {
-                show: false,
-              },
-              axisLabel: {
-                show: true,
-                formatter: "{value} %", //右侧Y轴文字显示
-              },
-            },
-            {
-              type: "value",
-              gridIndex: 0,
-              min: 50,
-              max: 100,
-              splitNumber: 8,
-              splitLine: {
-                show: false,
-              },
-              axisLine: {
-                show: false,
-              },
-              axisTick: {
-                show: false,
-              },
-              axisLabel: {
-                show: false,
-              },
-              splitArea: {
-                show: true,
-                areaStyle: {
-                  color: ["rgba(250,250,250,0.0)", "rgba(250,250,250,0.05)"],
-                },
               },
             },
           ],
           series: [
             {
-              name: "销售水量",
-              type: "line",
-              smooth: true, //平滑曲线显示
+              name: "菜品金额",
+              type: "bar",
+              barWidth: 15,
+              stack: "1",
               itemStyle: {
-                color: "#058cff",
+                normal: {
+                  color: "#0099ff",
+                },
+              },
+              data: [],
+            },
+            {
+              name: "菜盒金额",
+              type: "bar",
+              barWidth: 15,
+              stack: "1",
+              itemStyle: {
+                color: "#33ccff",
               },
               areaStyle: {
                 color: "rgba(5,140,255, 0.2)",
               },
-              data: [4.2, 3.8, 4.8, 3.5, 2.9, 2.8, 3, 5],
+              data: [],
             },
             {
-              name: "主营业务",
-              type: "bar",
+              name: "菜品数量",
+              type: "line",
+              barWidth: 15,
+              smooth: true,
+              itemStyle: {
+                color: "#00b19d",
+              },
+
+              data: [],
+            },
+            {
+              name: "菜盒数量",
+              type: "line",
               barWidth: 15,
               itemStyle: {
-                normal: {
-                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                    {
-                      offset: 0,
-                      color: "#00FFE3",
-                    },
-                    {
-                      offset: 1,
-                      color: "#4693EC",
-                    },
-                  ]),
-                },
+                color: "#ff4d4f",
               },
-              data: [4.2, 3.8, 4.8, 3.5, 2.9, 2.8, 3, 5],
+              smooth: true, //平滑曲线显示
+              data: [],
             },
           ],
         },
+        // 按月统计
         chart2: {
+          grid: {
+            top: "20%",
+            bottom: "8%",
+          },
           tooltip: {
-            show: true,
-            formatter: "{b} : {c}",
+            trigger: "axis",
+            axisPointer: {
+              type: "shadow",
+              label: {
+                show: true,
+              },
+            },
           },
           legend: {
-            show: true,
-            icon: "circle",
-            top: "10%",
-            left: "10%",
-            width: 50,
-            padding: [0, 5],
-            itemGap: 25,
-            data: ["已婚已育", "已婚未育", "未婚", "学生"],
-            selectedMode: true,
-            orient: "vertical",
+            data: ["菜品金额", "菜盒金额", "菜品数量", "菜盒数量"],
           },
-          series: [
-            {
-              name: "Line 4",
-              type: "pie",
-              clockWise: true,
-              hoverAnimation: false,
-              radius: ["65%", "75%"],
-              data: [
-                {
-                  value: 7645434,
-                  name: "已婚已育",
-                },
-                {
-                  value: 3612343,
-                  name: "总数",
-                  tooltip: {
-                    show: false,
-                  },
-                  itemStyle: {
-                    normal: {
-                      color: "rgba(0,0,0,0)",
-                      label: {
-                        show: false,
-                      },
-                      labelLine: {
-                        show: false,
-                      },
-                    },
-                    emphasis: {
-                      color: "rgba(0,0,0,0)",
-                    },
-                  },
-                },
-              ],
+          xAxis: {
+            data: [],
+            axisLine: {
+              show: true, //隐藏X轴轴线
             },
-            {
-              name: "Line 3",
-              type: "pie",
-              clockWise: true,
-              radius: ["50%", "60%"],
-              itemStyle: {
-                normal: {
-                  label: {
-                    show: false,
-                  },
-                  labelLine: {
-                    show: false,
-                  },
-                  // shadowBlur: 15,
-                  // shadowColor: 'white',
-                },
-              },
-              hoverAnimation: false,
-              data: [
-                {
-                  value: 2632321,
-                  name: "已婚未育",
-                },
-                {
-                  value: 2212343,
-                  name: "总数",
-                  tooltip: {
-                    show: false,
-                  },
-                  itemStyle: {
-                    normal: {
-                      color: "rgba(0,0,0,0)",
-                      label: {
-                        show: false,
-                      },
-                      labelLine: {
-                        show: false,
-                      },
-                    },
-                    emphasis: {
-                      color: "rgba(0,0,0,0)",
-                    },
-                  },
-                },
-              ],
+            axisTick: {
+              show: true, //隐藏X轴刻度
             },
-            {
-              name: "Line 2",
-              type: "pie",
-              clockWise: true,
-              hoverAnimation: false,
-              radius: ["35%", "45%"],
-              itemStyle: {
-                normal: {
-                  label: {
-                    show: false,
-                  },
-                  labelLine: {
-                    show: false,
-                  },
-                  // shadowBlur: 15,
-                  // shadowColor: 'white',
-                },
-              },
-              data: [
-                {
-                  value: 1823323,
-                  name: "未婚",
-                },
-                {
-                  value: 1812343,
-                  name: "总数",
-                  tooltip: {
-                    show: false,
-                  },
-                  itemStyle: {
-                    normal: {
-                      color: "rgba(0,0,0,0)",
-                      label: {
-                        show: false,
-                      },
-                      labelLine: {
-                        show: false,
-                      },
-                    },
-                    emphasis: {
-                      color: "rgba(0,0,0,0)",
-                    },
-                  },
-                },
-              ],
+            axisLabel: {
+              show: true,
             },
-            {
-              name: "Line 1",
-              type: "pie",
-              clockWise: true,
-              radius: ["20%", "30%"],
-              itemStyle: {
-                normal: {
-                  label: {
-                    show: false,
-                  },
-                  labelLine: {
-                    show: false,
-                  },
-                  // shadowBlur: 15,
-                  // shadowColor: 'white',
-                },
-              },
-              hoverAnimation: false,
-              data: [
-                {
-                  value: 1342221,
-                  name: "学生",
-                },
-                {
-                  value: 1912343,
-                  name: "总数",
-                  tooltip: {
-                    show: false,
-                  },
-                  itemStyle: {
-                    normal: {
-                      color: "rgba(0,0,0,0)",
-                      label: {
-                        show: false,
-                      },
-                      labelLine: {
-                        show: false,
-                      },
-                    },
-                    emphasis: {
-                      color: "rgba(0,0,0,0)",
-                    },
-                  },
-                },
-              ],
-            },
-          ],
-        },
-
-        //访问量
-        fwl: {
-          grid: {
-            top: "4%",
-            left: "2%",
-            right: "4%",
-            bottom: "0%",
-            containLabel: true,
           },
-          xAxis: [
-            {
-              type: "category",
-              boundaryGap: false,
-              data: [],
-              axisTick: {
-                alignWithLabel: true,
-              },
-            },
-          ],
           yAxis: [
             {
               type: "value",
-            },
-          ],
-          series: [
-            {
-              name: "访问量",
-              type: "line",
-              data: [],
-              smooth: true,
-              areaStyle: {},
-            },
-          ],
-        },
-        //授权数
-        sqs: {
-          grid: {
-            top: "4%",
-            left: "2%",
-            right: "4%",
-            bottom: "0%",
-            containLabel: true,
-          },
-          xAxis: [
-            {
-              type: "category",
-              /*boundaryGap: false,*/
-              data: ["0时", "4时", "8时", "12时", "16时", "20时", "24时"],
+              name: "元",
+              splitLine: {
+                show: true,
+              },
               axisTick: {
-                alignWithLabel: true,
+                show: true,
+              },
+              axisLine: {
+                show: true,
+              },
+              axisLabel: {
+                show: true,
               },
             },
           ],
-          yAxis: [
-            {
-              type: "value",
-            },
-          ],
           series: [
             {
-              name: "授权数",
+              name: "菜品金额",
               type: "bar",
-              barWidth: "60%",
-              data: [10, 52, 20, 33, 39, 33, 22],
-            },
-          ],
-        },
-        //词云
-        cy: {
-          grid: {
-            top: "4%",
-            left: "2%",
-            right: "4%",
-            bottom: "0%",
-          },
-          series: [
-            {
-              type: "wordCloud",
-              gridSize: 15,
-              sizeRange: [12, 40],
-              rotationRange: [0, 0],
-              width: "100%",
-              height: "100%",
-              textStyle: {
-                normal: {
-                  color() {
-                    const arr = [
-                      "#1890FF",
-                      "#36CBCB",
-                      "#4ECB73",
-                      "#FBD437",
-                      "#F2637B",
-                      "#975FE5",
-                    ];
-                    let index = Math.floor(Math.random() * arr.length);
-                    return arr[index];
-                  },
-                },
-              },
-              data: [
-                {
-                  name: "张三",
-                  value: 15000,
-                },
-                {
-                  name: "李四",
-                  value: 10081,
-                },
-                {
-                  name: "王五",
-                  value: 9386,
-                },
-
-                {
-                  name: "麻子",
-                  value: 6500,
-                },
-                {
-                  name: "二狗子",
-                  value: 6000,
-                },
-                {
-                  name: "小李子",
-                  value: 4500,
-                },
-                {
-                  name: "张三",
-                  value: 15000,
-                },
-                {
-                  name: "李四",
-                  value: 10081,
-                },
-                {
-                  name: "王五",
-                  value: 9386,
-                },
-
-                {
-                  name: "麻子",
-                  value: 6500,
-                },
-                {
-                  name: "二狗子",
-                  value: 6000,
-                },
-                {
-                  name: "小李子",
-                  value: 4500,
-                },
-                {
-                  name: "张三",
-                  value: 15000,
-                },
-                {
-                  name: "李四",
-                  value: 10081,
-                },
-                {
-                  name: "王五",
-                  value: 9386,
-                },
-
-                {
-                  name: "麻子",
-                  value: 6500,
-                },
-                {
-                  name: "二狗子",
-                  value: 6000,
-                },
-                {
-                  name: "小李子",
-                  value: 4500,
-                },
-              ],
-            },
-          ],
-        },
-        //中国地图
-        zgdt: {
-          title: {
-            text: "2099年全国GDP分布",
-            subtext: "数据来自vue-admin-beautiful杜撰",
-          },
-          tooltip: {
-            trigger: "item",
-          },
-          dataRange: {
-            orient: "horizontal",
-            min: 0,
-            max: 55000,
-            text: ["高", "低"],
-            splitNumber: 0,
-          },
-          series: [
-            {
-              name: "2099年全国GDP分布",
-              type: "map",
-              roam: false,
-              zoom: 1.25,
-              mapType: "china",
-              mapLocation: {
-                x: "center",
-              },
-              selectedMode: "multiple",
+              barWidth: 15,
+              stack: "1",
               itemStyle: {
                 normal: {
-                  label: {
-                    show: false,
-                  },
-                },
-                emphasis: {
-                  label: {
-                    show: true,
-                  },
+                  color: "#0099ff",
                 },
               },
-              data: [
-                { name: "西藏", value: 605.83 },
-                { name: "青海", value: 1670.44 },
-                { name: "宁夏", value: 2102.21 },
-                { name: "海南", value: 2522.66 },
-                { name: "甘肃", value: 5020.37 },
-                { name: "贵州", value: 5701.84 },
-                { name: "新疆", value: 6610.05 },
-                { name: "云南", value: 8893.12 },
-                { name: "重庆", value: 10011.37 },
-                { name: "吉林", value: 10568.83 },
-                { name: "山西", value: 11237.55 },
-                { name: "天津", value: 11307.28 },
-                { name: "江西", value: 11702.82 },
-                { name: "广西", value: 11720.87 },
-                { name: "陕西", value: 12512.3 },
-                { name: "黑龙江", value: 12582 },
-                { name: "内蒙古", value: 14359.88 },
-                { name: "安徽", value: 15300.65 },
-                { name: "北京", value: 16251.93 },
-                { name: "福建", value: 17560.18 },
-                { name: "上海", value: 19195.69 },
-                { name: "湖北", value: 19632.26 },
-                { name: "湖南", value: 19669.56 },
-                { name: "四川", value: 21026.68 },
-                { name: "辽宁", value: 22226.7 },
-                { name: "河北", value: 24515.76 },
-                { name: "河南", value: 26931.03 },
-                { name: "浙江", value: 32318.85 },
-                { name: "山东", value: 45361.85, selected: true },
-                { name: "江苏", value: 49110.27 },
-                { name: "广东", value: 53210.28 },
-              ],
+              data: [],
+            },
+            {
+              name: "菜盒金额",
+              type: "bar",
+              barWidth: 15,
+              stack: "1",
+              itemStyle: {
+                color: "#33ccff",
+              },
+              areaStyle: {
+                color: "rgba(5,140,255, 0.2)",
+              },
+              data: [],
+            },
+            {
+              name: "菜品数量",
+              type: "line",
+              barWidth: 15,
+              smooth: true,
+              itemStyle: {
+                color: "#00b19d",
+              },
+
+              data: [],
+            },
+            {
+              name: "菜盒数量",
+              type: "line",
+              barWidth: 15,
+              itemStyle: {
+                color: "#ff4d4f",
+              },
+              smooth: true, //平滑曲线显示
+              data: [],
             },
           ],
         },
 
-        //更新日志
-        reverse: false,
-        activities: [
-          {
-            content: "活动按期开始",
-            color: "#0bbd87",
-            timestamp: "2018-04-15",
-          },
-          {
-            content: "通过审核",
-            timestamp: "2018-04-13",
-          },
-          {
-            content: "创建成功",
-            timestamp: "2018-04-11",
-          },
-        ],
-        noticeList: [],
         //其他信息
         userAgent: navigator.userAgent,
-        //卡片图标
-        iconList: [
-          {
-            icon: "video",
-            title: "视频播放器",
-            link: "/vab/player",
-            color: "#ffc069",
-          },
-          {
-            icon: "table",
-            title: "表格",
-            link: "/vab/table/comprehensiveTable",
-            color: "#5cdbd3",
-          },
-          {
-            icon: "laptop-code",
-            title: "源码",
-            link: "https://github.com/chuzhixin/vue-admin-beautiful",
-            color: "#b37feb",
-          },
-          {
-            icon: "book",
-            title: "书籍",
-            link: "",
-            color: "#69c0ff",
-          },
-          {
-            icon: "bullhorn",
-            title: "公告",
-            link: "",
-            color: "#ff85c0",
-          },
-          {
-            icon: "gift",
-            title: "礼物",
-            link: "",
-            color: "#ffd666",
-          },
-
-          {
-            icon: "balance-scale-left",
-            title: "公平的世界",
-            link: "",
-            color: "#ff9c6e",
-          },
-          {
-            icon: "coffee",
-            title: "休息一下",
-            link: "",
-            color: "#95de64",
-          },
-        ],
+        orderByDay: {
+          store_account: "",
+          time: [],
+        },
+        orderByMonth: {
+          store_account: "",
+          time: [],
+        },
+        dayPickerOptions: {
+          shortcuts: [
+            {
+              text: "最近一周",
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                picker.$emit("pick", [start, end]);
+              },
+            },
+            {
+              text: "最近一个月",
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                picker.$emit("pick", [start, end]);
+              },
+            },
+            {
+              text: "最近三个月",
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                picker.$emit("pick", [start, end]);
+              },
+            },
+          ],
+        },
+        monthPickerOptions: {
+          shortcuts: [
+            {
+              text: "本月",
+              onClick(picker) {
+                picker.$emit("pick", [new Date(), new Date()]);
+              },
+            },
+            {
+              text: "今年至今",
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date(new Date().getFullYear(), 0);
+                picker.$emit("pick", [start, end]);
+              },
+            },
+            {
+              text: "最近六个月",
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setMonth(start.getMonth() - 6);
+                picker.$emit("pick", [start, end]);
+              },
+            },
+          ],
+        },
       };
     },
     created() {
-      this.fetchData();
-    },
-    beforeDestroy() {
-      clearInterval(this.timer);
-    },
-    mounted() {
-      let base = +new Date(2020, 1, 1);
-      let oneDay = 24 * 3600 * 1000;
-      let date = [];
-
-      let data = [Math.random() * 1500];
-      let now = new Date(base);
-
-      const addData = (shift) => {
-        now = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join("/");
-        date.push(now);
-        data.push(this.$baseLodash.random(20000, 60000));
-
-        if (shift) {
-          date.shift();
-          data.shift();
-        }
-
-        now = new Date(+new Date(now) + oneDay);
+      this.orderByDay = {
+        store_account: this.$store.state.user.store[0].account,
+        time: [
+          dayjs().add(-30, "day").format("YYYY-MM-DD"),
+          dayjs().format("YYYY-MM-DD"),
+        ],
       };
-
-      for (let i = 1; i < 6; i++) {
-        addData();
-      }
-      addData(true);
-      this.fwl.xAxis[0].data = date;
-      this.fwl.series[0].data = data;
-      this.timer = setInterval(() => {
-        addData(true);
-        this.fwl.xAxis[0].data = date;
-        this.fwl.series[0].data = data;
-      }, 3000);
+      this.orderByMonth = {
+        store_account: this.$store.state.user.store[0].account,
+        time: [
+          dayjs().startOf("year").format("YYYY-MM-DD"),
+          dayjs().format("YYYY-MM-DD"),
+        ],
+      };
+      this.getYesterdayData();
+      this.getDaysData();
+      this.statOrderByMonth();
     },
+    mounted() {},
     methods: {
-      handleClick(e) {
-        this.$baseMessage(`点击了${e.name},这里可以写跳转`);
+      async getYesterdayData() {
+        const {
+          data: { dayStat },
+        } = await statOrderByDay({
+          from: dayjs().add(-1, "day").format("YYYY-MM-DD"),
+          to: dayjs().add(-1, "day").format("YYYY-MM-DD"),
+          store_account: this.orderByDay.store_account,
+        });
+        this.yesterdayData = dayStat[0];
       },
-      handleZrClick(e) {},
+      async getDaysData() {
+        const orderByDay = JSON.parse(JSON.stringify(this.orderByDay));
+        orderByDay.from = orderByDay.time[0];
+        orderByDay.to = orderByDay.time[1];
+        const {
+          data: { dayStat },
+        } = await statOrderByDay(orderByDay);
+        this.chart1.xAxis.data = dayStat.map((item) => item.day.slice(5));
+        this.chart1.series[0].data = dayStat.map((item) => item.caipin_amount);
+        this.chart1.series[1].data = dayStat.map((item) => item.caihe_amount);
+        this.chart1.series[2].data = dayStat.map((item) => item.caipin_count);
+        this.chart1.series[3].data = dayStat.map((item) => item.caihe_count);
+      },
+      async statOrderByMonth() {
+        const orderByMonth = JSON.parse(JSON.stringify(this.orderByMonth));
+        orderByMonth.from = orderByMonth.time[0] + "-01";
+        orderByMonth.to = orderByMonth.time[1] + "-01";
+        const {
+          data: { monthStat },
+        } = await statOrderByMonth(orderByMonth);
+        this.chart2.xAxis.data = dayStat.map((item) => item.month);
+        this.chart2.series[0].data = monthStat.map(
+          (item) => item.caipin_amount
+        );
+        this.chart2.series[1].data = monthStat.map((item) => item.caihe_amount);
+        this.chart2.series[2].data = monthStat.map((item) => item.caipin_count);
+        this.chart2.series[3].data = monthStat.map((item) => item.caihe_count);
+      },
       handleChangeTheme() {
         this.$baseEventBus.$emit("theme");
       },
-      async fetchData() {},
     },
   };
 </script>
@@ -1004,9 +530,9 @@
       }
 
       .el-card__body {
+        min-height: 305px;
         .echarts {
           width: 100%;
-          height: 125px;
         }
       }
     }
@@ -1015,6 +541,12 @@
       min-height: 400px;
 
       ::v-deep {
+        .el-card__header {
+          .el-form-item {
+            margin-bottom: 0;
+          }
+          padding: 11px 20px;
+        }
         .el-card__body {
           .echarts {
             width: 100%;

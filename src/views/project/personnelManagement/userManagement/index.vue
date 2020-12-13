@@ -120,7 +120,7 @@
         label="角色"
         align="center"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.roles | getRoles(roles) }}
         </template>
       </el-table-column>
@@ -130,7 +130,7 @@
         label="状态"
         align="center"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <el-tag
             :type="scope.row.status === 1 ? 'success' : 'danger'"
             disable-transitions
@@ -147,7 +147,7 @@
         width="200"
         align="center"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <el-button type="primary" @click="handleEdit(scope.row)">
             编辑
           </el-button>
