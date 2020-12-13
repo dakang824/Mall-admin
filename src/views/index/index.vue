@@ -448,7 +448,7 @@
       this.orderByDay = {
         store_account: this.$store.state.user.store[0].account,
         time: [
-          dayjs().startOf("month").format("YYYY-MM-DD"),
+          dayjs().add(-30, "day").format("YYYY-MM-DD"),
           dayjs().format("YYYY-MM-DD"),
         ],
       };
