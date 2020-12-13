@@ -47,7 +47,7 @@
       <el-form-item label="绑定城合店铺" prop="status">
         <addTag
           v-if="show"
-          :val="form.storesArr"
+          :vals="form.storesArr"
           verify
           txt="添加绑定"
           @enter="handleEnter"
