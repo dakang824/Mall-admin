@@ -52,7 +52,6 @@
                 type="daterange"
                 align="right"
                 unlink-panels
-                range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 :picker-options="dayPickerOptions"
@@ -495,7 +494,7 @@
         const {
           data: { monthStat },
         } = await statOrderByMonth(orderByMonth);
-        this.chart2.xAxis.data = dayStat.map((item) => item.month);
+        this.chart2.xAxis.data = monthStat.map((item) => item.month);
         this.chart2.series[0].data = monthStat.map(
           (item) => item.caipin_amount
         );

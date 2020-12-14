@@ -3,7 +3,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 可填写的标签
  * @Date: 2020-12-03 20:15:41
- * @LastEditTime: 2020-12-13 18:44:53
+ * @LastEditTime: 2020-12-14 21:08:37
 -->
 <template>
   <div class="addTag">
@@ -66,7 +66,6 @@
       },
       handleDelTag(e) {
         this.$emit("delect", this.val[e]);
-        // eslint-disable-next-line vue/no-mutating-props
         this.val.splice(e, 1);
       },
       handleInputConfirm() {
@@ -81,12 +80,10 @@
             }
             this.$emit("enter", inputValue, (v) => {
               if (v) {
-                // eslint-disable-next-line vue/no-mutating-props
                 this.val.push({ name: inputValue });
               }
             });
           } else {
-            // eslint-disable-next-line vue/no-mutating-props
             this.val.push({ name: inputValue });
           }
         }
