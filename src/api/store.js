@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 店铺管理
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-10-06 18:48:01
+ * @LastEditTime: 2020-12-12 13:43:06
  */
 import request from "@/utils/request";
 
@@ -32,6 +32,22 @@ export function modifyStore(data) {
 export function deleteStore(data) {
   return request({
     url: "/service/plat/admin/deleteStore",
+    method: "post",
+    data,
+  });
+}
+
+export function addStorePic(data) {
+  return request({
+    url: "/service/plat/admin/addStorePic",
+    method: "post",
+    data,
+  });
+}
+
+export function deleteStorePic(data) {
+  return request({
+    url: "/service/plat/admin/deleteStorePic",
     method: "post",
     data,
   });

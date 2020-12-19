@@ -152,7 +152,7 @@
   import Edit from "./components/OrderRemittanceEdit";
   import filters from "@/filters";
   export default {
-    name: "OrderRemittance",
+    name: "Remittance",
     components: { Edit },
     filters: {
       getStatusStr(v) {

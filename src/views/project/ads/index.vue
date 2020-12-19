@@ -93,7 +93,7 @@
   import Edit from "./components/AdsEdit";
 
   export default {
-    name: "Banner",
+    name: "Ads",
     components: { Edit },
     data() {
       return {

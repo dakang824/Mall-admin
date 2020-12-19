@@ -295,8 +295,8 @@
         this.queryForm.pageNo = 1;
         this.fetchData();
       },
-      async fetchData() {
-        this.listLoading = true;
+      async fetchData(listLoading = true) {
+        this.listLoading = listLoading;
         const queryForm = JSON.parse(JSON.stringify(this.queryForm));
         if (queryForm.prodPri.length) {
           queryForm.prodPri = queryForm.prodPri.reduce((a, b) => a + b);

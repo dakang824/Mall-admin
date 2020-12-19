@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:商品管理
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-10-27 00:26:55
+ * @LastEditTime: 2020-12-19 16:53:32
  */
 import request from "@/utils/request";
 

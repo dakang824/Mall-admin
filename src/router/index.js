@@ -157,23 +157,7 @@ export const asyncRoutes = [
       },
     ],
   },
-  {
-    path: "/finance",
-    component: Layout,
-    redirect: "/finance",
-    children: [
-      {
-        path: "/finance",
-        name: "Finance",
-        component: () => import("@/views/project/finance/index"),
-        meta: {
-          title: "财务管理",
-          icon: "money-bill-alt",
-          permissions: ["financial", "admin"],
-        },
-      },
-    ],
-  },
+
   {
     path: "/order",
     component: Layout,
@@ -185,46 +169,75 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: "/recharge",
+        path: "recharge",
         name: "Recharge",
         hidden: true,
         component: () => import("@/views/project/order/recharge"),
         meta: {
           title: "充值订单",
           icon: "funnel-dollar",
-          noKeepAlive: true,
         },
       },
       {
-        path: "/orderGoods",
+        path: "orderGoods",
         name: "OrderGoods",
         component: () => import("@/views/project/order/goods"),
         meta: {
           title: "订单管理",
           icon: "shopping-bag",
-          noKeepAlive: true,
         },
       },
       {
-        path: "/remittance",
+        path: "remittance",
         name: "Remittance",
         hidden: true,
         component: () => import("@/views/project/order/remittance"),
         meta: {
           title: "汇款订单",
           icon: "file-invoice-dollar",
-          noKeepAlive: true,
         },
       },
       {
-        path: "/businessGoods",
+        path: "businessGoods",
         name: "BusinessGoods",
         hidden: true,
         component: () => import("@/views/project/order/business-goods"),
         meta: {
           title: "商家订单查询",
           icon: "shopping-bag",
-          noKeepAlive: true,
+        },
+      },
+    ],
+  },
+  {
+    path: "/purchase",
+    component: Layout,
+    redirect: "/purchase",
+    children: [
+      {
+        path: "/purchase",
+        name: "Purchase",
+        component: () => import("@/views/project/purchase"),
+        meta: {
+          title: "商品采购单",
+          icon: "shopping-basket",
+        },
+      },
+    ],
+  },
+  {
+    path: "/finance",
+    component: Layout,
+    redirect: "/finance",
+    hidden: true,
+    children: [
+      {
+        path: "/finance",
+        name: "Finance",
+        component: () => import("@/views/project/finance/index"),
+        meta: {
+          title: "财务管理",
+          icon: "money-bill-alt",
         },
       },
     ],
@@ -256,7 +269,7 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: "/banner",
+        path: "banner",
         name: "Banner",
         hidden: true,
         component: () => import("@/views/project/banner/index"),
@@ -266,7 +279,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: "/ads",
+        path: "ads",
         name: "Ads",
         hidden: true,
         component: () => import("@/views/project/ads/index"),
@@ -276,8 +289,8 @@ export const asyncRoutes = [
         },
       },
       {
-        path: "/setting",
-        name: "Setting",
+        path: "setting",
+        name: "StoreSet",
         component: () => import("@/views/project/storeSet/index"),
         meta: {
           title: "店铺设置",
@@ -305,7 +318,6 @@ export const asyncRoutes = [
         meta: {
           title: "文章列表",
           icon: "list-ul",
-          noKeepAlive: true,
         },
       },
       {
@@ -315,7 +327,6 @@ export const asyncRoutes = [
         meta: {
           title: "编辑文章",
           icon: "edit",
-          noKeepAlive: true,
         },
       },
     ],

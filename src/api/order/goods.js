@@ -53,3 +53,11 @@ export function exportOrders(data) {
     data,
   });
 }
+
+export function orderPayBack(data) {
+  return request({
+    url: "/service/plat/admin/orderPayBack",
+    method: "post",
+    data,
+  });
+}
