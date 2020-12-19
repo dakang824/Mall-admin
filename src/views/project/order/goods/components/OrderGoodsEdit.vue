@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-11-22 13:21:45
+ * @LastEditTime: 2020-12-19 16:54:47
 -->
 <template>
   <el-drawer
@@ -167,6 +167,8 @@
 </template>
 
 <script>
+  import { mapState } from "vuex";
+  import { orderPayBack } from "@/api/order/goods";
   import Dialog from "./dialog";
   export default {
     name: "OrderGoodsEdit",
@@ -219,6 +221,11 @@
         title: "",
         dialogFormVisible: false,
       };
+    },
+    computed: {
+      ...mapState({
+        username: (state) => state.user.username,
+      }),
     },
     created() {},
     methods: {
@@ -307,7 +314,25 @@
       handleSend() {
         this.show = true;
       },
-      handleBackMoney() {},
+      async handleBackMoney() {
+        const {
+          user_id: userId,
+          id: order_id,
+          pay_no,
+          refund_amount,
+          total_amount,
+          operator = this.username,
+        } = this.form;
+        const { msg } = await orderPayBack({
+          userId,
+          order_id,
+          pay_no,
+          refund_amount,
+          total_amount,
+          operator,
+        });
+        this.$baseMessage(msg, "success");
+      },
       getSummaries(param) {
         const { columns, data } = param;
         const sums = ["总价"];

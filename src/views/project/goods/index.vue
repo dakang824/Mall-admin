@@ -231,7 +231,7 @@
   import Edit from "./components/GoodsEdit";
   import { mapState } from "vuex";
   export default {
-    name: "OrderGoods",
+    name: "Goods",
     components: { Edit },
     filters: {
       minPrice: (value) => {
@@ -347,7 +347,7 @@
         this.selectRows = val;
       },
       handleEdit(row) {
-        row = this.list[row.$index];
+        // row = this.list[row.$index];
         if (row.id) {
           this.$refs["edit"].showEdit(row);
         } else {

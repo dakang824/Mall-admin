@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-12-12 15:00:11
+ * @LastEditTime: 2020-12-19 16:37:10
 -->
 
 <template>
@@ -137,7 +137,7 @@
           <el-col :span="12">
             <el-form-item label="物流服务" prop="postStore" label-width="89px">
               <el-input
-                v-model.number="form.postStore"
+                v-model.number="form.postScore"
                 autocomplete="off"
                 type="number"
                 max="5"
@@ -267,12 +267,12 @@
           contact: "",
           prodPri: [],
           status: "",
-          desScore: "",
-          serScore: "",
-          postScore: "",
-          desCompare: "",
-          serCompare: "",
-          postCompare: "",
+          desScore: "5.0",
+          serScore: "5.0",
+          postScore: "5.0",
+          desCompare: "95",
+          serCompare: "95",
+          postCompare: "95",
           province: "",
           city: "",
           storePics: [],
@@ -338,7 +338,7 @@
           var row = JSON.parse(JSON.stringify(row));
           row.desScore = row.desScore.toFixed(1);
           row.serScore = row.serScore.toFixed(1);
-          row.postStore = row.postStore.toFixed(1);
+          row.postScore = row.postStore.toFixed(1);
           Array.from(
             { length: 5 },
             (e, i) =>
@@ -348,11 +348,17 @@
           )
             .filter((item) => item.length)
             .flat();
-
-          row.address = [
+          const t = !row.province && !row.city;
+          if (t) {
+            const a = row.address.split(" ");
+            row.province = a[0];
+            row.city = a[1];
+          }
+          row.province = row.address = [
             TextToCode[row.province].code,
             TextToCode[row.province][row.city].code,
           ];
+
           const prodPri = this.roles
             .map((item) => {
               if ((row.prodPri & item.value) > 0) {
@@ -392,7 +398,15 @@
             const len = filters.imgBaseUrl("").length;
             const form = JSON.parse(JSON.stringify(this.form));
             form.prodPri = form.prodPri.reduce((a, b) => a + b);
-            form.address = form.province + " " + form.city;
+
+            if (Array.isArray(form.province)) {
+              form.address = form.province
+                .map((item) => CodeToText[`${item}`])
+                .join(" ");
+            } else {
+              form.address = form.province + " " + form.city;
+            }
+
             const arr = Array.from({ length: 5 }, (e, i) =>
               this.getImgPath(this[`path${i + 1}`], i + 1)
             )

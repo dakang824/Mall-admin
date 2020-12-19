@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-12-13 18:47:13
- * @LastEditTime: 2020-12-13 23:41:50
+ * @LastEditTime: 2020-12-19 17:05:54
 -->
 <template>
   <el-dialog
@@ -44,7 +44,7 @@
       </tr>
       <tr v-if="keys">
         <th>菜品名称</th>
-        <th colspan="2">重量</th>
+        <th colspan="2">重量(g)</th>
       </tr>
       <tr v-for="(v, k, i) in billMap" :key="'t' + i">
         <td>{{ k }}</td>

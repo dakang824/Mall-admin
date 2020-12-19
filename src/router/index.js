@@ -265,7 +265,7 @@ export const asyncRoutes = [
       },
       {
         path: "setting",
-        name: "Setting",
+        name: "StoreSet",
         component: () => import("@/views/project/storeSet/index"),
         meta: {
           title: "店铺设置",

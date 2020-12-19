@@ -183,7 +183,7 @@
   const dayjs = require("dayjs");
 
   export default {
-    name: "Finance",
+    name: "Purchase",
     components: { Edit },
     data() {
       return {

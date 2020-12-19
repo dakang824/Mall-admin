@@ -36,33 +36,44 @@
       <el-col :xs="24" :sm="24" :md="12">
         <el-card class="card" shadow="never">
           <div slot="header">
-            <el-form ref="elForm" :model="orderByDay" inline>
-              <el-form-item>
-                <el-input
-                  v-model.lazy="orderByDay.store_account"
-                  placeholder="请输入店铺账号"
-                  clearable
-                  :style="{ width: '100%' }"
-                  @keyup.enter.native="getDaysData"
-                  @clear="getDaysData"
-                />
-              </el-form-item>
-              <el-date-picker
-                v-model="orderByDay.time"
-                type="daterange"
-                align="right"
-                unlink-panels
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :picker-options="dayPickerOptions"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd"
-                @change="getDaysData"
-              ></el-date-picker>
-            </el-form>
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              按月统计
+              <el-form ref="elForm" :model="orderByMonth" inline>
+                <el-form-item>
+                  <el-input
+                    v-model.lazy="orderByMonth.store_account"
+                    placeholder="请输入店铺账号"
+                    clearable
+                    :style="{ width: '140px' }"
+                    @keyup.enter.native="statOrderByMonth"
+                    @clear="statOrderByMonth"
+                  />
+                </el-form-item>
+                <el-date-picker
+                  v-model="orderByMonth.time"
+                  type="monthrange"
+                  align="right"
+                  unlink-panels
+                  range-separator="-"
+                  start-placeholder="开始月份"
+                  end-placeholder="结束月份"
+                  :picker-options="monthPickerOptions"
+                  format="yyyy-MM"
+                  :style="{ width: '200px' }"
+                  value-format="yyyy-MM"
+                  @change="statOrderByMonth"
+                ></el-date-picker>
+              </el-form>
+            </div>
           </div>
           <div>
-            <vab-chart autoresize :options="chart1" />
+            <vab-chart autoresize :options="chart2" />
           </div>
         </el-card>
       </el-col>
@@ -71,34 +82,43 @@
       <el-col :xs="24" :sm="24" :md="12">
         <el-card class="card" shadow="never">
           <div slot="header">
-            <el-form ref="elForm" :model="orderByMonth" inline>
-              <el-form-item>
-                <el-input
-                  v-model.lazy="orderByMonth.store_account"
-                  placeholder="请输入店铺账号"
-                  clearable
-                  :style="{ width: '100%' }"
-                  @keyup.enter.native="statOrderByMonth"
-                  @clear="statOrderByMonth"
-                />
-              </el-form-item>
-              <el-date-picker
-                v-model="orderByMonth.time"
-                type="monthrange"
-                align="right"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="开始月份"
-                end-placeholder="结束月份"
-                :picker-options="monthPickerOptions"
-                format="yyyy-MM"
-                value-format="yyyy-MM"
-                @change="statOrderByMonth"
-              ></el-date-picker>
-            </el-form>
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              按日统计
+              <el-form ref="elForm" :model="orderByDay" inline>
+                <el-form-item>
+                  <el-input
+                    v-model.lazy="orderByDay.store_account"
+                    placeholder="请输入店铺账号"
+                    clearable
+                    :style="{ width: '140px' }"
+                    @keyup.enter.native="getDaysData"
+                    @clear="getDaysData"
+                  />
+                </el-form-item>
+                <el-date-picker
+                  v-model="orderByDay.time"
+                  type="daterange"
+                  align="right"
+                  unlink-panels
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  :style="{ width: '220px' }"
+                  :picker-options="dayPickerOptions"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
+                  @change="getDaysData"
+                ></el-date-picker>
+              </el-form>
+            </div>
           </div>
           <div>
-            <vab-chart autoresize :options="chart2" />
+            <vab-chart autoresize :options="chart1" />
           </div>
         </el-card>
       </el-col>
