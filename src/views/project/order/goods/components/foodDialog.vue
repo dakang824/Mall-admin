@@ -22,7 +22,7 @@
         ></el-table-column>
         <el-table-column
           prop="weight"
-          label="菜品重量（KG）"
+          label="菜品重量（g）"
           align="center"
         ></el-table-column>
       </el-table>

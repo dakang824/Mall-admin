@@ -45,7 +45,7 @@
             >
               按月统计
               <el-form ref="elForm" :model="orderByMonth" inline>
-                <el-form-item>
+                <!-- <el-form-item>
                   <el-input
                     v-model.lazy="orderByMonth.store_account"
                     placeholder="请输入店铺账号"
@@ -54,7 +54,7 @@
                     @keyup.enter.native="statOrderByMonth"
                     @clear="statOrderByMonth"
                   />
-                </el-form-item>
+                </el-form-item> -->
                 <el-date-picker
                   v-model="orderByMonth.time"
                   type="monthrange"
@@ -91,7 +91,7 @@
             >
               按日统计
               <el-form ref="elForm" :model="orderByDay" inline>
-                <el-form-item>
+                <!-- <el-form-item>
                   <el-input
                     v-model.lazy="orderByDay.store_account"
                     placeholder="请输入店铺账号"
@@ -100,7 +100,7 @@
                     @keyup.enter.native="getDaysData"
                     @clear="getDaysData"
                   />
-                </el-form-item>
+                </el-form-item> -->
                 <el-date-picker
                   v-model="orderByDay.time"
                   type="daterange"

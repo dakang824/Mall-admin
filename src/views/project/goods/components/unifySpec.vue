@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 统一规格
  * @Date: 2020-10-07 16:23:22
- * @LastEditTime: 2020-12-06 16:02:51
+ * @LastEditTime: 2020-12-19 17:29:31
 -->
 <template>
   <div class="unifySpec">
@@ -46,10 +46,10 @@
           :style="{ width: '100%' }"
         ></el-input>
       </el-form-item>
-      <el-form-item label="重量（Kg）" prop="weight">
+      <el-form-item label="重量（g）" prop="weight">
         <el-input
           v-model="form.weight"
-          placeholder="请输入重量（Kg）"
+          placeholder="请输入重量（g）"
           clearable
           :style="{ width: '100%' }"
         ></el-input>
@@ -92,7 +92,7 @@
             { required: true, message: "请输入单前库存", trigger: "blur" },
           ],
           weight: [
-            { required: true, message: "请输入重量（Kg）", trigger: "blur" },
+            { required: true, message: "请输入重量（g）", trigger: "blur" },
           ],
         },
       };

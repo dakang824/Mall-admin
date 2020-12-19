@@ -94,7 +94,12 @@
         type="selection"
         align="center"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip prop="id" align="center">
+      <el-table-column
+        show-overflow-tooltip
+        prop="id"
+        align="center"
+        width="80"
+      >
         <template slot="header">
           <i class="el-icon-edit"></i>
           排序
@@ -115,13 +120,14 @@
         prop="name"
         label="商品名称"
         align="center"
-        min-width="150"
+        width="150"
       />
       <el-table-column
         show-overflow-tooltip
         prop="price"
         label="价格"
         align="center"
+        width="80"
       >
         <template #default="scope">
           {{ scope.row.specList | minPrice }}
@@ -148,6 +154,7 @@
         prop="collectCount"
         label="收藏数"
         align="center"
+        width="80"
       />
       <el-table-column
         show-overflow-tooltip
@@ -164,7 +171,7 @@
         prop="type"
         label="商品类目"
         align="center"
-        min-width="150"
+        min-width="140"
       >
         <template #default="scope">
           {{ scope.row | getGoodsCate(category) }}
@@ -198,9 +205,11 @@
           ></el-switch>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="200" align="center">
+      <el-table-column fixed="right" label="操作" width="150" align="center">
         <template #default="scope">
-          <el-button type="primary" @click="handleEdit(scope)">编辑</el-button>
+          <el-button type="primary" @click="handleEdit(scope.row)">
+            编辑
+          </el-button>
           <el-button type="danger" @click="handleDelete(scope.row)">
             删除
           </el-button>

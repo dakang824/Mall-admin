@@ -126,7 +126,6 @@ export const asyncRoutes = [
   {
     path: "/produce",
     component: Layout,
-    hidden: true,
     redirect: "/produce",
     children: [
       {
