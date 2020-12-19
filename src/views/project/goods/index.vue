@@ -182,7 +182,7 @@
         prop="onlineTime"
         label="上下架时间"
         align="center"
-        min-width="150"
+        min-width="130"
       >
         <template #default="scope">
           {{ scope.row.onlineTime | slice(0, 19) }}

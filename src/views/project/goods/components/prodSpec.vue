@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 产品多规格
  * @Date: 2020-10-07 14:01:31
- * @LastEditTime: 2020-12-19 17:29:45
+ * @LastEditTime: 2020-12-19 17:38:59
 -->
 <template>
   <div class="prodSpec">
