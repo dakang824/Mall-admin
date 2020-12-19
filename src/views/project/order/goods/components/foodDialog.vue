@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 菜品明细
  * @Date: 2020-10-30 21:33:18
- * @LastEditTime: 2020-11-25 22:17:48
+ * @LastEditTime: 2020-12-19 17:39:18
 -->
 <template>
   <div>
@@ -22,7 +22,7 @@
         ></el-table-column>
         <el-table-column
           prop="weight"
-          label="菜品重量（KG）"
+          label="菜品重量（g）"
           align="center"
         ></el-table-column>
       </el-table>

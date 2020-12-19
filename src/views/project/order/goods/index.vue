@@ -100,6 +100,16 @@
           {{ scope.row.status | getStatusStr }}
         </template>
       </el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        label="采购状态"
+        align="center"
+        width="80"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.buy_status | getBuyStatusStr }}
+        </template>
+      </el-table-column>
 
       <el-table-column fixed="right" label="操作" width="80" align="center">
         <template #default="scope">
@@ -134,6 +144,9 @@
     filters: {
       getProdName(v) {
         return v.map((item) => item.name).join();
+      },
+      getBuyStatusStr(v) {
+        return v === 0 ? "未采购" : v === 1 ? "已采购" : "";
       },
       getStatusStr(v) {
         return v === 0

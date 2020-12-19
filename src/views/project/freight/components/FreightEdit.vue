@@ -41,7 +41,7 @@
         </div>
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item label="首重（KG）" prop="baseWeight">
+            <el-form-item label="首重（g）" prop="baseWeight">
               <el-input
                 v-model.number="form.baseWeight"
                 autocomplete="off"
@@ -57,7 +57,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="续重（KG）" prop="moreWeight">
+            <el-form-item label="续重（g）" prop="moreWeight">
               <el-input
                 v-model.number="form.moreWeight"
                 autocomplete="off"
@@ -81,9 +81,9 @@
             {{ scope.row.area | getName(province) }}
           </template>
         </el-table-column>
-        <el-table-column prop="baseWeight" label="首重（KG）" align="center" />
+        <el-table-column prop="baseWeight" label="首重（g）" align="center" />
         <el-table-column prop="basePrice" label="运费（元" align="center" />
-        <el-table-column prop="moreWeight" label="续重（KG）" align="center" />
+        <el-table-column prop="moreWeight" label="续重（g）" align="center" />
         <el-table-column
           prop="morePrice"
           label="额外金额（元）"

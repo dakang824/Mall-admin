@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 产品多规格
  * @Date: 2020-10-07 14:01:31
- * @LastEditTime: 2020-10-07 22:56:36
+ * @LastEditTime: 2020-12-19 17:38:59
 -->
 <template>
   <div class="prodSpec">
@@ -53,7 +53,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="重量（Kg）" prop="weight">
+            <el-form-item label="重量（g）" prop="weight">
               <el-input
                 v-model="form.weight"
                 clearable
@@ -86,7 +86,7 @@
       <el-table-column prop="stock" label="库存" width="80" align="center" />
       <el-table-column
         prop="weight"
-        label="重量（Kg）"
+        label="重量（g）"
         align="center"
         width="100"
       />

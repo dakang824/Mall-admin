@@ -175,7 +175,7 @@
         prop="onlineTime"
         label="上下架时间"
         align="center"
-        min-width="150"
+        min-width="130"
       >
         <template #default="scope">
           {{ scope.row.onlineTime | slice(0, 19) }}
@@ -198,9 +198,11 @@
           ></el-switch>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="200" align="center">
+      <el-table-column fixed="right" label="操作" width="150" align="center">
         <template #default="scope">
-          <el-button type="primary" @click="handleEdit(scope)">编辑</el-button>
+          <el-button type="primary" @click="handleEdit(scope.row)">
+            编辑
+          </el-button>
           <el-button type="danger" @click="handleDelete(scope.row)">
             删除
           </el-button>
