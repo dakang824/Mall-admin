@@ -118,7 +118,7 @@
             </div>
           </div>
           <div>
-            <vab-chart autoresize :options="chart2" />
+            <vab-chart autoresize :options="chart1" />
           </div>
         </el-card>
       </el-col>
