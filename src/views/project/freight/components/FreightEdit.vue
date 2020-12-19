@@ -82,7 +82,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="baseWeight" label="首重（g）" align="center" />
-        <el-table-column prop="basePrice" label="运费（元" align="center" />
+        <el-table-column prop="basePrice" label="运费（元）" align="center" />
         <el-table-column prop="moreWeight" label="续重（g）" align="center" />
         <el-table-column
           prop="morePrice"
