@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-12-20 23:16:12
+ * @LastEditTime: 2020-12-20 23:18:02
 -->
 <template>
   <el-drawer
@@ -324,7 +324,6 @@
         this.show = true;
       },
       async handleBackMoney(e) {
-        console.log(e);
         const {
           user_id: userId,
           id: order_id,
