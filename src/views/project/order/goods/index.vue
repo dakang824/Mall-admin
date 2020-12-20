@@ -129,7 +129,12 @@
       @current-change="handleCurrentChange"
     ></el-pagination>
     <edit ref="edit" @fetchData="fetchData" @changeStatus="changeStatus"></edit>
-    <foodDialog ref="detail" v-model="show" :model="queryForm" />
+    <foodDialog
+      ref="detail"
+      v-model="show"
+      :model="queryForm"
+      @fetchData="fetchData"
+    />
   </div>
 </template>
 

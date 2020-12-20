@@ -260,6 +260,7 @@
         }
       },
       getGoodsType: (val, type) => {
+        val = Number(val);
         val = val === 3 ? 4 : val === 4 ? 8 : val;
         return type.find((item) => item.value === val).label;
       },
@@ -268,7 +269,7 @@
         const lastName = firstName.subCategoryList.find(
           (item) => item.id === val.subCateId
         );
-        return `${firstName.name}/${lastName.name}`;
+        return `${firstName && firstName.name}/${lastName && lastName.name}`;
       },
     },
     data() {
@@ -313,7 +314,7 @@
     },
     computed: mapState({
       goodsType: (state) => state.goods.goodsType,
-      category: (state) => state.goods.category,
+      category: (state) => state.goods.categoryAll,
     }),
     async created() {
       this.fetchData();
@@ -325,7 +326,8 @@
         this.list[index].edit = false;
       },
       add(e) {
-        this.list.push(e);
+        console.log(e);
+        this.list.unshift(e);
       },
       update(e) {
         const index = this.list.findIndex((item) => item.id === e.id);

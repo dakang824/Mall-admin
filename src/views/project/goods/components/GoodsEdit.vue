@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-12-06 16:35:56
+ * @LastEditTime: 2020-12-20 22:37:37
 -->
 <template>
   <el-drawer
@@ -375,7 +375,7 @@
         return this.isAdd ? 1 : 10000;
       },
       getGoodsType() {
-        const arr = this.goodsType
+        const arr = JSON.parse(JSON.stringify(this.goodsType))
           .filter(
             (item) => (this.$store.state.user.store[0].prodPri & item.value) > 0
           )

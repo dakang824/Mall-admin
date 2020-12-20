@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-12-19 16:54:47
+ * @LastEditTime: 2020-12-20 23:18:02
 -->
 <template>
   <el-drawer
@@ -142,11 +142,7 @@
       <el-button v-if="form.status === 2" type="primary" @click="handleSend">
         发 货
       </el-button>
-      <el-button
-        v-if="form.status === 6"
-        type="primary"
-        @click="handleBackMoney"
-      >
+      <el-button v-if="form.status === 6" type="primary" @click="handlegive">
         退 款
       </el-button>
     </div>
@@ -163,6 +159,12 @@
       </el-table>
     </el-dialog>
     <Dialog v-model="show" :model="form" @change="handleChange"></Dialog>
+    <dialogBackMoney
+      ref="dialogBackMoney"
+      v-model="dialogBackMoney"
+      :money="form.pay_amount"
+      @handleBackMoney="handleBackMoney"
+    />
   </el-drawer>
 </template>
 
@@ -170,9 +172,11 @@
   import { mapState } from "vuex";
   import { orderPayBack } from "@/api/order/goods";
   import Dialog from "./dialog";
+  import DialogBackMoney from "./dialogBackMoney";
+
   export default {
     name: "OrderGoodsEdit",
-    components: { Dialog },
+    components: { Dialog, DialogBackMoney },
     filters: {
       getStatusStr(v) {
         return v === 1
@@ -208,6 +212,7 @@
         form: {
           id: "",
         },
+        dialogBackMoney: false,
         dialogTableVisible: false,
         baseTable: [],
         userTable: [],
@@ -229,6 +234,10 @@
     },
     created() {},
     methods: {
+      handlegive() {
+        this.dialogBackMoney = true;
+        this.$refs["dialogBackMoney"].handleInit(this.form.pay_amount);
+      },
       handleClick(row) {
         this.gridData = row.recipes.map((item) => {
           return { name: item.name, weight: item.weight };
@@ -314,23 +323,25 @@
       handleSend() {
         this.show = true;
       },
-      async handleBackMoney() {
+      async handleBackMoney(e) {
         const {
           user_id: userId,
           id: order_id,
           pay_no,
-          refund_amount,
           total_amount,
           operator = this.username,
         } = this.form;
+
         const { msg } = await orderPayBack({
           userId,
           order_id,
           pay_no,
-          refund_amount,
+          refund_amount: e,
           total_amount,
           operator,
         });
+        this.form.status = 7;
+        this.$emit("fetchData", false);
         this.$baseMessage(msg, "success");
       },
       getSummaries(param) {
