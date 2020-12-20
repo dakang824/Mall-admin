@@ -2,12 +2,13 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 全局商品类型
  * @Date: 2020-10-07 11:23:12
- * @LastEditTime: 2020-12-06 16:36:18
+ * @LastEditTime: 2020-12-20 22:22:10
  */
 import { findAllCategory, findSubCategoryByCateId } from "@/api/goods";
 import { data } from "autoprefixer";
 const state = {
   category: [],
+  categoryAll: [],
   subCategory: [],
   goodsType: [
     {
@@ -35,6 +36,9 @@ const mutations = {
   ChangeCategory(state, category) {
     state.category = category;
   },
+  ChangeCategoryAll(state, category) {
+    state.categoryAll = category;
+  },
   ChangeSubCategory(state, category) {
     state.subCategory = category;
   },
@@ -44,12 +48,14 @@ const actions = {
     const {
       data: { category },
     } = await findAllCategory();
-    category.map((item) => {
+    const categoryAll = JSON.parse(JSON.stringify(category));
+    categoryAll.map((item) => {
       item.subCategoryList.unshift({
         id: "",
         name: "全部",
       });
     });
+    commit("ChangeCategoryAll", categoryAll);
     commit("ChangeCategory", category);
   },
   async findSubCategoryByCateId({ commit }, params) {

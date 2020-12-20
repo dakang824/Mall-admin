@@ -79,7 +79,7 @@
       </el-col>
     </el-row>
     <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="12">
+      <el-col :xs="24" :sm="24" :md="24">
         <el-card class="card" shadow="never">
           <div slot="header">
             <div
@@ -122,7 +122,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :xs="24" :sm="24" :md="12">
+      <!-- <el-col :xs="24" :sm="24" :md="12">
         <el-card shadow="never">
           <div slot="header">
             <span>依赖信息</span>
@@ -172,7 +172,7 @@
             </tr>
           </table>
         </el-card>
-      </el-col>
+      </el-col> -->
     </el-row>
   </div>
 </template>
