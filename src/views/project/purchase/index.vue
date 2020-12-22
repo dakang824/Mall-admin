@@ -223,7 +223,7 @@
     created() {
       this.queryForm.time = [
         dayjs().add(-90, "day").format("YYYY-MM-DD HH:mm:ss"),
-        dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        dayjs().format("YYYY-MM-DD") + " 23:59:59",
       ];
       this.fetchData();
     },

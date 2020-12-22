@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 确认汇款订单
  * @Date: 2020-10-30 21:33:18
- * @LastEditTime: 2020-12-20 23:16:20
+ * @LastEditTime: 2020-12-22 21:01:39
 -->
 <template>
   <div>
@@ -90,9 +90,17 @@
       async submitForm() {
         this.$refs["elForm"].validate(async (valid) => {
           if (valid) {
-            this.$emit("handleBackMoney", this.formData.num);
-            this.resetForm();
-            this.handleClose();
+            this.$confirm(`确认退款${this.formData.num}元吗？`, "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning",
+            })
+              .then(() => {
+                this.$emit("handleBackMoney", this.formData.num);
+                this.resetForm();
+                this.handleClose();
+              })
+              .catch(() => {});
           } else {
             return false;
           }
