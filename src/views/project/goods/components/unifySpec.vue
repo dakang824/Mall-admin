@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 统一规格
  * @Date: 2020-10-07 16:23:22
- * @LastEditTime: 2020-12-19 17:39:07
+ * @LastEditTime: 2020-12-22 19:58:54
 -->
 <template>
   <div class="unifySpec">
@@ -54,6 +54,13 @@
           :style="{ width: '100%' }"
         ></el-input>
       </el-form-item>
+      <el-form-item label="几个标准份" prop="recipeRate">
+        <el-input
+          v-model="form.recipeRate"
+          clearable
+          :style="{ width: '100%' }"
+        ></el-input>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -93,6 +100,9 @@
           ],
           weight: [
             { required: true, message: "请输入重量（g）", trigger: "blur" },
+          ],
+          recipeRate: [
+            { required: true, message: "请输入几个标准份", trigger: "blur" },
           ],
         },
       };
