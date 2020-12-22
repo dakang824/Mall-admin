@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 产品多规格
  * @Date: 2020-10-07 14:01:31
- * @LastEditTime: 2020-12-19 17:38:59
+ * @LastEditTime: 2020-12-22 21:55:42
 -->
 <template>
   <div class="prodSpec">
@@ -33,9 +33,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="原价" prop="oriPrice">
+            <!-- <el-form-item label="原价" prop="oriPrice">
               <el-input
                 v-model="form.oriPrice"
+                clearable
+                :style="{ width: '100%' }"
+              ></el-input>
+            </el-form-item> -->
+            <el-form-item label="批发价" prop="w_price">
+              <el-input
+                v-model="form.w_price"
                 clearable
                 :style="{ width: '100%' }"
               ></el-input>
@@ -43,6 +50,15 @@
           </el-col>
         </el-row>
         <el-row type="flex">
+          <el-col :span="8">
+            <el-form-item label="起批量" prop="w_num">
+              <el-input
+                v-model="form.w_num"
+                clearable
+                :style="{ width: '100%' }"
+              ></el-input>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
             <el-form-item label="库存" prop="stock">
               <el-input
@@ -61,6 +77,8 @@
               ></el-input>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row type="flex">
           <el-col :span="8">
             <el-form-item label="几个标准份" prop="recipeRate">
               <el-input
@@ -82,7 +100,13 @@
         align="center"
         width="80"
       />
-      <el-table-column prop="oriPrice" label="原价" width="80" align="center" />
+      <el-table-column prop="w_num" label="起批量" width="80" align="center" />
+      <el-table-column
+        prop="w_price"
+        label="批发价"
+        width="80"
+        align="center"
+      />
       <el-table-column prop="stock" label="库存" width="80" align="center" />
       <el-table-column
         prop="weight"
@@ -137,9 +161,10 @@
           sellPrice: [
             { required: true, message: "请输入销售价", trigger: "blur" },
           ],
-          oriPrice: [
-            { required: true, message: "请输入原价", trigger: "blur" },
+          w_price: [
+            { required: true, message: "请输入批发价", trigger: "blur" },
           ],
+          w_num: [{ required: true, message: "请输入起批量", trigger: "blur" }],
           stock: [{ required: true, message: "请输入库存", trigger: "blur" }],
           weight: [{ required: true, message: "请输入重量", trigger: "blur" }],
           recipeRate: [
@@ -155,6 +180,8 @@
           stock: "",
           weight: "",
           recipeRate: "",
+          w_price: "",
+          w_num: "",
         },
       };
     },

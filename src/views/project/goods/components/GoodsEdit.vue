@@ -2,14 +2,14 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-12-20 22:37:37
+ * @LastEditTime: 2020-12-22 21:53:38
 -->
 <template>
   <el-drawer
     :title="title"
     :visible.sync="dialogFormVisible"
     :before-close="close"
-    size="700px"
+    size="760px"
   >
     <div v-if="dialogFormVisible" class="form">
       <el-form
