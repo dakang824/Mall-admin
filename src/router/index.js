@@ -228,7 +228,6 @@ export const asyncRoutes = [
     path: "/finance",
     component: Layout,
     redirect: "/finance",
-    hidden: true,
     children: [
       {
         path: "/finance",
@@ -252,7 +251,7 @@ export const asyncRoutes = [
         component: () => import("@/views/project/payBackOrders/index"),
         meta: {
           title: "退款订单",
-          icon: "money-bill-alt",
+          icon: "clipboard-list",
         },
       },
     ],
