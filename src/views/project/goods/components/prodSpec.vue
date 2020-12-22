@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 产品多规格
  * @Date: 2020-10-07 14:01:31
- * @LastEditTime: 2020-12-22 21:17:07
+ * @LastEditTime: 2020-12-22 21:46:08
 -->
 <template>
   <div class="prodSpec">
@@ -43,7 +43,6 @@
             <el-form-item label="批发价" prop="w_price">
               <el-input
                 v-model="form.w_price"
-                placeholder="请输入批发价"
                 clearable
                 :style="{ width: '100%' }"
               ></el-input>
@@ -55,7 +54,6 @@
             <el-form-item label="起批量" prop="w_num">
               <el-input
                 v-model="form.w_num"
-                placeholder="请输入起批量"
                 clearable
                 :style="{ width: '100%' }"
               ></el-input>
@@ -102,7 +100,13 @@
         align="center"
         width="80"
       />
-      <el-table-column prop="oriPrice" label="原价" width="80" align="center" />
+      <el-table-column prop="w_num" label="起批量" width="80" align="center" />
+      <el-table-column
+        prop="w_price"
+        label="批发价"
+        width="80"
+        align="center"
+      />
       <el-table-column prop="stock" label="库存" width="80" align="center" />
       <el-table-column
         prop="weight"
