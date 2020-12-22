@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:修改登录
  * @Date: 2020-09-20 23:31:19
- * @LastEditTime: 2020-11-22 20:44:53
+ * @LastEditTime: 2020-12-22 22:41:58
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -25,6 +25,7 @@ const state = {
   avatar: "",
   permissions: [],
   store: [],
+  admin_info: {},
 };
 const getters = {
   accessToken: (state) => state.accessToken,
@@ -40,6 +41,9 @@ const mutations = {
   },
   setusername(state, username) {
     state.username = username;
+  },
+  setAdminInfo(state, data) {
+    state.admin_info = data;
   },
   setAvatar(state, avatar) {
     state.avatar = avatar;
@@ -95,6 +99,7 @@ const actions = {
         "setAvatar",
         avatar ? avatar : require("@/assets/default-avatar.gif")
       );
+      commit("setAdminInfo", data.admin_info);
       commit("setStore", data.store);
       return permissions;
     } else {

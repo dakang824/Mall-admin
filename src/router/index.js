@@ -222,7 +222,6 @@ export const asyncRoutes = [
     path: "/finance",
     component: Layout,
     redirect: "/finance",
-    hidden: true,
     children: [
       {
         path: "/finance",

@@ -41,47 +41,42 @@
 
     <el-table
       v-loading="listLoading"
-      table
       :data="list"
       :element-loading-text="elementLoadingText"
+      border
       @selection-change="setSelectRows"
     >
-      <el-table-column
-        show-overflow-tooltip
-        type="selection"
-        align="center"
-      ></el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="id"
         label="序号"
         align="center"
-      />
+      ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="id"
+        prop="name"
         label="名称"
         align="center"
-      />
+      ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="id"
+        prop="account"
         label="账号"
         align="center"
-      />
+      ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="id"
+        prop="mobile"
         label="手机号"
         align="center"
-      />
+      ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="id"
-        label="账户余额"
+        prop="balance"
+        label="账户余额(元)"
         align="center"
       />
-      <el-table-column fixed="right" label="操作" width="80">
+      <el-table-column fixed="right" label="操作" width="80" align="center">
         <template #default="scope">
           <el-button type="text" @click="handleEdit(scope.row)">充值</el-button>
         </template>
@@ -101,14 +96,37 @@
 </template>
 
 <script>
-  import { getList, doDelete } from "@/api/finance";
+  import { queryUsers, findAllUserRoles } from "@/api/userManagement";
   import Edit from "./components/FinanceEdit";
 
   export default {
     name: "Finance",
     components: { Edit },
+    filters: {
+      getRoles: (value, roles) => {
+        return roles
+          .map((item) => {
+            if ((value & item.no) > 0) {
+              return item.name;
+            }
+          })
+          .filter((item) => item !== undefined)
+          .join();
+      },
+    },
     data() {
       return {
+        status: [
+          {
+            value: 1,
+            label: "启用",
+          },
+          {
+            value: 0,
+            label: "禁用",
+          },
+        ],
+        roles: [],
         list: null,
         listLoading: true,
         layout: "total, sizes, prev, pager, next, jumper",
@@ -116,16 +134,20 @@
         selectRows: "",
         elementLoadingText: "正在加载...",
         queryForm: {
-          pageNo: 1,
+          pageNum: 1,
           pageSize: 10,
           name: "",
+          roles: "",
+          state: "",
           account: "",
           mobile: "",
+          status: "",
         },
       };
     },
     created() {
       this.fetchData();
+      this.queryUsers();
     },
     methods: {
       setSelectRows(val) {
@@ -146,14 +168,25 @@
         this.fetchData();
       },
       queryData() {
-        this.queryForm.pageNo = 1;
+        this.queryForm.pageNum = 1;
         this.fetchData();
       },
-      async fetchData() {
-        this.listLoading = true;
-        // const { data, totalCount } = await getList(this.queryForm);
-        // this.list = data;
-        // this.total = totalCount;
+      async queryUsers() {
+        const { data } = await findAllUserRoles();
+        this.roles = data.roles;
+      },
+      async fetchData(listLoading = true) {
+        this.listLoading = listLoading;
+        const queryForm = JSON.parse(JSON.stringify(this.queryForm));
+        if (queryForm.roles.length) {
+          queryForm.roles = queryForm.roles.reduce((a, b) => a + b);
+        }
+
+        const {
+          data: { users },
+        } = await queryUsers(queryForm);
+        this.list = users.list;
+        this.total = users.total;
         setTimeout(() => {
           this.listLoading = false;
         }, 300);

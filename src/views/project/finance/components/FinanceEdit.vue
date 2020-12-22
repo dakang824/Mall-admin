@@ -1,3 +1,9 @@
+<!--
+ * @Author: yukang 1172248038@qq.com
+ * @Description: 
+ * @Date: 2020-12-19 12:57:50
+ * @LastEditTime: 2020-12-22 22:53:13
+-->
 <template>
   <el-dialog
     :title="title"
@@ -6,8 +12,8 @@
     @close="close"
   >
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="id" prop="id">
-        <el-input v-model="form.id" autocomplete="off"></el-input>
+      <el-form-item label="充值金额" prop="amount">
+        <el-input v-model.number="form.amount" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -18,31 +24,39 @@
 </template>
 
 <script>
-  import { doEdit } from "@/api/finance";
+  import { mapState } from "vuex";
+  import { adminRecharge } from "@/api/finance";
 
   export default {
     name: "FinanceEdit",
     data() {
       return {
         form: {
-          id: "",
+          amount: 0,
         },
         rules: {
-          id: [{ required: true, trigger: "blur", message: "请输入id" }],
+          amount: [
+            { required: true, trigger: "blur", message: "请输入充值金额" },
+            { type: "number", trigger: "blur", message: "金额必须为数字值" },
+          ],
         },
-        title: "",
+        title: "充值",
         dialogFormVisible: false,
       };
+    },
+    computed: {
+      ...mapState({
+        admin_info: (state) => state.user.admin_info,
+      }),
     },
     created() {},
     methods: {
       showEdit(row) {
-        if (!row) {
-          this.title = "添加";
-        } else {
-          this.title = "编辑";
-          this.form = Object.assign({}, row);
-        }
+        this.form = {
+          user_id: row.id,
+          amount: "",
+          admin_id: this.admin_info.id,
+        };
         this.dialogFormVisible = true;
       },
       close() {
@@ -53,10 +67,18 @@
       save() {
         this.$refs["form"].validate(async (valid) => {
           if (valid) {
-            const { msg } = await doEdit(this.form);
-            this.$baseMessage(msg, "success");
-            this.$emit("fetchData");
-            this.close();
+            this.$confirm(`确认充值${this.form.amount}元吗？`, "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning",
+            })
+              .then(async () => {
+                const { msg } = await adminRecharge(this.form);
+                this.$baseMessage(msg, "success");
+                this.$emit("fetchData", false);
+                this.close();
+              })
+              .catch(() => {});
           } else {
             return false;
           }
