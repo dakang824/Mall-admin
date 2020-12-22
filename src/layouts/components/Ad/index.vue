@@ -1,3 +1,9 @@
+<!--
+ * @Author: yukang 1172248038@qq.com
+ * @Description: 
+ * @Date: 2020-10-11 15:11:42
+ * @LastEditTime: 2020-12-22 19:55:43
+-->
 <template>
   <div v-if="nodeEnv !== 'development'" class="vab-ad">
     <el-carousel
@@ -29,8 +35,8 @@
     },
     methods: {
       async fetchData() {
-        const { data } = await getList();
-        this.adList = data;
+        // const { data } = await getList();
+        // this.adList = data;
       },
     },
   };
