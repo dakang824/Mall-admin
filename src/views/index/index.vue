@@ -178,6 +178,7 @@
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import * as echarts from "echarts";
   import VabChart from "@/plugins/echarts";
   const dayjs = require("dayjs");
@@ -463,6 +464,9 @@
         },
       };
     },
+    computed: mapState({
+      storeYestdayData: (state) => state.user.storeYestdayData,
+    }),
     created() {
       this.orderByDay = {
         store_account: this.$store.state.user.store[0].account,
