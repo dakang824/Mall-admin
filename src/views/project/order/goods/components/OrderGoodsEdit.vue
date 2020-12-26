@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-12-20 23:18:02
+ * @LastEditTime: 2020-12-26 19:17:13
 -->
 <template>
   <el-drawer
@@ -16,23 +16,39 @@
       <p class="title">基本信息：</p>
       <el-table :data="baseTable" border>
         <el-table-column prop="trade_no" label="订单编号" align="center" />
-        <el-table-column show-overflow-tooltip label="订单状态" align="center">
+        <el-table-column
+          show-overflow-tooltip
+          label="订单状态"
+          align="center"
+          width="90px"
+        >
           <template slot-scope="scope">
             {{ scope.row.status | getStatusStr }}
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="用户账号" align="center" />
+        <el-table-column
+          prop="name"
+          label="用户账号"
+          align="center"
+          width="90px"
+        />
         <el-table-column
           prop="pay_amount"
           label="订单金额(元)"
           align="center"
+          width="110px"
         />
         <el-table-column label="下单时间" align="center">
           <template slot-scope="scope">
             {{ scope.row.pay_time | slice(0, 16) }}
           </template>
         </el-table-column>
-        <el-table-column prop="buyer_common" label="买家留言" align="center" />
+        <el-table-column
+          prop="buyer_common"
+          label="买家留言"
+          align="center"
+          show-overflow-tooltip
+        />
       </el-table>
 
       <!-- 物流表格 -->
@@ -41,7 +57,7 @@
         :data="refundTable"
         border
       >
-        <el-table-column label="支付方式" align="center">
+        <el-table-column label="支付方式" align="center" width="100px">
           <template slot-scope="scope">
             {{ scope.row.pay_type | getPayName }}
           </template>
@@ -68,15 +84,31 @@
 
       <p class="title">收货人信息：</p>
       <el-table :data="userTable" border>
-        <el-table-column prop="name" label="收货人" align="center" />
+        <el-table-column
+          prop="name"
+          label="收货人"
+          align="center"
+          width="100px"
+        />
         <el-table-column
           show-overflow-tooltip
           prop="mobile"
           label="手机号码"
           align="center"
+          width="140px"
         />
-        <el-table-column prop="phone" label="固定号码" align="center" />
-        <el-table-column prop="address" label="收货地址" align="center" />
+        <el-table-column
+          prop="phone"
+          label="固定号码"
+          align="center"
+          width="140px"
+        />
+        <el-table-column
+          prop="address"
+          label="收货地址"
+          align="center"
+          show-overflow-tooltip
+        />
       </el-table>
 
       <p class="title">商品信息：</p>
@@ -106,7 +138,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="spe_name" label="规格" align="center" />
-        <el-table-column prop="sell_price" label="价格（元）" align="center" />
+        <el-table-column prop="unit_Price" label="价格（元）" align="center" />
         <el-table-column prop="quantity" label="数量" align="center" />
         <el-table-column
           prop="total_amount"
@@ -120,17 +152,17 @@
         <el-table-column
           label="商品合计（元）"
           align="center"
-          prop="total_amount"
+          prop="pay_amount"
         />
         <el-table-column prop="post_amount" label="运费（元）" align="center" />
 
         <el-table-column
-          prop="orderTotalMoney"
+          prop="total_amount"
           label="订单总金额（元）"
           align="center"
         />
         <el-table-column
-          prop="pay_amount"
+          prop="pay_money"
           label="应付款金额（元）"
           align="center"
         />
@@ -256,7 +288,9 @@
           this.title = "订单详情";
           this.form = Object.assign({}, row);
           this.form.items.map((item) => {
-            item.total_amount = (item.sell_price * item.quantity).toFixed(2);
+            item.unit_Price =
+              item.quantity >= item.w_num ? item.w_price : item.sell_price;
+            item.total_amount = (item.unit_Price * item.quantity).toFixed(2);
           });
           const {
             trade_no,
@@ -286,12 +320,11 @@
             buyer_common,
           });
 
-          const orderTotalMoney = total_amount + post_amount;
           this.moneyTable.push({
             total_amount,
+            pay_amount,
             post_amount,
-            orderTotalMoney,
-            pay_amount: orderTotalMoney - discount,
+            pay_money: total_amount - discount,
           });
 
           this.userTable.push({

@@ -29,7 +29,7 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="cateId">
+          <el-form-item prop="cate">
             <el-cascader
               v-model="queryForm.cate"
               :options="category"
