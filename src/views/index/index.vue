@@ -21,13 +21,13 @@
             <li>
               <span>订单数</span>
               <p style="font-weight: bold; font-size: 40px">
-                {{ yesterdayData.total_count | toFixed }}
+                {{ storeYestdayData.order_count | toFixed }}
               </p>
             </li>
             <li>
               <span>订单金额(元)</span>
               <p style="font-weight: bold; font-size: 40px">
-                {{ yesterdayData.total_amount | toFixed }}
+                {{ storeYestdayData.order_amount | toFixed }}
               </p>
             </li>
           </ul>

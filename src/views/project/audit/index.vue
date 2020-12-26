@@ -89,7 +89,7 @@
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="store_id"
+        prop="store.name"
         label="店铺名称"
         align="center"
       ></el-table-column>
