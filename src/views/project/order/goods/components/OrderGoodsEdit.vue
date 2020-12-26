@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 订单详情
  * @Date: 2020-10-26 22:43:34
- * @LastEditTime: 2020-12-26 17:16:01
+ * @LastEditTime: 2020-12-26 19:17:13
 -->
 <template>
   <el-drawer
@@ -16,23 +16,39 @@
       <p class="title">基本信息：</p>
       <el-table :data="baseTable" border>
         <el-table-column prop="trade_no" label="订单编号" align="center" />
-        <el-table-column show-overflow-tooltip label="订单状态" align="center">
+        <el-table-column
+          show-overflow-tooltip
+          label="订单状态"
+          align="center"
+          width="90px"
+        >
           <template slot-scope="scope">
             {{ scope.row.status | getStatusStr }}
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="用户账号" align="center" />
+        <el-table-column
+          prop="name"
+          label="用户账号"
+          align="center"
+          width="90px"
+        />
         <el-table-column
           prop="pay_amount"
           label="订单金额(元)"
           align="center"
+          width="110px"
         />
         <el-table-column label="下单时间" align="center">
           <template slot-scope="scope">
             {{ scope.row.pay_time | slice(0, 16) }}
           </template>
         </el-table-column>
-        <el-table-column prop="buyer_common" label="买家留言" align="center" />
+        <el-table-column
+          prop="buyer_common"
+          label="买家留言"
+          align="center"
+          show-overflow-tooltip
+        />
       </el-table>
 
       <!-- 物流表格 -->
@@ -41,7 +57,7 @@
         :data="refundTable"
         border
       >
-        <el-table-column label="支付方式" align="center">
+        <el-table-column label="支付方式" align="center" width="100px">
           <template slot-scope="scope">
             {{ scope.row.pay_type | getPayName }}
           </template>
@@ -68,15 +84,31 @@
 
       <p class="title">收货人信息：</p>
       <el-table :data="userTable" border>
-        <el-table-column prop="name" label="收货人" align="center" />
+        <el-table-column
+          prop="name"
+          label="收货人"
+          align="center"
+          width="100px"
+        />
         <el-table-column
           show-overflow-tooltip
           prop="mobile"
           label="手机号码"
           align="center"
+          width="140px"
         />
-        <el-table-column prop="phone" label="固定号码" align="center" />
-        <el-table-column prop="address" label="收货地址" align="center" />
+        <el-table-column
+          prop="phone"
+          label="固定号码"
+          align="center"
+          width="140px"
+        />
+        <el-table-column
+          prop="address"
+          label="收货地址"
+          align="center"
+          show-overflow-tooltip
+        />
       </el-table>
 
       <p class="title">商品信息：</p>
