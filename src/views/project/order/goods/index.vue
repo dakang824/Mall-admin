@@ -70,7 +70,7 @@
       </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="pay_amount"
+        prop="total_amount"
         label="订单金额（元）"
         align="center"
       />

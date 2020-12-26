@@ -43,33 +43,26 @@
           <el-col :span="6">
             <el-form-item label="首重（g）" prop="baseWeight">
               <el-input
-                v-model.number="form.baseWeight"
-                autocomplete="off"
+                v-model="form.baseWeight"
+                :min="0.0"
+                :step="0.01"
+                type="number"
               ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="运费（元）" prop="basePrice">
-              <el-input
-                v-model.number="form.basePrice"
-                autocomplete="off"
-              ></el-input>
+              <el-input v-model="form.basePrice" type="number"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="续重（g）" prop="moreWeight">
-              <el-input
-                v-model.number="form.moreWeight"
-                autocomplete="off"
-              ></el-input>
+              <el-input v-model="form.moreWeight" type="number"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="额外金额（元）" prop="morePrice">
-              <el-input
-                v-model.number="form.morePrice"
-                autocomplete="off"
-              ></el-input>
+              <el-input v-model="form.morePrice" type="number"></el-input>
             </el-form-item>
           </el-col>
         </el-row>

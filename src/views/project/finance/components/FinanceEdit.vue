@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-12-19 12:57:50
- * @LastEditTime: 2020-12-23 21:05:28
+ * @LastEditTime: 2020-12-26 17:34:30
 -->
 <template>
   <el-dialog
@@ -25,7 +25,7 @@
         <el-input v-model="form.balance" disabled></el-input>
       </el-form-item>
       <el-form-item label="充值金额" prop="amount">
-        <el-input v-model.number="form.amount" autocomplete="off"></el-input>
+        <el-input v-model="form.amount" type="number"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -49,7 +49,6 @@
         rules: {
           amount: [
             { required: true, trigger: "blur", message: "请输入充值金额" },
-            { type: "number", trigger: "blur", message: "金额必须为数字值" },
           ],
         },
         title: "充值",
