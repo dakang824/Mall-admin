@@ -228,14 +228,27 @@ export const asyncRoutes = [
     path: "/finance",
     component: Layout,
     redirect: "/finance",
+    meta: {
+      title: "财务管理",
+      icon: "money-check-alt",
+    },
     children: [
       {
         path: "/finance",
         name: "Finance",
         component: () => import("@/views/project/finance/index"),
         meta: {
-          title: "财务管理",
+          title: "充值管理",
           icon: "money-bill-alt",
+        },
+      },
+      {
+        path: "/audit",
+        name: "Audit",
+        component: () => import("@/views/project/audit/index"),
+        meta: {
+          title: "提现审核",
+          icon: "search-dollar",
         },
       },
     ],

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-12-19 12:57:50
- * @LastEditTime: 2020-12-22 22:53:13
+ * @LastEditTime: 2020-12-23 21:05:28
 -->
 <template>
   <el-dialog
@@ -12,6 +12,18 @@
     @close="close"
   >
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form-item label="名称">
+        <el-input v-model="form.name" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="账号">
+        <el-input v-model="form.account" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="手机号">
+        <el-input v-model="form.mobile" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="账户余额">
+        <el-input v-model="form.balance" disabled></el-input>
+      </el-form-item>
       <el-form-item label="充值金额" prop="amount">
         <el-input v-model.number="form.amount" autocomplete="off"></el-input>
       </el-form-item>
@@ -56,6 +68,7 @@
           user_id: row.id,
           amount: "",
           admin_id: this.admin_info.id,
+          ...row,
         };
         this.dialogFormVisible = true;
       },
