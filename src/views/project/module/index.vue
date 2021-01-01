@@ -49,6 +49,7 @@
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import { findModule, deleteModule } from "@/api/module";
   import { findAllProfession } from "@/api/professions";
   import Edit from "./components/Edit";
@@ -80,7 +81,7 @@
               prop: "prof",
               label: "所属专业",
               render: (h, scope) => {
-                return <span>{scope.row.prof.name}</span>;
+                return <span>{this.professionsKeyVal[scope.row.prof_id]}</span>;
               },
             },
             {
@@ -121,14 +122,8 @@
                 clearable: true,
               },
               options: async () => {
-                const {
-                  data: {
-                    professionList: { list },
-                  },
-                } = await findAllProfession({ pageNo: 1, pageSize: 50 });
-                return list.map((item) => {
-                  return { text: item.name, value: item.id };
-                });
+                await this.$store.dispatch("globalRequest/findAllProfession");
+                return this.professions;
               },
             },
           },
@@ -138,6 +133,12 @@
           pageSize: 10,
         },
       };
+    },
+    computed: {
+      ...mapState({
+        professions: (state) => state.globalRequest.professions,
+        professionsKeyVal: (state) => state.globalRequest.professionsKeyVal,
+      }),
     },
     async created() {
       this.fetchData();

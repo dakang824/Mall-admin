@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-01-01 21:46:47
+ * @LastEditTime: 2021-01-01 22:08:57
 -->
 <template>
   <ele-form-dialog
@@ -54,7 +54,7 @@
               },
               {
                 text: "否",
-                value: 2,
+                value: 0,
               },
             ],
           },

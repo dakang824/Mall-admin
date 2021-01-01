@@ -2,8 +2,9 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 全局商品类型
  * @Date: 2020-10-07 11:23:12
- * @LastEditTime: 2020-12-11 20:59:26
+ * @LastEditTime: 2021-01-01 22:26:41
  */
+import { getAllArtNav } from "@/api/navigation";
 const state = {
   articleList: [],
   cate1: [
@@ -16,50 +17,8 @@ const state = {
       value: 2,
     },
   ],
-  cate2: [
-    {
-      text: "公共",
-      value: 1,
-    },
-    {
-      text: "标准",
-      value: 2,
-    },
-    {
-      text: "技能树",
-      value: 3,
-    },
-    {
-      text: "影像",
-      value: 4,
-    },
-    {
-      text: "总结",
-      value: 5,
-    },
-  ],
-  cate3: [
-    {
-      text: "变电",
-      value: 1,
-    },
-    {
-      text: "信息",
-      value: 2,
-    },
-    {
-      text: "基站",
-      value: 3,
-    },
-    {
-      text: "通讯",
-      value: 4,
-    },
-    {
-      text: "电缆",
-      value: 5,
-    },
-  ],
+  // 二级栏目
+  cate2: [],
 
   status: [
     {
@@ -95,6 +54,18 @@ const mutations = {
   ChangeArticleList(state, data) {
     state.articleList = data;
   },
+  ChangeCate2(state, data) {
+    state.cate2 = data;
+  },
 };
-const actions = {};
+const actions = {
+  async getAllArtNav({ commit }) {
+    const {
+      data: { navs },
+    } = await getAllArtNav(this.queryForm);
+
+    const data = navs.map((item) => ({ text: item.title, value: item.id }));
+    commit("ChangeCate2", data);
+  },
+};
 export default { state, getters, mutations, actions };

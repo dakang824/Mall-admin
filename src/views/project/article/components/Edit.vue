@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2020-12-11 23:15:43
+ * @LastEditTime: 2021-01-01 22:43:50
 -->
 <template>
   <ele-form-drawer
@@ -19,8 +19,8 @@
       'author',
       'cover_pic',
       'cate1',
-      'cate2',
-      'cate3',
+      'nav_id',
+      'prof_id',
       'start_time',
       'end_time',
       'group_id',
@@ -48,8 +48,8 @@
           author: "",
           cover_pic: "",
           cate1: "",
-          cate2: "",
-          cate3: "",
+          nav_id: "",
+          prof_id: "",
           start_time: "",
           end_time: "",
           group_id: "",

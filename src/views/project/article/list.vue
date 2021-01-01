@@ -51,6 +51,7 @@
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import { findArticle, deleteArticle } from "@/api/list";
   import Edit from "./components/Edit";
   import filters from "@/filters";
@@ -71,8 +72,8 @@
           title: "",
           author: "",
           cate1: "",
-          cate2: "",
-          cate3: "",
+          nav_id: "",
+          prof_id: "",
         },
         formConfig: {
           formDesc: {
@@ -98,7 +99,7 @@
                 clearable: true,
               },
               options: () => {
-                return this.$store.state.article.status;
+                return this.status;
               },
             },
             cate1: {
@@ -108,27 +109,29 @@
                 clearable: true,
               },
               options: () => {
-                return this.$store.state.article.cate1;
+                return this.cate1;
               },
             },
-            cate2: {
+            nav_id: {
               type: "select",
               label: "二级栏目",
               attrs: {
                 clearable: true,
               },
-              options: () => {
-                return this.$store.state.article.cate2;
+              options: async () => {
+                await this.$store.dispatch("article/getAllArtNav");
+                return this.cate2;
               },
             },
-            cate3: {
+            prof_id: {
               type: "select",
               label: "三级栏目",
               attrs: {
                 clearable: true,
               },
-              options: () => {
-                return this.$store.state.article.cate3;
+              options: async () => {
+                await this.$store.dispatch("globalRequest/findAllProfession");
+                return this.professions;
               },
             },
           },
@@ -201,6 +204,14 @@
         },
         statusTxt: {},
       };
+    },
+    computed: {
+      ...mapState({
+        status: (state) => state.article.status,
+        cate1: (state) => state.article.cate1,
+        cate2: (state) => state.article.cate2,
+        professions: (state) => state.globalRequest.professions,
+      }),
     },
     created() {
       const status = this.$store.state.article.status;
