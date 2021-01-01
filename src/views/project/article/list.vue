@@ -46,6 +46,7 @@
       :options="{ formDesc: formConfig.formDesc }"
       @fetchData="fetchData"
       @update="updateData"
+      @add="addData"
     ></edit>
   </div>
 </template>
@@ -224,6 +225,9 @@
     methods: {
       setSelectRows(val) {
         this.selectRows = val;
+      },
+      addData(e) {
+        this.tableData.data.unshift(e);
       },
       updateData(e) {
         const index = this.tableData.data.findIndex((item) => item.id === e.id);

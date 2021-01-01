@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-01-01 22:43:50
+ * @LastEditTime: 2021-01-01 22:53:24
 -->
 <template>
   <ele-form-drawer
@@ -181,17 +181,17 @@
         if (this.title.includes("添加")) {
           const {
             msg,
-            data: { user },
+            data: { article },
           } = await addArticle(formData);
           this.$baseMessage(msg, "success");
-          this.$emit("fetchData", false);
+          this.$emit("add", article);
         } else {
           const {
             msg,
-            data: { user },
+            data: { article },
           } = await modifyArticle(formData);
           this.$baseMessage(msg, "success");
-          this.$emit("update", user);
+          this.$emit("update", article);
         }
         // 关闭弹窗
         this.dialogFormVisible = false;
