@@ -20,7 +20,7 @@
       :column="tableData.column"
       :data="tableData.data"
       align="center"
-      pagination
+      :pagination="false"
       background
       :layout="layout"
       :current-page.sync="queryForm.pageNo"
@@ -40,8 +40,7 @@
 </template>
 
 <script>
-  import { findModule, deleteModule } from "@/api/module";
-  import { findAllProfession } from "@/api/professions";
+  import { getAllArtNav, deleteArtNav } from "@/api/navigation";
   import Edit from "./components/Edit";
 
   export default {
@@ -59,19 +58,19 @@
               type: "selection",
             },
             {
-              prop: "id",
+              prop: "pos",
               label: "序号",
               width: "80",
             },
             {
-              prop: "name",
+              prop: "title",
               label: "导航名称",
             },
             {
-              prop: "prof",
+              prop: "open_prof",
               label: "是否配置专业",
               render: (h, scope) => {
-                return <span>{scope.row.prof.name}</span>;
+                return <span>{this.getOpenProf[scope.row.open_prof]}</span>;
               },
             },
             {
@@ -102,6 +101,10 @@
             },
           ],
           data: [],
+        },
+        getOpenProf: {
+          0: "否",
+          1: "是",
         },
         queryForm: {
           pageNo: 1,
@@ -134,7 +137,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await deleteModule({ ids: row.id });
+            const { msg } = await deleteArtNav({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.tableData.data.splice(
               this.tableData.data.findIndex((item) => item.id === row.id),
@@ -145,7 +148,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await deleteModule({ ids });
+              const { msg } = await deleteArtNav({ ids });
               this.$baseMessage(msg, "success");
               this.selectRows.map((item) => {
                 this.tableData.data.splice(
@@ -178,12 +181,10 @@
       async fetchData(loading = true) {
         this.loading = loading;
         const {
-          data: {
-            moduleList: { list, total },
-          },
-        } = await findModule(this.queryForm);
-        this.tableData.data = list;
-        this.total = total;
+          data: { navs },
+        } = await getAllArtNav(this.queryForm);
+        this.tableData.data = navs;
+        // this.total = total;
         setTimeout(() => {
           this.loading = false;
         }, 300);

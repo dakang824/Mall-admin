@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2020-12-11 19:14:13
+ * @LastEditTime: 2021-01-01 19:44:52
 -->
 <template>
   <ele-form-dialog
@@ -55,10 +55,12 @@
             },
           },
           test_time: {
-            type: "datetime",
+            type: "date",
             label: "考试时间",
             attrs: {
               clearable: true,
+              format: "yyyy-MM-dd",
+              "value-format": "yyyy-MM-dd",
             },
           },
         },

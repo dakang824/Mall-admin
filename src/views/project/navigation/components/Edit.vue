@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2020-12-08 00:07:01
+ * @LastEditTime: 2021-01-01 21:46:47
 -->
 <template>
   <ele-form-dialog
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-  import { addModule, modifyModule } from "@/api/module";
+  import { addArtNav, modifyArtNav } from "@/api/navigation";
   export default {
     props: {
       options: { type: Object, default: () => {} },
@@ -28,16 +28,20 @@
       return {
         title: "添加",
         dialogFormVisible: false,
-        formData: {},
+        formData: {
+          pos: 0,
+          title: "",
+          open_prof: "",
+        },
         formDesc: {
-          name: {
+          title: {
             type: "input",
             label: "导航名称",
             attrs: {
               clearable: true,
             },
           },
-          prof_id: {
+          open_prof: {
             type: "select",
             label: "是否配置专业",
             attrs: {
@@ -63,7 +67,7 @@
           },
         },
         rules: {
-          name: { required: true, message: "模块名称必填" },
+          title: { required: true, message: "模块名称必填" },
           prof_id: { required: true, message: "所属专业必选" },
         },
       };
@@ -74,7 +78,6 @@
           this.title = "添加导航";
         } else {
           this.title = "编辑导航";
-          row.role = row.roles;
           this.formData = JSON.parse(JSON.stringify(row));
         }
         this.dialogFormVisible = true;
@@ -87,18 +90,17 @@
         if (this.title.includes("添加")) {
           const {
             msg,
-            data: { module },
-          } = await addModule(this.formData);
+            data: { nav },
+          } = await addArtNav(this.formData);
           this.$baseMessage(msg, "success");
-          // this.$emit("add", module);
-          this.$emit("fetchData", false);
+          this.$emit("add", nav);
         } else {
           const {
             msg,
-            data: { module },
-          } = await modifyModule(this.formData);
+            data: { nav },
+          } = await modifyArtNav(this.formData);
           this.$baseMessage(msg, "success");
-          this.$emit("fetchData", false);
+          this.$emit("update", nav);
         }
         // 关闭弹窗
         this.dialogFormVisible = false;
