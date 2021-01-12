@@ -61,7 +61,7 @@ module.exports = {
     after: mockServer(),
     proxy: {
       "/service": {
-        target: "http://47.101.210.167/",
+        target: "http://106.14.36.72/",
         changeOrigin: true,
       },
     },

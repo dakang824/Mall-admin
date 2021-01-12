@@ -1,3 +1,4 @@
+![Visitor Badge](https://visitor-badge.laobi.icu/badge?page_id=dakang824.Mall-admin)
 ## 安装
 
 ```bash
