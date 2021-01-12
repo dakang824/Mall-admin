@@ -131,11 +131,13 @@
         if (store === null) {
           this.$baseMessage(check_res, "error");
         } else {
-          await addUserStore({
-            store_id: store.id,
-            ignoreStoreId: true,
-            user_id: this.form.id,
-          });
+          if (this.title.includes("编辑")) {
+            await addUserStore({
+              store_id: store.id,
+              ignoreStoreId: true,
+              user_id: this.form.id,
+            });
+          }
         }
         callback(store !== null);
       },

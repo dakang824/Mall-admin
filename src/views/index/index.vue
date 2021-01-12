@@ -21,7 +21,7 @@
             <li>
               <span>订单数</span>
               <p style="font-weight: bold; font-size: 40px">
-                {{ storeYestdayData.order_count | toFixed }}
+                {{ storeYestdayData.order_count }}
               </p>
             </li>
             <li>
@@ -478,7 +478,7 @@
       this.orderByMonth = {
         store_account: this.$store.state.user.store[0].account,
         time: [
-          dayjs().startOf("year").format("YYYY-MM-DD"),
+          dayjs().month(-6).format("YYYY-MM-DD"),
           dayjs().format("YYYY-MM-DD"),
         ],
       };
@@ -518,7 +518,7 @@
         const {
           data: { monthStat },
         } = await statOrderByMonth(orderByMonth);
-        this.chart2.xAxis.data = monthStat.map((item) => item.month);
+        this.chart2.xAxis.data = monthStat.reverse().map((item) => item.month);
         this.chart2.series[0].data = monthStat.map(
           (item) => item.caipin_amount
         );
