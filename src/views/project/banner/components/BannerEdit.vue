@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-11-11 21:20:15
- * @LastEditTime: 2020-11-21 11:03:47
+ * @LastEditTime: 2021-01-12 23:14:32
 -->
 <template>
   <el-dialog
@@ -43,7 +43,6 @@
           accept="image/*"
           :on-success="handlePicsSuccess"
           :before-remove="handlePicsRemove"
-          :limit="1"
         >
           <el-button size="small" type="primary" icon="el-icon-upload">
             添加图片
