@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2020-12-12 17:54:28
+ * @LastEditTime: 2021-01-12 13:39:07
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -23,7 +23,7 @@ module.exports = {
   baseURL:
     process.env.NODE_ENV === "development"
       ? "/"
-      : "http://47.101.210.167/" || "vab-mock-server",
+      : "http://106.14.36.72/" || "vab-mock-server",
   //标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）
   title: "嗨厨玩味",
   //简写
