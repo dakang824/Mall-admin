@@ -1,13 +1,10 @@
 /*
  * @Author: yukang 1172248038@qq.com
- * @Description:
+ * @Description:全局变量配置
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2020-12-11 19:15:22
+ * @LastEditTime: 2021-01-14 20:40:52
  */
-/**
- * @copyright chuzhixin 1204505056@qq.com
- * @description 全局变量配置
- */
+
 const baseURL = "http://47.101.210.167:9999/";
 module.exports = {
   // 开发以及部署时的URL 如"/test/"

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-01-01 22:53:24
+ * @LastEditTime: 2021-01-14 22:04:23
 -->
 <template>
   <ele-form-drawer
@@ -21,6 +21,8 @@
       'cate1',
       'nav_id',
       'prof_id',
+      'prof_id1',
+      'module_id',
       'start_time',
       'end_time',
       'group_id',
@@ -137,6 +139,7 @@
           this.title = "编辑文章";
           row.role = row.roles;
           row.pwdTwo = row.pwd;
+          row.cate1 === 2 ? (row.prof_id1 = row.prof_id) : "";
           this.formBtns = [
             {
               text: "提交审核",

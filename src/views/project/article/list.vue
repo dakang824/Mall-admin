@@ -119,6 +119,9 @@
               attrs: {
                 clearable: true,
               },
+              vif(data) {
+                return data.cate1 === 1 || data.cate1 === "";
+              },
               options: async () => {
                 await this.$store.dispatch("article/getAllArtNav");
                 return this.cate2;
@@ -130,9 +133,41 @@
               attrs: {
                 clearable: true,
               },
+              vif(data) {
+                return data.cate1 === 1 || data.cate1 === "";
+              },
               options: async () => {
                 await this.$store.dispatch("globalRequest/findAllProfession");
                 return this.professions;
+              },
+            },
+            prof_id1: {
+              type: "select",
+              label: "二级栏目",
+              attrs: {
+                clearable: true,
+              },
+              vif(data) {
+                return data.cate1 === 2;
+              },
+              options: async () => {
+                await this.$store.dispatch("globalRequest/findAllProfession");
+                return this.professions;
+              },
+            },
+            module_id: {
+              type: "select",
+              label: "三级栏目",
+              attrs: {
+                clearable: true,
+              },
+              vif(data) {
+                return data.cate1 === 2;
+              },
+              options: async () => {
+                await this.$store.dispatch("globalRequest/findModule");
+                console.log(this.moduleLists);
+                return this.moduleLists;
               },
             },
           },
@@ -212,6 +247,7 @@
         cate1: (state) => state.article.cate1,
         cate2: (state) => state.article.cate2,
         professions: (state) => state.globalRequest.professions,
+        moduleLists: (state) => state.globalRequest.moduleLists,
       }),
     },
     created() {
@@ -286,12 +322,14 @@
         this.fetchData();
       },
       async fetchData(loading = true) {
+        const queryForm = JSON.parse(JSON.stringify(this.queryForm));
+        queryForm.prof_id = queryForm.prof_id1 || queryForm.prof_id;
         this.loading = loading;
         const {
           data: {
             articles: { list, total },
           },
-        } = await findArticle(this.queryForm);
+        } = await findArticle(queryForm);
         list.map((item) => {
           item.cover_pic = filters.imgBaseUrl(item.cover_pic);
         });
