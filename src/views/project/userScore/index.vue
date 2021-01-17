@@ -60,7 +60,11 @@
 </template>
 
 <script>
-  import { findUserScore, deleteUserScore } from "@/api/userScore";
+  import {
+    findUserScore,
+    deleteUserScore,
+    exportUserScore,
+  } from "@/api/userScore";
   import filters from "@/filters";
   import Edit from "./components/Edit";
   import ImportTemplate from "./components/importTemplate";
@@ -272,30 +276,30 @@
         this.$set(this.tableData.data, index, e);
       },
       async handleExport() {
-        // const {
-        //   data: { excel_path },
-        // } = await exportUsers(this.queryForm);
-        // window.open(filters.imgBaseUrl(excel_path), "_parent");
-
         this.downloadLoading = true;
-        import("@/components/vendor/Export2Excel").then((excel) => {
-          excel.export_json_to_excel({
-            header: [
-              "序号",
-              "姓名",
-              "账号",
-              "角色",
-              "所属公司",
-              "用户类型",
-              "专业组",
-            ],
-            data: this.formatJson(),
-            filename: "users",
-            autoWidth: true,
-            bookType: "xlsx",
-          });
-          this.downloadLoading = false;
-        });
+        const {
+          data: { excel_path },
+        } = await exportUserScore(this.queryForm);
+        window.open(filters.imgBaseUrl(excel_path), "_parent");
+
+        // import("@/components/vendor/Export2Excel").then((excel) => {
+        //   excel.export_json_to_excel({
+        //     header: [
+        //       "序号",
+        //       "姓名",
+        //       "账号",
+        //       "角色",
+        //       "所属公司",
+        //       "用户类型",
+        //       "专业组",
+        //     ],
+        //     data: this.formatJson(),
+        //     filename: "users",
+        //     autoWidth: true,
+        //     bookType: "xlsx",
+        //   });
+        this.downloadLoading = false;
+        // });
       },
       formatJson() {
         return this.tableData.data.map((v) =>
