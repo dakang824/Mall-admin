@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 09:17:16
- * @LastEditTime: 2020-12-19 16:37:10
+ * @LastEditTime: 2021-01-20 17:23:20
 -->
 
 <template>
@@ -81,9 +81,8 @@
           <el-col :span="12">
             <el-form-item label="描述相符" prop="desScore" label-width="89px">
               <el-input
-                v-model.number="form.desScore"
+                v-model="form.desScore"
                 autocomplete="off"
-                type="number"
                 max="5"
                 min="0"
               ></el-input>
@@ -96,9 +95,8 @@
               label-width="100px"
             >
               <el-input
-                v-model.number="form.desCompare"
+                v-model="form.desCompare"
                 autocomplete="off"
-                type="number"
                 max="100"
                 min="0"
               ></el-input>
@@ -109,9 +107,8 @@
           <el-col :span="12">
             <el-form-item label="服务态度" prop="serScore" label-width="89px">
               <el-input
-                v-model.number="form.serScore"
+                v-model="form.serScore"
                 autocomplete="off"
-                type="number"
                 max="5"
                 min="0"
               ></el-input>
@@ -124,9 +121,8 @@
               label-width="100px"
             >
               <el-input
-                v-model.number="form.serCompare"
+                v-model="form.serCompare"
                 autocomplete="off"
-                type="number"
                 max="100"
                 min="0"
               ></el-input>
@@ -137,9 +133,8 @@
           <el-col :span="12">
             <el-form-item label="物流服务" prop="postStore" label-width="89px">
               <el-input
-                v-model.number="form.postScore"
+                v-model="form.postScore"
                 autocomplete="off"
-                type="number"
                 max="5"
                 min="0"
               ></el-input>
@@ -152,9 +147,8 @@
               label-width="100px"
             >
               <el-input
-                v-model.number="form.postCompare"
+                v-model="form.postCompare"
                 autocomplete="off"
-                type="number"
                 max="100"
                 min="0"
               ></el-input>
@@ -254,6 +248,17 @@
       },
     },
     data() {
+      var validNumber = (rule, value, callback) => {
+        if (value === "") {
+          callback(new Error("不能为空"));
+        } else if (value > 5) {
+          callback(new Error("分值不能大于5"));
+        } else if (isNaN(value)) {
+          callback(new Error("请输入数字"));
+        } else {
+          callback();
+        }
+      };
       return {
         options: provinceAndCityData,
         oldPwd: "",
@@ -291,6 +296,24 @@
             {
               pattern: /^[0-9]*$/,
               message: "请输入数字",
+              trigger: "blur",
+            },
+          ],
+          desScore: [
+            {
+              validator: validNumber,
+              trigger: "blur",
+            },
+          ],
+          serScore: [
+            {
+              validator: validNumber,
+              trigger: "blur",
+            },
+          ],
+          postScore: [
+            {
+              validator: validNumber,
               trigger: "blur",
             },
           ],
@@ -336,9 +359,9 @@
         } else {
           this.title = "编辑店铺";
           var row = JSON.parse(JSON.stringify(row));
-          row.desScore = row.desScore.toFixed(1);
-          row.serScore = row.serScore.toFixed(1);
-          row.postScore = row.postStore.toFixed(1);
+          row.desScore = row.desScore?.toFixed(1);
+          row.serScore = row.serScore?.toFixed(1);
+          row.postScore = row.postStore?.toFixed(1);
           Array.from(
             { length: 5 },
             (e, i) =>
@@ -350,14 +373,16 @@
             .flat();
           const t = !row.province && !row.city;
           if (t) {
-            const a = row.address.split(" ");
+            const a = row.address?.split(" ") || [null, null];
             row.province = a[0];
             row.city = a[1];
           }
-          row.province = row.address = [
-            TextToCode[row.province].code,
-            TextToCode[row.province][row.city].code,
-          ];
+          row.province && row.city
+            ? (row.province = row.address = [
+                TextToCode[row.province].code,
+                TextToCode[row.province][row.city].code,
+              ])
+            : "";
 
           const prodPri = this.roles
             .map((item) => {
