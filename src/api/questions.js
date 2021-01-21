@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:　运费管理
  * @Date: 2020-10-02 09:38:00
- * @LastEditTime: 2020-12-11 20:18:22
+ * @LastEditTime: 2021-01-21 22:57:54
  */
 import request from "@/utils/request";
 
@@ -40,6 +40,22 @@ export function deleteQuestion(data) {
 export function getQueTemplate(data) {
   return request({
     url: "/service/plat/admin/getQueTemplate",
+    method: "post",
+    data,
+  });
+}
+
+export function importQuestion(data) {
+  return request({
+    url: "/service/plat/admin/importQuestion",
+    method: "post",
+    data,
+  });
+}
+
+export function exportQuestion(data) {
+  return request({
+    url: "/service/plat/admin/exportQuestion",
     method: "post",
     data,
   });

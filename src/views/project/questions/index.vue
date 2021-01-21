@@ -60,7 +60,11 @@
 </template>
 
 <script>
-  import { findQuestions, deleteQuestion } from "@/api/questions";
+  import {
+    findQuestions,
+    deleteQuestion,
+    exportQuestion,
+  } from "@/api/questions";
   import filters from "@/filters";
   import Edit from "./components/Edit";
   import ImportTemplate from "./components/importTemplate";
@@ -244,46 +248,40 @@
       },
       async handleExport() {
         this.downloadLoading = true;
-        import("@/components/vendor/Export2Excel").then((excel) => {
-          excel.export_json_to_excel({
-            header: ["序号", "题目", "专业", "模块", "题目类型", "答案"],
-            data: this.formatJson(),
-            filename: "questions",
-            autoWidth: true,
-            bookType: "xlsx",
-          });
-          this.downloadLoading = false;
-        });
+        const {
+          data: { excel_path },
+        } = await exportQuestion(this.queryForm);
+        window.open(filters.imgBaseUrl(excel_path), "_parent");
+        // import("@/components/vendor/Export2Excel").then((excel) => {
+        //   excel.export_json_to_excel({
+        //     header: ["序号", "题目", "专业", "模块", "题目类型"],
+        //     data: this.formatJson(),
+        //     filename: "questions",
+        //     autoWidth: true,
+        //     bookType: "xlsx",
+        //   });
+        // });
+        this.downloadLoading = false;
       },
       formatJson() {
         return this.tableData.data.map((v) =>
-          ["id", "content", "prof_id", "module_id", "type", "queOptions"].map(
-            (j) => {
-              if (j === "prof_id") {
-                return this.professionsKeyVal[v[j]];
-              } else if (j === "module_id") {
-                return this.moduleListsKeyVal[v[j]];
-              } else if (j === "queOptions") {
-                return v[j]
-                  .map((item) => {
-                    return `${item.content}--${
-                      item.rig == 1 ? "正确" : "错误"
-                    }`;
-                  })
-                  .join("/##/");
-              } else if (j === "type") {
-                return v[j] === 1
-                  ? "单选"
-                  : v[j] === 2
-                  ? "多选"
-                  : v[j] === 3
-                  ? "判断"
-                  : "";
-              } else {
-                return v[j];
-              }
+          ["id", "content", "prof_id", "module_id", "type"].map((j) => {
+            if (j === "prof_id") {
+              return this.professionsKeyVal[v[j]];
+            } else if (j === "module_id") {
+              return this.moduleListsKeyVal[v[j]];
+            } else if (j === "type") {
+              return v[j] === 1
+                ? "单选"
+                : v[j] === 2
+                ? "多选"
+                : v[j] === 3
+                ? "判断"
+                : "";
+            } else {
+              return v[j];
             }
-          )
+          })
         );
       },
       handleImport() {

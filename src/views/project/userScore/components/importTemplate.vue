@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2021-01-17 23:06:58
+ * @LastEditTime: 2021-01-21 22:54:41
 -->
 <template>
   <ele-form-dialog
@@ -29,7 +29,7 @@
     props: {
       title: {
         type: String,
-        default: "导入文件",
+        default: "成绩导入",
       },
     },
     data() {
@@ -80,8 +80,16 @@
         this.dialogFormVisible = false;
       },
       async handleSubmit(e) {
-        const res = await importUserScore({ file: this.file });
-        console.log(e, res);
+        const {
+          msg,
+          data: { exceptionFile = null },
+        } = await importUserScore({ file: this.file });
+        if (exceptionFile) {
+          window.open(filters.imgBaseUrl(exceptionFile), "_parent");
+        } else {
+          this.$baseMessage(msg, "success");
+          this.handleClosed();
+        }
       },
     },
   };
