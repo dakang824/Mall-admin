@@ -60,12 +60,12 @@ module.exports = {
     },
     disableHostCheck: true,
     after: mockServer(),
-    proxy: {
-      "/service": {
-        target,
-        changeOrigin: true,
-      },
-    },
+    // proxy: {
+    //   "/service": {
+    //     target,
+    //     changeOrigin: true,
+    //   },
+    // },
   },
   configureWebpack() {
     return {

@@ -216,6 +216,22 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: "/skills",
+    component: Layout,
+    redirect: "noRedirect",
+    children: [
+      {
+        path: "index",
+        name: "Skills",
+        component: () => import("@/views/project/skills"),
+        meta: {
+          title: "技能树管理",
+          icon: "tree",
+        },
+      },
+    ],
+  },
+  {
     path: "/finance",
     component: Layout,
     redirect: "noRedirect",
@@ -333,22 +349,6 @@ export const asyncRoutes = [
         component: () =>
           import("@/views/project/personnelManagement/menuManagement/index"),
         meta: { title: "菜单管理" },
-      },
-    ],
-  },
-  {
-    path: "/personalCenter",
-    component: Layout,
-    hidden: true,
-    redirect: "personalCenter",
-    children: [
-      {
-        path: "personalCenter",
-        name: "PersonalCenter",
-        component: () => import("@/views/personalCenter/index"),
-        meta: {
-          title: "个人中心",
-        },
       },
     ],
   },

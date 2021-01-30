@@ -183,12 +183,19 @@
               width: "80",
             },
             {
-              prop: "name",
-              label: "内容",
-            },
-            {
               prop: "title",
               label: "标题",
+              render: (h, scope) => {
+                return (
+                  <el-link
+                    onClick={() => {
+                      this.handleEdit(scope.row);
+                    }}
+                  >
+                    {scope.row.title}
+                  </el-link>
+                );
+              },
             },
             {
               prop: "author",
