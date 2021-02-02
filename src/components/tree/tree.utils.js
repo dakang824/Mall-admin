@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2021-01-30 19:43:19
- * @LastEditTime: 2021-02-02 14:29:41
+ * @LastEditTime: 2021-02-02 18:26:00
  */
 export function getEditContent(h, data, node) {
   let self = this;
@@ -30,7 +30,7 @@ export function getDefaultContent(h, data, node) {
   let self = this;
   return (
     <div class="ly-visible">
-      {self.is_superuser && (
+      {self.isSuperuser && (
         <span>
           <el-button
             size="mini"

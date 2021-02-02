@@ -79,18 +79,6 @@
         selectRows: "",
 
         tableData: {
-          column: [
-            {
-              type: "selection",
-            },
-            {
-              prop: "name",
-              label: "技能树",
-              render: (h, scope) => {
-                return <Tree></Tree>;
-              },
-            },
-          ],
           data: [],
         },
         formConfig: {

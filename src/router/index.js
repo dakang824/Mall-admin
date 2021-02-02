@@ -219,14 +219,27 @@ export const asyncRoutes = [
     path: "/skills",
     component: Layout,
     redirect: "noRedirect",
+    meta: {
+      title: "技能树",
+      icon: "skiing",
+    },
     children: [
       {
         path: "index",
         name: "Skills",
         component: () => import("@/views/project/skills"),
         meta: {
-          title: "技能树管理",
+          title: "技能树维护",
           icon: "tree",
+        },
+      },
+      {
+        path: "skillsScore",
+        name: "SkillsScore",
+        component: () => import("@/views/project/skillsScore"),
+        meta: {
+          title: "技能树成绩",
+          icon: "coins",
         },
       },
     ],

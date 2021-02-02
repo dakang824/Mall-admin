@@ -22,12 +22,15 @@
         type: Array,
         default: () => [],
       },
+      isSuperuser: {
+        type: Boolean,
+        default: true,
+      },
     },
     data() {
       return {
         isEdit: false,
         edit_name: "",
-        is_superuser: "False",
         defaultProps: {
           children: "child",
           label: "name",
@@ -42,6 +45,7 @@
 
     created() {
       // this.refresh();
+      console.log(this.treeData);
     },
 
     methods: {
