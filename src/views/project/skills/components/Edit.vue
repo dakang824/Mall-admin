@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-01-30 22:46:04
+ * @LastEditTime: 2021-02-02 15:55:27
 -->
 <template>
   <ele-form-dialog
@@ -86,7 +86,7 @@
             data: { skillTree },
           } = await addSkillTree(formData);
           this.$baseMessage(msg, "success");
-          this.$emit("add", skillTree);
+          this.$emit("add", { ...skillTree, status: 0 });
         }
         // 关闭弹窗
         this.dialogFormVisible = false;

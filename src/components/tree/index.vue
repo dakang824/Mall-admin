@@ -105,8 +105,10 @@
       delSelect() {
         delItem(this.treeData, { id: this.select_node.data.id });
         this.delDialogVisible = false;
-
-        this.$emit("delete", { id: this.select_node.data.id });
+        this.$emit("delete", {
+          id: this.select_node.data.id,
+          level: this.select_node.level,
+        });
       },
 
       update(node, data, e) {

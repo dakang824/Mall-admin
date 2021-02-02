@@ -17,9 +17,6 @@
           添加
         </el-button>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel :span="12">
-        <el-button icon="el-icon-refresh" @click="fetchData">刷新</el-button>
-      </vab-query-form-right-panel>
     </vab-query-form>
     <el-row v-loading="loading" :gutter="20">
       <el-col v-for="(item, index) in tableData.data" :key="index" :span="8">
@@ -31,12 +28,12 @@
           >
             <span>{{ professionsKeyVal[item.prof_id] }}</span>
             <el-button
-              type="primary"
+              :type="item.status == 0 ? 'success' : 'warning'"
               size="mini"
-              icon="el-icon-s-promotion"
-              @click="clickPublish(item)"
+              :icon="item.status == 0 ? 'el-icon-turn-off' : 'el-icon-open'"
+              @click="clickPublish(item, index)"
             >
-              发布
+              {{ item.status == 0 ? "发布" : "取消发布" }}
             </el-button>
           </div>
           <tree
@@ -65,6 +62,8 @@
     publicSkillTree,
     addSkillTree,
     modifySkillTree,
+    canclePublicSkillTree,
+    deleteSkillTree,
   } from "@/api/skills";
   import Tree from "@/components/tree";
   import Edit from "./components/Edit";
@@ -132,12 +131,15 @@
       this.fetchData();
     },
     methods: {
-      async clickDelete() {
+      async clickDelete(e) {
         const {
           msg,
           data: { skillTree },
-        } = await addSkillTree(e);
-        callback(skillTree);
+        } = await deleteSkillTree({ ids: e.id });
+        if (e.level === 1) {
+          const ind = this.tableData.data.findIndex((item) => e.id === item.id);
+          this.tableData.data.splice(ind, 1);
+        }
         this.$baseMessage(msg, "success");
       },
       async clickModify(e) {
@@ -155,11 +157,18 @@
         callback(skillTree);
         this.$baseMessage(msg, "success");
       },
-      async clickPublish(e) {
-        const { msg } = await publicSkillTree({ ids: e.id });
+      async clickPublish(e, ind) {
+        const { msg } = await (e.status == 0
+          ? publicSkillTree
+          : canclePublicSkillTree)({ ids: e.id });
         this.$baseMessage(msg, "success");
+        this.$set(this.tableData.data, ind, {
+          ...this.tableData.data[ind],
+          status: e.status == 0 ? 1 : 0,
+        });
       },
       addData(e) {
+        console.log(e);
         this.tableData.data.unshift(e);
       },
       updateData(e) {

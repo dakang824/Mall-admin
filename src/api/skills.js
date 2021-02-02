@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 技能树管理
  * @Date: 2020-10-02 00:59:22
- * @LastEditTime: 2021-02-02 11:44:35
+ * @LastEditTime: 2021-02-02 16:05:46
  */
 import request from "@/utils/request";
 
@@ -33,6 +33,22 @@ export function findSkillTree(data) {
 export function publicSkillTree(data) {
   return request({
     url: "/service/plat/admin/publicSkillTree",
+    method: "post",
+    data,
+  });
+}
+
+export function canclePublicSkillTree(data) {
+  return request({
+    url: "/service/plat/admin/canclePublicSkillTree",
+    method: "post",
+    data,
+  });
+}
+
+export function deleteSkillTree(data) {
+  return request({
+    url: "/service/plat/admin/deleteSkillTree",
     method: "post",
     data,
   });
