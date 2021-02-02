@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2021-01-30 19:43:19
- * @LastEditTime: 2021-01-30 22:36:45
+ * @LastEditTime: 2021-02-02 14:29:41
  */
 export function getEditContent(h, data, node) {
   let self = this;
@@ -40,7 +40,7 @@ export function getDefaultContent(h, data, node) {
             编辑
           </el-button>
 
-          {data.level !== 6 && (
+          {
             <el-button
               size="mini"
               type="text"
@@ -48,9 +48,9 @@ export function getDefaultContent(h, data, node) {
             >
               添加
             </el-button>
-          )}
+          }
 
-          {data.level !== 1 && (
+          {
             <el-button
               size="mini"
               type="text"
@@ -58,7 +58,7 @@ export function getDefaultContent(h, data, node) {
             >
               删除
             </el-button>
-          )}
+          }
         </span>
       )}
     </div>

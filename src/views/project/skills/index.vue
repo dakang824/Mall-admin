@@ -1,6 +1,17 @@
 <template>
   <div class="demo-container">
     <vab-query-form>
+      <vab-query-form-left-panel :span="24">
+        <ele-form
+          v-model="queryForm"
+          class="clear-col-6"
+          v-bind="formConfig"
+          is-show-reset-btn
+          inline
+          :is-show-label="false"
+          :request-fn="queryData"
+        />
+      </vab-query-form-left-panel>
       <vab-query-form-left-panel :span="12">
         <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
           添加
@@ -14,39 +25,60 @@
       <el-col v-for="(item, index) in tableData.data" :key="index" :span="8">
         <div class="grid-content bg-purple"></div>
         <el-card>
-          <div slot="header" style="text-align: right">
+          <div
+            slot="header"
+            style="display: flex; justify-content: space-between"
+          >
+            <span>{{ professionsKeyVal[item.prof_id] }}</span>
             <el-button
-              type="danger"
+              type="primary"
               size="mini"
-              icon="el-icon-delete"
-              @click="handleDelete"
+              icon="el-icon-s-promotion"
+              @click="clickPublish(item)"
             >
-              删除
+              发布
             </el-button>
           </div>
-          <tree :tree-data="[item]" />
+          <tree
+            :tree-data="[item]"
+            default-expand-all
+            @add="clickAddData"
+            @delete="clickDelete"
+            @modify="clickModify"
+          />
         </el-card>
       </el-col>
+
+      <div style="height: 500px">
+        <my-empty v-if="!tableData.data.length" fit></my-empty>
+      </div>
     </el-row>
     <edit ref="edit" @add="addData" />
   </div>
 </template>
 
 <script>
+  import { MyEmpty } from "$ui";
   import { mapState } from "vuex";
-  import { findSkillTree } from "@/api/skills";
+  import {
+    findSkillTree,
+    publicSkillTree,
+    addSkillTree,
+    modifySkillTree,
+  } from "@/api/skills";
   import Tree from "@/components/tree";
   import Edit from "./components/Edit";
 
   export default {
     name: "Group",
-    components: { Edit, Tree },
+    components: { Edit, Tree, MyEmpty },
     data() {
       return {
         loading: true,
         layout: "total, sizes, prev, pager, next, jumper",
         total: 0,
         selectRows: "",
+
         tableData: {
           column: [
             {
@@ -66,14 +98,14 @@
           formDesc: {
             name: {
               type: "input",
-              label: "专业组名称",
+              label: "名称",
               attrs: {
                 clearable: true,
               },
             },
-            prof_ids: {
-              type: "checkbox",
-              label: "所属专业",
+            prof_id: {
+              type: "select",
+              label: "专业",
               attrs: {
                 clearable: true,
               },
@@ -100,6 +132,33 @@
       this.fetchData();
     },
     methods: {
+      async clickDelete() {
+        const {
+          msg,
+          data: { skillTree },
+        } = await addSkillTree(e);
+        callback(skillTree);
+        this.$baseMessage(msg, "success");
+      },
+      async clickModify(e) {
+        const {
+          msg,
+          data: { skillTree },
+        } = await modifySkillTree(e);
+        this.$baseMessage(msg, "success");
+      },
+      async clickAddData(e, callback) {
+        const {
+          msg,
+          data: { skillTree },
+        } = await addSkillTree(e);
+        callback(skillTree);
+        this.$baseMessage(msg, "success");
+      },
+      async clickPublish(e) {
+        const { msg } = await publicSkillTree({ ids: e.id });
+        this.$baseMessage(msg, "success");
+      },
       addData(e) {
         this.tableData.data.unshift(e);
       },
@@ -171,9 +230,7 @@
             skillTree: { list, total },
           },
         } = await findSkillTree(this.queryForm);
-        const d = this.processingData(list);
-        // console.log(d);
-        this.tableData.data = d;
+        this.tableData.data = this.processingData(list);
         this.total = total;
         setTimeout(() => {
           this.loading = false;

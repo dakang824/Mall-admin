@@ -3,9 +3,9 @@
     <el-tree
       :data="treeData"
       :props="defaultProps"
-      default-expand-all
       :expand-on-click-node="false"
       :render-content="renderContent"
+      v-bind="$attrs"
     ></el-tree>
   </div>
 </template>
@@ -36,6 +36,7 @@
         select_level: null,
         select_node: null,
         delDialogVisible: false,
+        id: null,
       };
     },
 
@@ -104,12 +105,8 @@
       delSelect() {
         delItem(this.treeData, { id: this.select_node.data.id });
         this.delDialogVisible = false;
-        this.$notify({
-          type: "success",
-          title: "操作提示",
-          message: "删除成功!",
-          duration: 2000,
-        });
+
+        this.$emit("delete", { id: this.select_node.data.id });
       },
 
       update(node, data, e) {
@@ -130,7 +127,7 @@
         this.isEdit = true;
       },
 
-      editMsg(data, node, e) {
+      async editMsg(data, node, e) {
         e = event || window.event;
         e.stopPropagation();
         if (this.edit_name.replace(/^\s+|\s+$/g, "")) {
@@ -140,23 +137,30 @@
               name: this.edit_name,
               id: virtualNode.data.id,
             };
-            let addChild = addItem(this.treeData, params);
-            // 如果是用的真api,需要在添加的接口返回添加的节点
-            // 添加成功后，将返回的节点加入数据中，然后删除掉没有id的假节点
-            virtualNode.data.child.forEach((item, i) => {
-              if (!item.id) {
-                virtualNode.data.child.splice(i, 1);
+            await this.$emit(
+              "add",
+              {
+                prof_id: this.treeData[0].prof_id,
+                name: params.name,
+                up_id: this.id || params.id,
+              },
+              (res) => {
+                params.id = res.up_id;
+                this.id = res.id;
+                node.parent.data.id = res.id;
+                let addChild = addItem(this.treeData, res);
+                // 如果是用的真api,需要在添加的接口返回添加的节点
+                // 添加成功后，将返回的节点加入数据中，然后删除掉没有id的假节点
+                virtualNode.data.child.forEach((item, i) => {
+                  if (!item.id) {
+                    virtualNode.data.child.splice(i, 1);
+                  }
+                });
+                this.isEdit = false;
+                this.select_id = null;
+                this.select_level = null;
               }
-            });
-            this.isEdit = false;
-            this.select_id = null;
-            this.select_level = null;
-            this.$notify({
-              type: "success",
-              title: "操作提示",
-              message: "添加成功！",
-              duration: 2000,
-            });
+            );
             return;
           }
 
@@ -164,16 +168,18 @@
             name: this.edit_name,
             id: data.id,
           };
+
+          this.$emit("modify", {
+            id: data.id,
+            prof_id: data.prof_id,
+            name: params.name,
+            up_id: node.parent.data.id,
+          });
+
           updateItem(this.treeData, params);
           this.isEdit = false;
           this.select_id = null;
           this.select_level = null;
-          this.$notify({
-            type: "success",
-            title: "操作提示",
-            message: "编辑成功！",
-            duration: 2000,
-          });
         }
       },
 

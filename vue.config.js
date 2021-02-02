@@ -60,12 +60,12 @@ module.exports = {
     },
     disableHostCheck: true,
     after: mockServer(),
-    // proxy: {
-    //   "/service": {
-    //     target,
-    //     changeOrigin: true,
-    //   },
-    // },
+    proxy: {
+      "/service": {
+        target,
+        changeOrigin: true,
+      },
+    },
   },
   configureWebpack() {
     return {
@@ -176,7 +176,7 @@ module.exports = {
         })
         .end();
     });
-
+    config.resolve.alias.set("$ui", "@xdh/my/ui/lib");
     if (build7z) {
       config.when(process.env.NODE_ENV === "production", (config) => {
         config
