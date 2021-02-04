@@ -143,8 +143,18 @@
               label: "是否绑定",
               render: (h, scope) => {
                 return (
-                  <el-tag type={scope.row.wx_open_id ? "success" : "warning"}>
-                    {scope.row.wx_open_id ? "已绑定" : "未绑定"}{" "}
+                  <el-tag
+                    type={
+                      scope.row.wx_open_id &&
+                      scope.row.wx_open_id !== "undefined"
+                        ? "success"
+                        : "warning"
+                    }
+                  >
+                    {scope.row.wx_open_id &&
+                    scope.row.wx_open_id !== "undefined"
+                      ? "已绑定"
+                      : "未绑定"}{" "}
                   </el-tag>
                 );
               },
