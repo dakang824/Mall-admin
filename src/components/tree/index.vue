@@ -55,6 +55,10 @@
         this.treeData = res.data;
       },
 
+      publish(node, data, e) {
+        console.log(node, data, e);
+      },
+
       append(node, data, e) {
         e = event || window.event;
         e.stopPropagation();

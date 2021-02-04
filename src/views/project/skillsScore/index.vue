@@ -92,6 +92,9 @@
               prop: "user_id",
               label: "用户姓名",
               width: "90",
+              render: (h, scope) => {
+                return <span>{scope.row.users.name}</span>;
+              },
             },
             {
               prop: "skilTree",

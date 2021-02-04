@@ -61,7 +61,7 @@
   import viewDetail from "./components/viewDetail";
 
   export default {
-    name: "List",
+    name: "Audit",
     components: { Edit, viewDetail },
     data() {
       return {
@@ -233,15 +233,7 @@
                         this.handleEdit(scope.row);
                       }}
                     >
-                      编辑
-                    </el-button>
-                    <el-button
-                      type="danger"
-                      onClick={() => {
-                        this.handleDelete(scope.row);
-                      }}
-                    >
-                      删除
+                      审核
                     </el-button>
                   </div>
                 );

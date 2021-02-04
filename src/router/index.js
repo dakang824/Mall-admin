@@ -204,6 +204,7 @@ export const asyncRoutes = [
           icon: "list-ul",
         },
       },
+
       {
         path: "editor",
         hidden: true,
@@ -215,6 +216,23 @@ export const asyncRoutes = [
       },
     ],
   },
+  {
+    path: "/audit",
+    component: Layout,
+    redirect: "/Audit",
+    children: [
+      {
+        path: "/audit",
+        name: "Audit",
+        component: () => import("@/views/project/article/audit.vue"),
+        meta: {
+          title: "文章审核",
+          icon: "gavel",
+        },
+      },
+    ],
+  },
+
   {
     path: "/skills",
     component: Layout,
