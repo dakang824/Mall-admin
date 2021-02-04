@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-01-14 22:04:23
+ * @LastEditTime: 2021-02-04 21:09:37
 -->
 <template>
   <ele-form-drawer
@@ -10,6 +10,7 @@
     label-position="left"
     :form-desc="formDesc"
     :rules="rules"
+    :drawer-attrs="{ destroyOnClose: true, wrapperClosable: false }"
     :visible.sync="dialogFormVisible"
     :title="title"
     size="550px"
@@ -140,24 +141,41 @@
           row.role = row.roles;
           row.pwdTwo = row.pwd;
           row.cate1 === 2 ? (row.prof_id1 = row.prof_id) : "";
-          this.formBtns = [
-            {
-              text: "提交审核",
-              type: "primary",
-              attrs: {
-                disabled: false,
+
+          const { id, status } = row;
+
+          if (status === 0 || status === 2) {
+            const obj = {
+              0: {
+                text: "提交审核",
+                status: 1,
               },
-              click: async () => {
-                const { id, status } = this.formData;
-                const {
-                  msg,
-                  data: { user },
-                } = await auditArticle({ id, status });
-                this.$baseMessage(msg, "success");
-                this.$emit("fetchData", false);
+              2: {
+                text: "发布",
+                status: 3,
               },
-            },
-          ];
+            };
+
+            this.formBtns = [
+              {
+                text: obj[status].text,
+                type: "primary",
+                attrs: {
+                  disabled: false,
+                },
+                click: async () => {
+                  const {
+                    msg,
+                    data: { user },
+                  } = await auditArticle({ id, status: obj[status].status });
+                  this.$baseMessage(msg, "success");
+                  this.$emit("fetchData", false);
+                  this.handleClosed();
+                },
+              },
+            ];
+          }
+
           this.formData = JSON.parse(JSON.stringify(row));
         }
         const formDesc = this.options.formDesc;
@@ -169,6 +187,7 @@
         this.dialogFormVisible = true;
       },
       handleClosed() {
+        this.dialogFormVisible = false;
         this.formData = {};
       },
 

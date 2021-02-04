@@ -2,13 +2,14 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 确认汇款订单
  * @Date: 2020-10-30 21:33:18
- * @LastEditTime: 2021-02-04 17:53:22
+ * @LastEditTime: 2021-02-04 20:24:42
 -->
 <template>
   <div>
     <el-dialog
       width="500px"
       title="文章详情"
+      :close-on-click-modal="false"
       :visible="value"
       :modal-append-to-body="false"
       append-to-body

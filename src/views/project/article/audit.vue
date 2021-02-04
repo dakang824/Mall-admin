@@ -41,12 +41,7 @@
       @selection-change="setSelectRows"
     />
 
-    <edit
-      ref="edit"
-      @fetchData="fetchData"
-      @update="updateData"
-      @add="addData"
-    ></edit>
+    <edit ref="edit" @fetchData="fetchData"></edit>
 
     <view-detail v-model="show" :model="model"></view-detail>
   </div>
@@ -96,18 +91,16 @@
                 clearable: true,
               },
             },
-            // status: {
-            //   type: "select",
-            //   label: "状态",
-            //   isOptions: true,
-            //   default: 1,
-            //   attrs: {
-            //     disabled: true,
-            //   },
-            //   options: () => {
-            //     return this.status;
-            //   },
-            // },
+            status: {
+              type: "select",
+              label: "状态",
+              isOptions: true,
+              default: 1,
+              attrs: {},
+              options: () => {
+                return this.status;
+              },
+            },
             cate1: {
               type: "select",
               label: "一级栏目",
@@ -179,9 +172,6 @@
         },
         tableData: {
           column: [
-            {
-              type: "selection",
-            },
             {
               prop: "id",
               label: "序号",
@@ -283,16 +273,7 @@
         this.show = true;
         this.model = e;
       },
-      setSelectRows(val) {
-        this.selectRows = val;
-      },
-      addData(e) {
-        this.tableData.data.unshift(e);
-      },
-      updateData(e) {
-        const index = this.tableData.data.findIndex((item) => item.id === e.id);
-        this.$set(this.tableData.data, index, e);
-      },
+
       handleEdit(row) {
         if (row.id) {
           this.$refs["edit"].showEdit(row);
@@ -348,7 +329,7 @@
       async fetchData(loading = true) {
         const queryForm = JSON.parse(JSON.stringify(this.queryForm));
         queryForm.prof_id = queryForm.prof_id1 || queryForm.prof_id;
-        queryForm.status = 1; //审核中
+        !("status" in queryForm) ? (queryForm.status = 1) : "";
         this.loading = loading;
         const {
           data: {
