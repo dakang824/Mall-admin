@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-02-04 20:47:27
+ * @LastEditTime: 2021-02-04 21:15:18
 -->
 <template>
   <ele-form-dialog
@@ -73,6 +73,7 @@
         this.dialogFormVisible = false;
         // 重置formData
         this.formData = {};
+        this.$emit("fetchData");
       },
     },
   };
