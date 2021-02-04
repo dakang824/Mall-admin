@@ -13,7 +13,7 @@
         />
       </vab-query-form-left-panel>
     </vab-query-form>
-    <vab-query-form>
+    <!-- <vab-query-form>
       <vab-query-form-left-panel :span="12">
         <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
           添加
@@ -22,7 +22,7 @@
           批量删除
         </el-button>
       </vab-query-form-left-panel>
-    </vab-query-form>
+    </vab-query-form> -->
 
     <lb-table
       v-loading="loading"
@@ -43,7 +43,6 @@
 
     <edit
       ref="edit"
-      :options="{ formDesc: formConfig.formDesc }"
       @fetchData="fetchData"
       @update="updateData"
       @add="addData"
@@ -56,7 +55,7 @@
 <script>
   import { mapState } from "vuex";
   import { findArticle, deleteArticle } from "@/api/list";
-  import Edit from "./components/Edit";
+  import Edit from "./components/auditEdit";
   import filters from "@/filters";
   import viewDetail from "./components/viewDetail";
 
@@ -97,17 +96,18 @@
                 clearable: true,
               },
             },
-            status: {
-              type: "select",
-              label: "状态",
-              isOptions: true,
-              attrs: {
-                clearable: true,
-              },
-              options: () => {
-                return this.status;
-              },
-            },
+            // status: {
+            //   type: "select",
+            //   label: "状态",
+            //   isOptions: true,
+            //   default: 1,
+            //   attrs: {
+            //     disabled: true,
+            //   },
+            //   options: () => {
+            //     return this.status;
+            //   },
+            // },
             cate1: {
               type: "select",
               label: "一级栏目",
@@ -208,10 +208,26 @@
             },
             {
               prop: "create_time",
-              label: "更新时间",
+              label: "创建时间",
               width: "160",
               render: (h, scope) => {
                 return <span>{scope.row.create_time.substr(0, 19)}</span>;
+              },
+            },
+            {
+              prop: "start_time",
+              label: "开始时间",
+              width: "160",
+              render: (h, scope) => {
+                return <span>{scope.row.start_time.substr(0, 19)}</span>;
+              },
+            },
+            {
+              prop: "end_time",
+              label: "结束时间",
+              width: "160",
+              render: (h, scope) => {
+                return <span>{scope.row.end_time.substr(0, 19)}</span>;
               },
             },
             {
@@ -332,6 +348,7 @@
       async fetchData(loading = true) {
         const queryForm = JSON.parse(JSON.stringify(this.queryForm));
         queryForm.prof_id = queryForm.prof_id1 || queryForm.prof_id;
+        queryForm.status = 1; //审核中
         this.loading = loading;
         const {
           data: {

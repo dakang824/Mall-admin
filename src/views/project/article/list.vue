@@ -208,10 +208,26 @@
             },
             {
               prop: "create_time",
-              label: "更新时间",
+              label: "创建时间",
               width: "160",
               render: (h, scope) => {
                 return <span>{scope.row.create_time.substr(0, 19)}</span>;
+              },
+            },
+            {
+              prop: "start_time",
+              label: "开始时间",
+              width: "160",
+              render: (h, scope) => {
+                return <span>{scope.row.start_time.substr(0, 19)}</span>;
+              },
+            },
+            {
+              prop: "end_time",
+              label: "结束时间",
+              width: "160",
+              render: (h, scope) => {
+                return <span>{scope.row.end_time.substr(0, 19)}</span>;
               },
             },
             {

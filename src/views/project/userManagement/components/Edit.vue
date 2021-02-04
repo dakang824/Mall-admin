@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2020-12-07 22:28:38
+ * @LastEditTime: 2021-02-04 18:40:07
 -->
 <template>
   <ele-form-dialog
@@ -21,6 +21,7 @@
 
 <script>
   import { addUser, modifyUser } from "@/api/userManagement";
+  var sha1 = require("sha1");
   export default {
     props: {
       options: { type: Object, default: () => {} },
@@ -48,6 +49,7 @@
             },
           },
         },
+        oldPwd: "",
         rules: {
           name: { required: true, message: "姓名必填" },
           account: { required: true, message: "账号必填" },
@@ -68,6 +70,7 @@
           this.title = "编辑用户";
           row.role = row.roles;
           row.pwdTwo = row.pwd;
+          this.oldPwd = row.pwd;
           this.formData = JSON.parse(JSON.stringify(row));
         }
         this.formDesc = { ...this.formDesc, ...this.options.formDesc };
@@ -82,19 +85,26 @@
           this.$baseMessage("密码不匹配,请重新输入", "error");
           return false;
         }
-
+        const { formData, oldPwd } = this;
+        if (oldPwd === formData.pwd) {
+          delete formData.pwd;
+          delete formData.pwdTwo;
+        } else {
+          formData.pwd = sha1(formData.pwd);
+          formData.pwdTwo = sha1(formData.pwdTwo);
+        }
         if (this.title.includes("添加")) {
           const {
             msg,
             data: { user },
-          } = await addUser(this.formData);
+          } = await addUser(formData);
           this.$baseMessage(msg, "success");
           this.$emit("fetchData", false);
         } else {
           const {
             msg,
             data: { user },
-          } = await modifyUser(this.formData);
+          } = await modifyUser(formData);
           this.$baseMessage(msg, "success");
           this.$emit("update", user);
         }

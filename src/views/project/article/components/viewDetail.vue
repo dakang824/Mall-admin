@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 确认汇款订单
  * @Date: 2020-10-30 21:33:18
- * @LastEditTime: 2021-02-04 17:15:23
+ * @LastEditTime: 2021-02-04 17:53:22
 -->
 <template>
   <div>
@@ -137,6 +137,9 @@
   .detail {
     max-height: calc(100vh / 2);
     overflow: auto;
+    .el-image {
+      vertical-align: middle;
+    }
     &__header {
       padding: 0 15px;
       font-size: 22rpx;
