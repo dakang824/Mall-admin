@@ -1,6 +1,7 @@
 import { loadingText, messageDuration, title } from "@/config/settings";
 import * as lodash from "lodash";
-import { Loading, Message, MessageBox, Notification } from "element-ui";
+import { Loading, Message, Notification } from "element-ui";
+
 import store from "@/store";
 import { getAccessToken } from "@/utils/accessToken";
 import filters from "@/filters";
@@ -84,7 +85,7 @@ const install = (Vue, opts = {}) => {
 
   /* 全局Alert */
   Vue.prototype.$baseAlert = (content, title, callback) => {
-    MessageBox.alert(content, title || "温馨提示", {
+    require("element-ui").MessageBox.alert(content, title || "温馨提示", {
       confirmButtonText: "确定",
       dangerouslyUseHTMLString: true,
       callback: (action) => {
@@ -97,12 +98,13 @@ const install = (Vue, opts = {}) => {
 
   /* 全局Confirm */
   Vue.prototype.$baseConfirm = (content, title, callback1, callback2) => {
-    MessageBox.confirm(content, title || "温馨提示", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
-      closeOnClickModal: false,
-      type: "warning",
-    })
+    require("element-ui")
+      .MessageBox.confirm(content, title || "温馨提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnClickModal: false,
+        type: "warning",
+      })
       .then(() => {
         if (callback1) {
           callback1();

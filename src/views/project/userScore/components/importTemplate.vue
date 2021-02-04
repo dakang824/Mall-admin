@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2021-02-04 16:34:19
+ * @LastEditTime: 2021-02-04 20:02:07
 -->
 <template>
   <ele-form-dialog
@@ -89,6 +89,7 @@
           window.open(filters.imgBaseUrl(exceptionFile), "_parent");
         } else {
           this.$baseMessage(msg, "success");
+          this.$emit("fetchData");
           this.handleClosed();
         }
       },

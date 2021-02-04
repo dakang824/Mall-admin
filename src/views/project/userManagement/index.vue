@@ -139,6 +139,17 @@
               },
             },
             {
+              prop: "wx_open_id",
+              label: "是否绑定",
+              render: (h, scope) => {
+                return (
+                  <el-tag type={scope.row.wx_open_id ? "success" : "warning"}>
+                    {scope.row.wx_open_id ? "已绑定" : "未绑定"}{" "}
+                  </el-tag>
+                );
+              },
+            },
+            {
               label: "操作",
               width: "230",
               render: (h, scope) => {
@@ -160,7 +171,6 @@
                     >
                       删除
                     </el-button>
-                    <el-button type="warning">未绑定</el-button>
                   </div>
                 );
               },
@@ -277,30 +287,30 @@
         this.$set(this.tableData.data, index, e);
       },
       async handleExport() {
-        // const {
-        //   data: { excel_path },
-        // } = await exportUsers(this.queryForm);
-        // window.open(filters.imgBaseUrl(excel_path), "_parent");
-
         this.downloadLoading = true;
-        import("@/components/vendor/Export2Excel").then((excel) => {
-          excel.export_json_to_excel({
-            header: [
-              "序号",
-              "姓名",
-              "账号",
-              "角色",
-              "所属公司",
-              "用户类型",
-              "专业组",
-            ],
-            data: this.formatJson(),
-            filename: "users",
-            autoWidth: true,
-            bookType: "xlsx",
-          });
-          this.downloadLoading = false;
-        });
+        const {
+          data: { excel_path },
+        } = await exportUsers(this.queryForm);
+        window.open(filters.imgBaseUrl(excel_path), "_parent");
+        this.downloadLoading = false;
+
+        // import("@/components/vendor/Export2Excel").then((excel) => {
+        //   excel.export_json_to_excel({
+        //     header: [
+        //       "序号",
+        //       "姓名",
+        //       "账号",
+        //       "角色",
+        //       "所属公司",
+        //       "用户类型",
+        //       "专业组",
+        //     ],
+        //     data: this.formatJson(),
+        //     filename: "users",
+        //     autoWidth: true,
+        //     bookType: "xlsx",
+        //   });
+        // });
       },
       formatJson() {
         return this.tableData.data.map((v) =>
