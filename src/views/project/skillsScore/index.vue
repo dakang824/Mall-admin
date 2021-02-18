@@ -89,49 +89,47 @@
         tableData: {
           column: [
             {
-              prop: "user_id",
+              prop: "user_name",
               label: "用户姓名",
               width: "90",
-              render: (h, scope) => {
-                return <span>{scope.row.users.name}</span>;
-              },
             },
             {
               prop: "skilTree",
               label: "技能树名称",
               render: (h, scope) => {
                 return scope.row.skilTree ? (
-                  <Tree tree-data={scope.row.skilTree} isSuperuser={false} />
+                  <Tree
+                    tree-data={scope.row.skilTree}
+                    isSuperuser={false}
+                    default-expand-all
+                  />
                 ) : (
                   ""
                 );
               },
             },
+            // {
+            //   prop: "prof_id",
+            //   label: "专业",
+            //   render: (h, scope) => {
+            //     return scope.row.skilTree ? (
+            //       <span>
+            //         {this.professionsKeyVal[scope.row.skilTree[0].prof_id]}
+            //       </span>
+            //     ) : (
+            //       ""
+            //     );
+            //   },
+            // },
             {
-              prop: "status",
-              label: "专业",
-              render: (h, scope) => {
-                return scope.row.skilTree ? (
-                  <span>
-                    {this.professionsKeyVal[scope.row.skilTree[0].prof_id]}
-                  </span>
-                ) : (
-                  ""
-                );
-              },
-            },
-            {
-              prop: "status",
+              prop: "res",
               label: "成绩",
-              render: (h, scope) => {
-                return <span>{this.statusTxt[scope.row.status]}</span>;
-              },
             },
             {
               prop: "create_time",
               label: "创建时间",
               render: (h, scope) => {
-                return <span>{scope.row.create_time.substr(0, 19)}</span>;
+                return <span>{scope.row.create_time.substr(0, 10)}</span>;
               },
             },
           ],
@@ -235,12 +233,50 @@
           },
         } = await querySkillTreeScore(queryForm);
 
+        function deep(data, d) {
+          return data.map((item) => {
+            if (item.child.length) {
+              deep(item.child, d);
+            } else {
+              item.child = [d];
+            }
+            return item;
+          });
+        }
         list.map((item) => {
-          if (item.skilTree) {
-            item.skilTree = this.processingData([item.skilTree]);
+          const arr = [item.skill_name];
+          for (let i = 0; i < 10; i++) {
+            if (`up${i}_name` in item && item[`up${i}_name`]) {
+              arr.push(item[`up${i}_name`]);
+            }
           }
+          item.arr = arr.reverse();
         });
+
+        list.map((item) => {
+          item.skilTree = [];
+          for (let i = 0; i < item.arr.length; i++) {
+            if (i === 0) {
+              item.skilTree.push({
+                id: i,
+                name: item.arr[i],
+                level: i,
+                child: [],
+              });
+            } else {
+              item.skilTree = deep(item.skilTree, {
+                id: i,
+                name: item.arr[i],
+                level: i,
+                child: [],
+              });
+            }
+          }
+          return item;
+        });
+
         this.tableData.data = list;
+
         this.total = total;
         setTimeout(() => {
           this.loading = false;

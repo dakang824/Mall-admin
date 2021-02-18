@@ -2,13 +2,13 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:全局变量配置
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2021-02-02 14:09:27
+ * @LastEditTime: 2021-02-18 13:15:56
  */
 
 const baseURL = "http://47.101.210.167:9999/";
 module.exports = {
   // 开发以及部署时的URL 如"/test/"
-  publicPath: "/storeAdmin/",
+  publicPath: "/",
   // 生产环境构建文件的目录名
   outputDir: "dist",
   // 放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录。

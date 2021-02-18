@@ -16,6 +16,17 @@
         <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
           添加
         </el-button>
+        <el-button icon="el-icon-upload2" type="warning" @click="handleImport">
+          技能树导入
+        </el-button>
+        <el-button
+          icon="el-icon-download"
+          type="success"
+          :loading="downloadLoading"
+          @click="handleExport"
+        >
+          技能树导出
+        </el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
     <el-row v-loading="loading" :gutter="20">
@@ -27,14 +38,14 @@
             style="display: flex; justify-content: space-between"
           >
             <span>{{ professionsKeyVal[item.prof_id] }}</span>
-            <el-button
+            <!-- <el-button
               :type="item.status == 0 ? 'success' : 'warning'"
               size="mini"
               :icon="item.status == 0 ? 'el-icon-turn-off' : 'el-icon-open'"
               @click="clickPublish(item, index)"
             >
               {{ item.status == 0 ? "发布" : "取消发布" }}
-            </el-button>
+            </el-button> -->
           </div>
           <tree
             :tree-data="[item]"
@@ -42,6 +53,7 @@
             @add="clickAddData"
             @delete="clickDelete"
             @modify="clickModify"
+            @publish="clickPublish"
           />
         </el-card>
       </el-col>
@@ -51,6 +63,7 @@
       </div>
     </el-row>
     <edit ref="edit" @add="addData" />
+    <import-template ref="import" @fetchData="fetchData" />
   </div>
 </template>
 
@@ -67,17 +80,18 @@
   } from "@/api/skills";
   import Tree from "@/components/tree";
   import Edit from "./components/Edit";
+  import ImportTemplate from "./components/importTemplate";
 
   export default {
     name: "Group",
-    components: { Edit, Tree, MyEmpty },
+    components: { Edit, Tree, MyEmpty, ImportTemplate },
     data() {
       return {
         loading: true,
         layout: "total, sizes, prev, pager, next, jumper",
         total: 0,
         selectRows: "",
-
+        downloadLoading: false,
         tableData: {
           data: [],
         },
@@ -119,6 +133,17 @@
       this.fetchData();
     },
     methods: {
+      handleImport() {
+        this.$refs["import"].showImport(this.formConfig.formDesc);
+      },
+      async handleExport() {
+        this.downloadLoading = true;
+        const {
+          data: { excel_path },
+        } = await exportUserScore(this.queryForm);
+        window.open(filters.imgBaseUrl(excel_path), "_parent");
+        this.downloadLoading = false;
+      },
       async clickDelete(e) {
         const {
           msg,
@@ -129,6 +154,7 @@
           this.tableData.data.splice(ind, 1);
         }
         this.$baseMessage(msg, "success");
+        this.fetchData(false);
       },
       async clickModify(e) {
         const {
@@ -136,6 +162,7 @@
           data: { skillTree },
         } = await modifySkillTree(e);
         this.$baseMessage(msg, "success");
+        this.fetchData(false);
       },
       async clickAddData(e, callback) {
         const {
@@ -144,19 +171,16 @@
         } = await addSkillTree(e);
         callback(skillTree);
         this.$baseMessage(msg, "success");
+        this.fetchData(false);
       },
-      async clickPublish(e, ind) {
+      async clickPublish(ids, e) {
         const { msg } = await (e.status == 0
           ? publicSkillTree
-          : canclePublicSkillTree)({ ids: e.id });
+          : canclePublicSkillTree)({ ids });
         this.$baseMessage(msg, "success");
-        this.$set(this.tableData.data, ind, {
-          ...this.tableData.data[ind],
-          status: e.status == 0 ? 1 : 0,
-        });
+        this.fetchData(false);
       },
       addData(e) {
-        console.log(e);
         this.tableData.data.unshift(e);
       },
       updateData(e) {
@@ -228,6 +252,7 @@
           },
         } = await findSkillTree(this.queryForm);
         this.tableData.data = this.processingData(list);
+        console.log(this.tableData.data);
         this.total = total;
         setTimeout(() => {
           this.loading = false;

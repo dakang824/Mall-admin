@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2021-01-30 19:43:19
- * @LastEditTime: 2021-02-04 15:49:38
+ * @LastEditTime: 2021-02-18 14:34:05
  */
 export function getEditContent(h, data, node) {
   let self = this;
@@ -59,15 +59,24 @@ export function getDefaultContent(h, data, node) {
               删除
             </el-button>
           }
-          {
-            <el-button
-              size="mini"
-              type="text"
-              on-click={() => self.publish(node, data)}
-            >
-              发布
-            </el-button>
-          }
+          {!node.data.child &&
+            ((data.status === 1 && (
+              <el-button
+                size="mini"
+                type="text"
+                on-click={() => self.publish(node, data)}
+              >
+                取消发布
+              </el-button>
+            )) || (
+              <el-button
+                size="mini"
+                type="text"
+                on-click={() => self.publish(node, data)}
+              >
+                发布
+              </el-button>
+            ))}
         </span>
       )}
     </div>

@@ -30,6 +30,7 @@
     data() {
       return {
         isEdit: false,
+        ids: [],
         edit_name: "",
         defaultProps: {
           children: "child",
@@ -45,7 +46,6 @@
 
     created() {
       // this.refresh();
-      console.log(this.treeData);
     },
 
     methods: {
@@ -56,7 +56,16 @@
       },
 
       publish(node, data, e) {
-        console.log(node, data, e);
+        this.processingData(node);
+        this.$emit("publish", this.ids.join(), data);
+        this.ids = [];
+      },
+
+      processingData(data) {
+        if (data.parent) {
+          this.ids.unshift(data.data.id);
+          this.processingData(data.parent);
+        }
       },
 
       append(node, data, e) {
