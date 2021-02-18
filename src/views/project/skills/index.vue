@@ -252,7 +252,6 @@
           },
         } = await findSkillTree(this.queryForm);
         this.tableData.data = this.processingData(list);
-        console.log(this.tableData.data);
         this.total = total;
         setTimeout(() => {
           this.loading = false;
