@@ -30,7 +30,7 @@
       </vab-query-form-left-panel>
     </vab-query-form>
     <el-row v-loading="loading" :gutter="20">
-      <el-col v-for="(item, index) in tableData.data" :key="index" :span="8">
+      <el-col v-for="(item, index) in tableData.data" :key="index" :span="24">
         <div class="grid-content bg-purple"></div>
         <el-card>
           <!-- <div
