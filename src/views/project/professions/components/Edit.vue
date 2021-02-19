@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2020-12-07 18:01:24
+ * @LastEditTime: 2021-02-19 11:44:19
 -->
 <template>
   <ele-form-dialog
@@ -67,6 +67,10 @@
           this.$baseMessage(msg, "success");
           this.$emit("update", profession);
         }
+
+        // 更新全局缓存专业组管理数据
+        await this.$store.dispatch("globalRequest/findAllProfession");
+
         // 关闭弹窗
         this.dialogFormVisible = false;
         // 重置formData

@@ -39,7 +39,7 @@
   import Tree from "@/components/tree";
 
   export default {
-    name: "Curd",
+    name: "SkillScore",
     components: {},
     data() {
       return {
@@ -93,19 +93,54 @@
               label: "用户姓名",
               width: "90",
             },
+            // {
+            //   prop: "skilTree",
+            //   label: "技能树名称",
+            //   render: (h, scope) => {
+            //     return scope.row.skilTree ? (
+            //       <Tree
+            //         tree-data={scope.row.skilTree}
+            //         isSuperuser={false}
+            //         default-expand-all
+            //       />
+            //     ) : (
+            //       ""
+            //     );
+            //   },
+            // },
             {
               prop: "skilTree",
-              label: "技能树名称",
+              label: "一级技能树",
               render: (h, scope) => {
-                return scope.row.skilTree ? (
-                  <Tree
-                    tree-data={scope.row.skilTree}
-                    isSuperuser={false}
-                    default-expand-all
-                  />
-                ) : (
-                  ""
-                );
+                return <span>{scope.row.arr[0]}</span>;
+              },
+            },
+            {
+              prop: "skilTree",
+              label: "二级技能树",
+              render: (h, scope) => {
+                return <span>{scope.row.arr[1]}</span>;
+              },
+            },
+            {
+              prop: "skilTree",
+              label: "三级技能树",
+              render: (h, scope) => {
+                return <span>{scope.row.arr[2]}</span>;
+              },
+            },
+            {
+              prop: "skilTree",
+              label: "四级技能树",
+              render: (h, scope) => {
+                return <span>{scope.row.arr[3]}</span>;
+              },
+            },
+            {
+              prop: "skilTree",
+              label: "五级技能树",
+              render: (h, scope) => {
+                return <span>{scope.row.arr[4]}</span>;
               },
             },
             // {
@@ -124,6 +159,13 @@
             {
               prop: "res",
               label: "成绩",
+              render: (h, scope) => {
+                return (
+                  <el-tag type={scope.row.res === 1 ? "success" : "warning"}>
+                    {scope.row.res === 1 ? "通过" : "未通过"}
+                  </el-tag>
+                );
+              },
             },
             {
               prop: "create_time",

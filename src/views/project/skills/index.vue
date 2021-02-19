@@ -33,20 +33,12 @@
       <el-col v-for="(item, index) in tableData.data" :key="index" :span="8">
         <div class="grid-content bg-purple"></div>
         <el-card>
-          <div
+          <!-- <div
             slot="header"
             style="display: flex; justify-content: space-between"
           >
             <span>{{ professionsKeyVal[item.prof_id] }}</span>
-            <!-- <el-button
-              :type="item.status == 0 ? 'success' : 'warning'"
-              size="mini"
-              :icon="item.status == 0 ? 'el-icon-turn-off' : 'el-icon-open'"
-              @click="clickPublish(item, index)"
-            >
-              {{ item.status == 0 ? "发布" : "取消发布" }}
-            </el-button> -->
-          </div>
+          </div> -->
           <tree
             :tree-data="[item]"
             default-expand-all
@@ -181,7 +173,8 @@
         this.fetchData(false);
       },
       addData(e) {
-        this.tableData.data.unshift(e);
+        // this.tableData.data.unshift(e);
+        this.fetchData(false);
       },
       updateData(e) {
         const index = this.tableData.data.findIndex((item) => item.id === e.id);
@@ -251,7 +244,24 @@
             skillTree: { list, total },
           },
         } = await findSkillTree(this.queryForm);
-        this.tableData.data = this.processingData(list);
+        const data = this.processingData(list);
+        const map = data.reduce((a, b) => {
+          const prof_name = this.professionsKeyVal[b.prof_id];
+          a[prof_name] = a[prof_name] || [];
+          a[prof_name].push(b);
+          return a;
+        }, {});
+
+        const result = Object.values(map).map((item) => {
+          return {
+            name: this.professionsKeyVal[item[0].prof_id],
+            child: item,
+            id: 0,
+            prof_id: item[0].prof_id,
+          };
+        });
+        this.tableData.data = result;
+
         this.total = total;
         setTimeout(() => {
           this.loading = false;

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 全局请求数据缓存
  * @Date: 2020-10-07 11:23:12
- * @LastEditTime: 2020-12-11 22:25:33
+ * @LastEditTime: 2021-02-19 11:38:12
  */
 import { findAllProfession } from "@/api/professions";
 import { findModule } from "@/api/module";
@@ -58,7 +58,7 @@ const actions = {
       data: {
         professionList: { list },
       },
-    } = await findAllProfession({ pageNo: 1, pageSize: 50 });
+    } = await findAllProfession({ pageNo: 1, pageSize: 150 });
 
     const professionLists = list.map((item) => {
       return { text: item.name, value: item.id };
@@ -78,7 +78,7 @@ const actions = {
       data: {
         moduleList: { list },
       },
-    } = await findModule({ pageNo: 1, pageSize: 50 });
+    } = await findModule({ pageNo: 1, pageSize: 150 });
 
     const moduleLists = list.map((item) => {
       return { text: item.name, value: item.id };
@@ -99,7 +99,7 @@ const actions = {
       data: {
         companyList: { list },
       },
-    } = await findAllCompany({ pageNo: 1, pageSize: 50 });
+    } = await findAllCompany({ pageNo: 1, pageSize: 150 });
 
     const companyLists = list.map((item) => {
       return { text: item.name, value: item.id };
@@ -120,7 +120,7 @@ const actions = {
       data: {
         profGroup: { list },
       },
-    } = await findAllProfGroup({ pageNo: 1, pageSize: 50 });
+    } = await findAllProfGroup({ pageNo: 1, pageSize: 150 });
 
     const profGroups = list.map((item) => {
       return { text: item.name, value: item.id };

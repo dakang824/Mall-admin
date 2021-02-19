@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2020-12-07 22:39:49
+ * @LastEditTime: 2021-02-19 11:43:49
 -->
 <template>
   <ele-form-dialog
@@ -32,7 +32,7 @@
         formDesc: {
           name: {
             type: "input",
-            label: "专业名称",
+            label: "模块名称",
             attrs: {
               clearable: true,
             },
@@ -77,6 +77,10 @@
           this.$baseMessage(msg, "success");
           this.$emit("fetchData", false);
         }
+
+        // 更新全局缓存模块管理数据
+        await this.$store.dispatch("globalRequest/findModule");
+
         // 关闭弹窗
         this.dialogFormVisible = false;
         // 重置formData

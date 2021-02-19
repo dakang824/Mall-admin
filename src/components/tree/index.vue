@@ -57,6 +57,7 @@
 
       publish(node, data, e) {
         this.processingData(node);
+        this.ids.splice(0, 1);
         this.$emit("publish", this.ids.join(), data);
         this.ids = [];
       },
@@ -161,7 +162,7 @@
               {
                 prof_id: this.treeData[0].prof_id,
                 name: params.name,
-                up_id: this.id || params.id,
+                up_id: params.id,
               },
               (res) => {
                 params.id = res.up_id;

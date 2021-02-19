@@ -219,7 +219,6 @@
         list.map(
           (item) => (item.prof_ids = item.itemList.map((i) => i.prof_id))
         );
-        console.log(list);
         this.tableData.data = list;
         this.total = total;
         setTimeout(() => {
