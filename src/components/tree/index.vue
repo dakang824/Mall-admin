@@ -58,8 +58,19 @@
       publish(node, data, e) {
         this.processingData(node);
         this.ids.splice(0, 1);
-        this.$emit("publish", this.ids.join(), data);
-        this.ids = [];
+        if (this.ids.length < 3) {
+          this.$notify({
+            type: "error",
+            title: "操作提示",
+            message: "最少三级",
+            duration: 2000,
+          });
+          this.ids = [];
+          return;
+        } else {
+          this.$emit("publish", this.ids.join(), data);
+          this.ids = [];
+        }
       },
 
       processingData(data) {
