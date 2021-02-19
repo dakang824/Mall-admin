@@ -95,7 +95,7 @@
               label: "账户",
             },
             {
-              prop: "company",
+              prop: "roles",
               label: "角色",
               render: (h, scope) => {
                 return (
@@ -132,10 +132,14 @@
               },
             },
             {
-              prop: "group",
+              prop: "prof_group",
               label: "专业组",
               render: (h, scope) => {
-                return <span>{scope.row.prof_group.name}</span>;
+                return (
+                  scope.row.prof_group && (
+                    <span>{scope.row.prof_group.name}</span>
+                  )
+                );
               },
             },
             {
