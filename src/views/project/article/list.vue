@@ -10,6 +10,7 @@
           inline
           :is-show-label="false"
           :request-fn="queryData"
+          @reset="handleReset"
         />
       </vab-query-form-left-panel>
     </vab-query-form>
@@ -287,6 +288,17 @@
       this.fetchData();
     },
     methods: {
+      handleReset() {
+        this.queryForm = {
+          pageNo: 1,
+          pageSize: 10,
+          title: "",
+          author: "",
+          cate1: "",
+          nav_id: "",
+          prof_id: "",
+        };
+      },
       handleLook(e) {
         this.show = true;
         this.model = e;

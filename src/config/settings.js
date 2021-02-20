@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:全局变量配置
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2021-02-18 13:15:56
+ * @LastEditTime: 2021-02-20 19:16:37
  */
 
 const baseURL = "http://47.101.210.167:9999/";
@@ -75,7 +75,7 @@ module.exports = {
   //消息框消失时间
   messageDuration: 3000,
   //最长请求时间
-  requestTimeout: 60000,
+  requestTimeout: 600000,
   //操作正常code，支持String、Array、int多种类型
   successCode: [200],
   //登录失效code

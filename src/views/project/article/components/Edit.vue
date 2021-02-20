@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-02-04 21:09:37
+ * @LastEditTime: 2021-02-20 21:08:41
 -->
 <template>
   <ele-form-drawer
@@ -108,6 +108,7 @@
             },
           },
           content_pic: {
+            label: "内容图片",
             type: "upload-file",
             attrs: {
               fileType: ["zip"],
@@ -127,6 +128,17 @@
         },
         rules: {
           title: { required: true, message: "标题必填" },
+          author: { required: true, message: "作者必填" },
+          cover_pic: { required: true, message: "封面图片必填" },
+          prof_id: { required: true, message: "三级栏目" },
+          start_time: { required: true, message: "开始时间必填" },
+          end_time: { required: true, message: "结束时间必填" },
+          group_id: { required: true, message: "专业组必选" },
+          content_pic: { required: true, message: "文件必传" },
+          cate1: { required: true, message: "一级栏目必填" },
+          nav_id: { required: true, message: "二级栏目必填" },
+          module_id: { required: true, message: "三级栏目必填" },
+          prof_id1: { required: true, message: "二级栏目必填" },
         },
         formBtns: [],
       };
@@ -137,6 +149,7 @@
           this.title = "添加文章";
           this.formBtns = [];
         } else {
+          delete this.rules.content_pic;
           this.title = "编辑文章";
           row.role = row.roles;
           row.pwdTwo = row.pwd;
@@ -184,6 +197,7 @@
           ...this.formDesc,
           ...formDesc,
         };
+        console.log(this.formDesc);
         this.dialogFormVisible = true;
       },
       handleClosed() {
@@ -199,7 +213,7 @@
         if (formData.content_pic1 !== "") {
           formData.content_pic = formData.content_pic1;
         }
-
+        formData.prof_id = formData.prof_id1 || formData.prof_id;
         if (this.title.includes("添加")) {
           const {
             msg,
