@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 确认汇款订单
  * @Date: 2020-10-30 21:33:18
- * @LastEditTime: 2021-02-04 20:24:42
+ * @LastEditTime: 2021-02-20 21:17:18
 -->
 <template>
   <div>
@@ -140,6 +140,7 @@
     overflow: auto;
     .el-image {
       vertical-align: middle;
+      width: 100%;
     }
     &__header {
       padding: 0 15px;
