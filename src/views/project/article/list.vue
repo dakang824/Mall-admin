@@ -222,6 +222,7 @@
             {
               prop: "author",
               label: "作者",
+              width: "80",
             },
             {
               prop: "create_time",
@@ -250,6 +251,7 @@
             {
               prop: "status",
               label: "状态",
+              width: "80",
               render: (h, scope) => {
                 return <span>{this.statusTxt[scope.row.status]}</span>;
               },

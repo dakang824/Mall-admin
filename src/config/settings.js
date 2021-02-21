@@ -2,10 +2,9 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:全局变量配置
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2021-02-21 09:35:28
+ * @LastEditTime: 2021-02-21 15:23:07
  */
 
-const baseURL = "http://47.101.210.167:9999/";
 module.exports = {
   // 开发以及部署时的URL 如"/test/"
   publicPath: "/",
@@ -25,7 +24,7 @@ module.exports = {
   // 默认的接口地址 如果是开发环境和生产环境走vab-mock-server，当然你也可以选择自己配置成需要的接口地址
   baseURL:
     process.env.NODE_ENV === "development" ? "/" : "/" || "vab-mock-server",
-  target: baseURL,
+  target: "http://47.101.210.167:9999/",
   //标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）
   title: "学习平台",
   //简写
