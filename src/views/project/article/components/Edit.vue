@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-02-21 15:01:02
+ * @LastEditTime: 2021-02-21 16:42:51
 -->
 <template>
   <ele-form-drawer
@@ -159,6 +159,7 @@
     },
     computed: {
       ...mapState({
+        cate1: (state) => state.article.cate1,
         profGroups: (state) => state.globalRequest.profGroups,
         moduleLists: (state) => state.globalRequest.moduleLists,
       }),
@@ -242,6 +243,10 @@
             data: { article },
           } = await addArticle(formData);
           this.$baseMessage(msg, "success");
+          article.cover_pic = filters.imgBaseUrl(article.cover_pic);
+          article.cate1_name = this.cate1.find(
+            (i) => article.cate1 === i.value
+          ).text;
           this.$emit("add", article);
         } else {
           const {
@@ -249,6 +254,10 @@
             data: { article },
           } = await modifyArticle(formData);
           this.$baseMessage(msg, "success");
+          article.cover_pic = filters.imgBaseUrl(article.cover_pic);
+          article.cate1_name = this.cate1.find(
+            (i) => article.cate1 === i.value
+          ).text;
           this.$emit("update", article);
         }
         // 关闭弹窗

@@ -225,6 +225,11 @@
               width: "80",
             },
             {
+              prop: "cate1_name",
+              label: "一级栏目",
+              width: "80",
+            },
+            {
               prop: "create_time",
               label: "创建时间",
               width: "160",
@@ -424,6 +429,7 @@
         } = await findArticle(queryForm);
         list.map((item) => {
           item.cover_pic = filters.imgBaseUrl(item.cover_pic);
+          item.cate1_name = this.cate1.find((i) => item.cate1 === i.value).text;
         });
         this.tableData.data = list;
         this.total = total;
