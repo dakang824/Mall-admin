@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 全局请求数据缓存
  * @Date: 2020-10-07 11:23:12
- * @LastEditTime: 2021-02-19 11:38:12
+ * @LastEditTime: 2021-02-21 12:50:53
  */
 import { findAllProfession } from "@/api/professions";
 import { findModule } from "@/api/module";
@@ -81,7 +81,7 @@ const actions = {
     } = await findModule({ pageNo: 1, pageSize: 150 });
 
     const moduleLists = list.map((item) => {
-      return { text: item.name, value: item.id };
+      return { text: item.name, value: item.id, prof_id: item.prof.id };
     });
 
     const moduleListsKeyVal = moduleLists.reduce((a, b) => {

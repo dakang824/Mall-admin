@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-02-21 10:40:00
+ * @LastEditTime: 2021-02-21 14:51:50
 -->
 <template>
   <ele-form-drawer
@@ -60,6 +60,7 @@
           content_pic: "",
           cover_pic1: "",
           content_pic1: "",
+          moduleLists: [],
         },
         formDesc: {
           start_time: {
@@ -119,6 +120,25 @@
               },
             },
           },
+          module_id: {
+            type: "select",
+            label: "三级栏目",
+            attrs: {
+              clearable: true,
+            },
+            vif(data, e) {
+              console.log(data);
+              e.options =
+                data.prof_id1 && data.moduleLists.length
+                  ? data.moduleLists.filter(
+                      (item) => data.prof_id1 === item.prof_id
+                    )
+                  : data.moduleLists;
+              return data.cate1 === 2;
+            },
+            isReloadOptions: true,
+            options: [],
+          },
         },
         rules: {
           title: { required: true, message: "标题必填" },
@@ -140,10 +160,13 @@
     computed: {
       ...mapState({
         profGroups: (state) => state.globalRequest.profGroups,
+        moduleLists: (state) => state.globalRequest.moduleLists,
       }),
     },
     methods: {
-      showEdit(row) {
+      async showEdit(row) {
+        await this.$store.dispatch("globalRequest/findModule");
+
         if (!row) {
           this.title = "添加文章";
           this.formBtns = [];
@@ -190,13 +213,13 @@
 
           this.formData = JSON.parse(JSON.stringify(row));
         }
+        this.formData.moduleLists = this.moduleLists;
         const formDesc = this.options.formDesc;
         delete formDesc.status;
         this.formDesc = {
           ...this.formDesc,
           ...formDesc,
         };
-        console.log(this.formDesc);
         this.dialogFormVisible = true;
       },
       handleClosed() {
