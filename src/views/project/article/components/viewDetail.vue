@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 确认汇款订单
  * @Date: 2020-10-30 21:33:18
- * @LastEditTime: 2021-02-20 21:17:18
+ * @LastEditTime: 2021-02-21 11:11:38
 -->
 <template>
   <div>
@@ -36,10 +36,11 @@
             fit="contain"
             :src="item.path | imgBaseUrl"
             lazy-load
-            use-loading-slot
           >
-            {{ item.path | imgBaseUrl }}
-            <van-loading slot="loading" type="spinner" size="20" vertical />
+            <div slot="placeholder" class="image-slot">
+              拼命加载中
+              <span class="loader-15"></span>
+            </div>
           </el-image>
         </div>
       </div>
@@ -112,6 +113,76 @@
 </script>
 
 <style lang="scss" scoped>
+  .image-slot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    text-align: center;
+    color: rgba(47, 150, 136, 0.5);
+    padding: 1em;
+    margin-bottom: 0.25em;
+    -webkit-transition: 0.3s color, 0.3s border;
+    transition: 0.3s color, 0.3s border;
+
+    .loader-15 {
+      background: currentcolor;
+      position: relative;
+      -webkit-animation: loader-15 1s ease-in-out infinite;
+      animation: loader-15 1s ease-in-out infinite;
+      -webkit-animation-delay: 0.4s;
+      animation-delay: 0.4s;
+      width: 0.25em;
+      height: 0.5em;
+      margin-left: 10px;
+    }
+    .loader-15:after,
+    .loader-15:before {
+      content: "";
+      position: absolute;
+      width: inherit;
+      height: inherit;
+      background: inherit;
+      -webkit-animation: inherit;
+      animation: inherit;
+    }
+    .loader-15:before {
+      right: 0.5em;
+      -webkit-animation-delay: 0.2s;
+      animation-delay: 0.2s;
+    }
+    .loader-15:after {
+      left: 0.5em;
+      -webkit-animation-delay: 0.6s;
+      animation-delay: 0.6s;
+    }
+    @-webkit-keyframes loader-15 {
+      0%,
+      100% {
+        box-shadow: 0 0 0 currentcolor, 0 0 0 currentcolor;
+      }
+      50% {
+        box-shadow: 0 -0.25em 0 currentcolor, 0 0.25em 0 currentcolor;
+      }
+    }
+    @keyframes loader-15 {
+      0%,
+      100% {
+        box-shadow: 0 0 0 currentcolor, 0 0 0 currentcolor;
+      }
+      50% {
+        box-shadow: 0 -0.25em 0 currentcolor, 0 0.25em 0 currentcolor;
+      }
+    }
+  }
+  [class*="loader-"] {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    color: inherit;
+    vertical-align: middle;
+    pointer-events: none;
+  }
   .u-flex {
     display: -webkit-box;
     display: -webkit-flex;

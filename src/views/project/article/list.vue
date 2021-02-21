@@ -240,7 +240,7 @@
             },
             {
               label: "操作",
-              width: "160",
+              width: "220",
               render: (h, scope) => {
                 return (
                   <div>
@@ -259,6 +259,14 @@
                       }}
                     >
                       删除
+                    </el-button>
+                    <el-button
+                      type="primary"
+                      onClick={() => {
+                        this.handleLook(scope.row);
+                      }}
+                    >
+                      预览
                     </el-button>
                   </div>
                 );

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-02-20 21:08:41
+ * @LastEditTime: 2021-02-21 10:40:00
 -->
 <template>
   <ele-form-drawer
@@ -38,6 +38,7 @@
   import { findAllProfession } from "@/api/professions";
   import { fileUpload } from "@/config/settings";
   import filters from "@/filters";
+  import { mapState } from "vuex";
   export default {
     props: {
       options: { type: Object, default: () => {} },
@@ -81,15 +82,8 @@
             type: "radio",
             label: "可见范围",
             options: async () => {
-              const {
-                data: {
-                  professionList: { list },
-                },
-              } = await findAllProfession({ pageNo: 1, pageSize: 50 });
-
-              return list.map((item) => {
-                return { text: item.name, value: item.id };
-              });
+              await this.$store.dispatch("globalRequest/findAllProfGroup");
+              return this.profGroups;
             },
           },
           cover_pic: {
@@ -112,7 +106,7 @@
             type: "upload-file",
             attrs: {
               fileType: ["zip"],
-              accept: "zip/*",
+              accept: ".zip",
               action: fileUpload,
               limit: 1,
               responseFn: (response, file) => {
@@ -142,6 +136,11 @@
         },
         formBtns: [],
       };
+    },
+    computed: {
+      ...mapState({
+        profGroups: (state) => state.globalRequest.profGroups,
+      }),
     },
     methods: {
       showEdit(row) {
