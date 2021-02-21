@@ -56,7 +56,7 @@
 
 <script>
   import { mapState } from "vuex";
-  import { findArticle, deleteArticle } from "@/api/list";
+  import { findArticle, deleteArticle, auditArticle } from "@/api/list";
   import Edit from "./components/Edit";
   import filters from "@/filters";
   import viewDetail from "./components/viewDetail";
@@ -81,6 +81,16 @@
           cate1: "",
           nav_id: "",
           prof_id: "",
+        },
+        operator: {
+          0: {
+            text: "提交审核",
+            status: 1,
+          },
+          2: {
+            text: "发布",
+            status: 3,
+          },
         },
         formConfig: {
           formDesc: {
@@ -246,12 +256,12 @@
             },
             {
               label: "操作",
-              width: "220",
+              width: "200",
               render: (h, scope) => {
                 return (
                   <div>
                     <el-button
-                      type="primary"
+                      type="text"
                       onClick={() => {
                         this.handleEdit(scope.row);
                       }}
@@ -259,7 +269,7 @@
                       编辑
                     </el-button>
                     <el-button
-                      type="danger"
+                      type="text"
                       onClick={() => {
                         this.handleDelete(scope.row);
                       }}
@@ -267,13 +277,23 @@
                       删除
                     </el-button>
                     <el-button
-                      type="primary"
+                      type="text"
                       onClick={() => {
                         this.handleLook(scope.row);
                       }}
                     >
                       预览
                     </el-button>
+                    {(scope.row.status === 0 || scope.row.status === 2) && (
+                      <el-button
+                        type="text"
+                        onClick={() => {
+                          this.handleClick(scope.row);
+                        }}
+                      >
+                        {this.operator[scope.row.status].text}
+                      </el-button>
+                    )}
                   </div>
                 );
               },
@@ -314,6 +334,16 @@
           nav_id: "",
           prof_id: "",
         };
+      },
+      async handleClick({ id, status }) {
+        if (status === 0 || status === 2) {
+          const { msg } = await auditArticle({
+            id,
+            status: this.operator[status].status,
+          });
+          this.$baseMessage(msg, "success");
+          this.fetchData(false);
+        }
       },
       handleLook(e) {
         this.show = true;

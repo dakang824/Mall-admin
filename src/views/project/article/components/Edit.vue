@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-02-21 14:51:50
+ * @LastEditTime: 2021-02-21 15:01:02
 -->
 <template>
   <ele-form-drawer
@@ -199,10 +199,10 @@
                   disabled: false,
                 },
                 click: async () => {
-                  const {
-                    msg,
-                    data: { user },
-                  } = await auditArticle({ id, status: obj[status].status });
+                  const { msg } = await auditArticle({
+                    id,
+                    status: obj[status].status,
+                  });
                   this.$baseMessage(msg, "success");
                   this.$emit("fetchData", false);
                   this.handleClosed();
