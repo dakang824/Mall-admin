@@ -19,14 +19,6 @@
         <el-button icon="el-icon-upload2" type="warning" @click="handleImport">
           技能树导入
         </el-button>
-        <el-button
-          icon="el-icon-download"
-          type="success"
-          :loading="downloadLoading"
-          @click="handleExport"
-        >
-          技能树导出
-        </el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
     <el-row v-loading="loading" :gutter="20">
@@ -127,14 +119,6 @@
     methods: {
       handleImport() {
         this.$refs["import"].showImport(this.formConfig.formDesc);
-      },
-      async handleExport() {
-        this.downloadLoading = true;
-        const {
-          data: { excel_path },
-        } = await exportUserScore(this.queryForm);
-        window.open(filters.imgBaseUrl(excel_path), "_parent");
-        this.downloadLoading = false;
       },
       async clickDelete(e) {
         const {

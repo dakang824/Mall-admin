@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2021-02-24 19:28:33
+ * @LastEditTime: 2021-02-24 19:42:53
 -->
 <template>
   <ele-form-dialog
@@ -23,14 +23,17 @@
 
 <script>
   import filters from "@/filters";
-  import { getSkillTreeTemplate, importSkillTree } from "@/api/skills";
+  import {
+    getSkillTreeScoreTemplate,
+    importSkillTreeScore,
+  } from "@/api/skills";
   import { fileUpload } from "@/config/settings";
   export default {
     components: {},
     props: {
       title: {
         type: String,
-        default: "技能树导入",
+        default: "技能树成绩导入",
       },
     },
     data() {
@@ -44,7 +47,7 @@
             click: async () => {
               const {
                 data: { excel_path },
-              } = await getSkillTreeTemplate();
+              } = await getSkillTreeScoreTemplate();
               window.open(filters.imgBaseUrl(excel_path), "_parent");
             },
           },
@@ -84,7 +87,7 @@
         const {
           msg,
           data: { exceptionFile = null },
-        } = await importSkillTree({ file: this.file });
+        } = await importSkillTreeScore({ file: this.file });
         if (exceptionFile) {
           window.open(filters.imgBaseUrl(exceptionFile), "_parent");
         } else {

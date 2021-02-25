@@ -12,6 +12,11 @@
           :request-fn="queryData"
         />
       </vab-query-form-left-panel>
+      <vab-query-form-left-panel :span="12">
+        <el-button icon="el-icon-upload2" type="warning" @click="handleImport">
+          技能树成绩导入
+        </el-button>
+      </vab-query-form-left-panel>
     </vab-query-form>
 
     <lb-table
@@ -29,6 +34,8 @@
       @size-change="handleSizeChange"
       @p-current-change="handleCurrentChange"
     />
+
+    <import-template ref="import" @fetchData="fetchData" />
   </div>
 </template>
 
@@ -37,10 +44,11 @@
   import { querySkillTreeScore } from "@/api/skills";
   import filters from "@/filters";
   import Tree from "@/components/tree";
+  import ImportTemplate from "./components/importTemplate";
 
   export default {
     name: "SkillScore",
-    components: {},
+    components: { ImportTemplate },
     data() {
       return {
         list: null,
@@ -195,6 +203,9 @@
       this.fetchData();
     },
     methods: {
+      handleImport() {
+        this.$refs["import"].showImport(this.formConfig.formDesc);
+      },
       processingData(data) {
         return (
           data.length &&
