@@ -40,7 +40,7 @@
 </template>
 
 <script>
-  import { findModule, deleteModule } from "@/api/module";
+  import { findFeedBack } from "@/api/opinion";
   import Edit from "./components/Edit";
 
   export default {
@@ -55,29 +55,39 @@
         tableData: {
           column: [
             {
-              type: "selection",
-            },
-            {
-              prop: "id",
-              label: "内容",
-            },
-            {
-              prop: "name",
+              prop: "users_id",
               label: "反馈人",
+              width: "90",
+              render: (h, scope) => {
+                return <span>{scope.row.users.name}</span>;
+              },
             },
             {
               prop: "role",
               label: "角色",
+              width: "80",
               render: (h, scope) => {
-                return <span>{scope.row.prof.name}</span>;
+                return (
+                  <span>
+                    {scope.row.users.roles === 1
+                      ? "学生"
+                      : scope.row.users.roles === 2
+                      ? "老师"
+                      : ""}
+                  </span>
+                );
               },
             },
             {
               label: "反馈时间",
-              width: "130",
+              width: "180",
               render: (h, scope) => {
-                return <div>{scope.row}</div>;
+                return <div>{scope.row.create_time.slice(0, 19)}</div>;
               },
+            },
+            {
+              prop: "content",
+              label: "内容",
             },
           ],
           data: [],
@@ -85,17 +95,51 @@
         formConfig: {
           formDesc: {
             time: {
-              type: "daterange",
-              label: "范围",
+              type: "datetimerange",
+              label: "范围1",
               attrs: {
                 clearable: true,
-              },
-            },
-            name: {
-              type: "input",
-              label: "反馈人",
-              attrs: {
-                clearable: true,
+                valueFormat: "yyyy-MM-dd HH:mm:ss",
+                pickerOptions: {
+                  shortcuts: [
+                    {
+                      text: "最近一周",
+                      onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                        picker.$emit("pick", [start, end]);
+                      },
+                    },
+                    {
+                      text: "最近一个月",
+                      onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                        picker.$emit("pick", [start, end]);
+                      },
+                    },
+                    {
+                      text: "最近三个月",
+                      onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                        picker.$emit("pick", [start, end]);
+                      },
+                    },
+                    {
+                      text: "最近六个月",
+                      onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
+                        picker.$emit("pick", [start, end]);
+                      },
+                    },
+                  ],
+                },
               },
             },
           },
@@ -104,11 +148,14 @@
           pageNo: 1,
           pageSize: 10,
           time: [],
-          name: "",
         },
       };
     },
     async created() {
+      const end = new Date();
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
+      this.queryForm.time = [start, end];
       this.fetchData();
     },
     methods: {
@@ -176,11 +223,14 @@
       },
       async fetchData(loading = true) {
         this.loading = loading;
+        const { queryForm } = this;
+        queryForm.from = queryForm.time[0] || "";
+        queryForm.to = queryForm.time[1] || "";
         const {
           data: {
-            moduleList: { list, total },
+            feedBacks: { list, total },
           },
-        } = await findModule(this.queryForm);
+        } = await findFeedBack(queryForm);
         this.tableData.data = list;
         this.total = total;
         setTimeout(() => {
