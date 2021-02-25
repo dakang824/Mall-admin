@@ -2,10 +2,15 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 试题弹窗表格
  * @Date: 2020-12-11 16:08:37
- * @LastEditTime: 2020-12-11 17:20:54
+ * @LastEditTime: 2021-02-25 21:15:11
 -->
 <template>
-  <el-dialog :title="title" :visible.sync="dialogVisible" width="700px">
+  <el-dialog
+    :title="title"
+    :visible.sync="dialogVisible"
+    width="700px"
+    destroy-on-close
+  >
     <lb-table
       v-loading="loading"
       border

@@ -2,10 +2,16 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 试题弹窗表格
  * @Date: 2020-12-11 16:08:37
- * @LastEditTime: 2020-12-11 17:35:34
+ * @LastEditTime: 2021-02-25 22:00:02
 -->
 <template>
-  <el-dialog :title="title" :visible.sync="dialogVisible" width="700px">
+  <el-dialog
+    :title="title"
+    :visible.sync="dialogVisible"
+    width="750px"
+    destroy-on-close
+    @closed="handleClose"
+  >
     <div style="margin-bottom: 20px">
       <el-button
         type="primary"
@@ -23,7 +29,8 @@
       :column="tableData.column"
       :data="tableData.data"
       align="center"
-      pagination
+      max-height="450"
+      :pagination="false"
       background
       :layout="layout"
       :current-page.sync="queryForm.pageNo"
@@ -36,13 +43,14 @@
 </template>
 
 <script>
-  import { findTestQues } from "@/api/mockTest";
+  import { getTestScoreResults } from "@/api/mockTest";
+  const dayjs = require("dayjs");
   export default {
     components: {},
     data() {
       return {
         loading: true,
-        title: "试卷",
+        title: "记录",
         dialogVisible: false,
         downloadLoading: false,
         layout: "total, sizes, prev, pager, next, jumper",
@@ -50,65 +58,39 @@
         tableData: {
           column: [
             {
-              prop: "id",
+              prop: "index",
               label: "序号",
               width: "80",
             },
             {
-              prop: "que",
-              label: "题目",
+              prop: "user_name",
+              label: "姓名",
+              width: "90",
+            },
+            {
+              prop: "test_name",
+              label: "试题",
               showOverflowTooltip: true,
-              render: (h, scope) => {
-                return <span>{scope.row.que.content}</span>;
-              },
             },
             {
-              prop: "prof_id",
-              label: "专业",
+              prop: "score",
+              label: "得分",
               width: "90",
-              render: (h, scope) => {
-                return (
-                  <span>
-                    {
-                      this.$store.state.globalRequest.professionsKeyVal[
-                        scope.row.que.prof_id
-                      ]
-                    }
-                  </span>
-                );
-              },
             },
             {
-              prop: "module_id",
-              label: "模块",
+              prop: "right_count",
+              label: "答对(道)",
               width: "90",
-              render: (h, scope) => {
-                return (
-                  <span>
-                    {
-                      this.$store.state.globalRequest.moduleListsKeyVal[
-                        scope.row.que.module_id
-                      ]
-                    }
-                  </span>
-                );
-              },
             },
             {
-              prop: "type",
-              label: "试题类型",
+              prop: "wrong_count",
+              label: "答错(道)",
               width: "90",
-              render: (h, scope) => {
-                return <span>{this.type[scope.row.que.type]}</span>;
-              },
             },
             {
-              prop: "company_id",
-              label: "答案",
-              width: "90",
-              render: (h, scope) => {
-                return <span>{this.getAnswer(scope.row.que.queOptions)}</span>;
-              },
+              prop: "time",
+              label: "考试时间",
+              width: "160",
             },
           ],
           data: [],
@@ -126,6 +108,9 @@
       };
     },
     methods: {
+      handleClose() {
+        this.dialogVisible = false;
+      },
       getAnswer: (v) => {
         const current = v.filter((item) => item.rig === 1);
 
@@ -138,14 +123,14 @@
             header: [
               "序号",
               "姓名",
-              "账号",
-              "角色",
-              "所属公司",
-              "用户类型",
-              "专业组",
+              "试题",
+              "得分",
+              "答对(道)",
+              "答错(道)",
+              "考试时间",
             ],
             data: this.formatJson(),
-            filename: "users",
+            filename: "score",
             autoWidth: true,
             bookType: "xlsx",
           });
@@ -155,23 +140,15 @@
       formatJson() {
         return this.tableData.data.map((v) =>
           [
-            "id",
-            "name",
-            "account",
-            "roles",
-            "company",
-            "type",
-            "prof_group",
+            "index",
+            "user_name",
+            "test_name",
+            "score",
+            "right_count",
+            "wrong_count",
+            "time",
           ].map((j) => {
-            if (j === "roles") {
-              return v[j] === 1 ? "学生" : v[j] === 2 ? "老师" : "";
-            } else if (j === "company" || j === "prof_group") {
-              return v[j].name;
-            } else if (j === "type") {
-              return v[j] === 1 ? "临时工" : v[j] === 2 ? "正式工" : "";
-            } else {
-              return v[j];
-            }
+            return v[j];
           })
         );
       },
@@ -191,12 +168,15 @@
       async fetchData() {
         this.loading = true;
         const {
-          data: {
-            testQues: { list, total },
-          },
-        } = await findTestQues(this.queryForm);
+          data: { score },
+        } = await getTestScoreResults(this.queryForm);
+        const list = score.map((item, ind) => {
+          item.time = dayjs(+item.code).format("YYYY-MM-DD HH:MM:ss");
+          item.index = ind + 1;
+          return item;
+        });
         this.tableData.data = list;
-        this.total = total;
+        this.total = list.length;
         this.loading = false;
       },
     },
