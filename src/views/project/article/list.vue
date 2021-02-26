@@ -164,8 +164,6 @@
                 clearable: true,
               },
               vif(data) {
-                data.show = false;
-                data.show = true;
                 return data.cate1 === 2;
               },
               options: async () => {
@@ -180,7 +178,6 @@
                 clearable: true,
               },
               vif(data, e) {
-                console.log(data);
                 e.options =
                   data.prof_id1 && data.moduleLists.length
                     ? data.moduleLists.filter(

@@ -159,14 +159,17 @@
               attrs: {
                 clearable: true,
               },
-              vif(data) {
+              vif(data, e) {
+                e.options =
+                  data.prof_id1 && data.moduleLists.length
+                    ? data.moduleLists.filter(
+                        (item) => data.prof_id1 === item.prof_id
+                      )
+                    : data.moduleLists;
                 return data.cate1 === 2;
               },
-              options: async () => {
-                await this.$store.dispatch("globalRequest/findModule");
-                console.log(this.moduleLists);
-                return this.moduleLists;
-              },
+              isReloadOptions: true,
+              options: [],
             },
           },
         },
@@ -260,7 +263,9 @@
         moduleLists: (state) => state.globalRequest.moduleLists,
       }),
     },
-    created() {
+    async created() {
+      await this.$store.dispatch("globalRequest/findModule");
+      this.queryForm.moduleLists = this.moduleLists;
       const status = this.$store.state.article.status;
       this.statusTxt = status.reduce((a, b) => {
         a[b.value] = b.text;

@@ -185,10 +185,17 @@
               attrs: {
                 clearable: true,
               },
-              options: async () => {
-                await this.$store.dispatch("globalRequest/findModule");
-                return this.moduleLists;
+              vif(data, e) {
+                e.options =
+                  data.prof_id && data.moduleLists.length
+                    ? data.moduleLists.filter(
+                        (item) => data.prof_id === item.prof_id
+                      )
+                    : data.moduleLists;
+                return true;
               },
+              isReloadOptions: true,
+              options: [],
             },
             company_id: {
               type: "select",
@@ -231,6 +238,8 @@
       }),
     },
     async created() {
+      await this.$store.dispatch("globalRequest/findModule");
+      this.queryForm.moduleLists = this.moduleLists;
       this.fetchData();
     },
     methods: {

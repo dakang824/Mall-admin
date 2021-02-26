@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑模拟考配置表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2020-12-11 19:59:25
+ * @LastEditTime: 2021-02-26 09:59:53
 -->
 <template>
   <ele-form-dialog
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import { addTest, modifyTest } from "@/api/mockTest";
   export default {
     props: {
@@ -144,8 +145,14 @@
         },
       };
     },
+    computed: {
+      ...mapState({
+        moduleLists: (state) => state.globalRequest.moduleLists,
+      }),
+    },
     methods: {
-      showEdit(row) {
+      async showEdit(row) {
+        await this.$store.dispatch("globalRequest/findModule");
         if (!row) {
           this.title = "添加考试";
         } else {
@@ -157,6 +164,7 @@
           this.formData = JSON.parse(JSON.stringify(row));
         }
         this.formDesc = { ...this.options.formDesc, ...this.formDesc };
+        this.formData.moduleLists = this.moduleLists;
         this.dialogFormVisible = true;
       },
       handleClosed() {
