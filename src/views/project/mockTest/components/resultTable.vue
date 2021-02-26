@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 试题弹窗表格
  * @Date: 2020-12-11 16:08:37
- * @LastEditTime: 2021-02-25 22:00:02
+ * @LastEditTime: 2021-02-26 10:06:09
 -->
 <template>
   <el-dialog
@@ -63,28 +63,28 @@
               width: "80",
             },
             {
-              prop: "user_name",
-              label: "姓名",
-              width: "90",
-            },
-            {
               prop: "test_name",
-              label: "试题",
+              label: "考试名称",
               showOverflowTooltip: true,
             },
             {
-              prop: "score",
-              label: "得分",
+              prop: "user_name",
+              label: "用户名称",
               width: "90",
             },
             {
               prop: "right_count",
-              label: "答对(道)",
+              label: "答对题数",
               width: "90",
             },
             {
               prop: "wrong_count",
-              label: "答错(道)",
+              label: "答错题数",
+              width: "90",
+            },
+            {
+              prop: "score",
+              label: "考试成绩",
               width: "90",
             },
             {
@@ -122,11 +122,11 @@
           excel.export_json_to_excel({
             header: [
               "序号",
-              "姓名",
-              "试题",
-              "得分",
-              "答对(道)",
-              "答错(道)",
+              "考试名称",
+              "用户名称",
+              "答对题数",
+              "答错题数",
+              "考试成绩",
               "考试时间",
             ],
             data: this.formatJson(),
@@ -141,11 +141,11 @@
         return this.tableData.data.map((v) =>
           [
             "index",
-            "user_name",
             "test_name",
-            "score",
+            "user_name",
             "right_count",
             "wrong_count",
+            "score",
             "time",
           ].map((j) => {
             return v[j];
