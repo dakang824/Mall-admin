@@ -232,6 +232,22 @@ export const asyncRoutes = [
       },
     ],
   },
+  {
+    path: "/planSum",
+    component: Layout,
+    redirect: "/planSum",
+    children: [
+      {
+        path: "/planSum",
+        name: "planSum",
+        component: () => import("@/views/project/planSum/index"),
+        meta: {
+          title: "计划汇总(总公司)",
+          icon: "volleyball-ball",
+        },
+      },
+    ],
+  },
 
   {
     path: "/skills",

@@ -9,9 +9,6 @@
           批量删除
         </el-button>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel :span="12">
-        <el-button icon="el-icon-refresh" @click="fetchData">刷新</el-button>
-      </vab-query-form-right-panel>
     </vab-query-form>
 
     <lb-table
