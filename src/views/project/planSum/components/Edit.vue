@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑模拟考配置表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-03-01 19:56:10
+ * @LastEditTime: 2021-03-01 21:00:19
 -->
 <template>
   <ele-form-dialog
@@ -28,7 +28,7 @@
     },
     data() {
       return {
-        title: "添加",
+        title: "添加计划",
         dialogFormVisible: false,
         formData: {},
         formDesc: {
