@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:修改登录
  * @Date: 2020-09-20 23:31:19
- * @LastEditTime: 2021-03-03 21:26:05
+ * @LastEditTime: 2021-03-03 21:38:31
  */
 /**
  * @copyright chuzhixin 1204505056@qq.com
@@ -24,14 +24,14 @@ const state = {
   username: "",
   avatar: "",
   permissions: [],
-  store: [],
+  admin_info: "",
 };
 const getters = {
   accessToken: (state) => state.accessToken,
   username: (state) => state.username,
   avatar: (state) => state.avatar,
   permissions: (state) => state.permissions,
-  store: (state) => state.store,
+  store: (state) => state.admin_info,
 };
 const mutations = {
   setAccessToken(state, accessToken) {
@@ -45,7 +45,7 @@ const mutations = {
     state.avatar = avatar;
   },
   setStore(state, store) {
-    state.store = store;
+    state.admin_info = store;
   },
   setPermissions(state, permissions) {
     state.permissions = permissions;

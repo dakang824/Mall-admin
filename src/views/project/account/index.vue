@@ -37,8 +37,7 @@
 </template>
 
 <script>
-  import { findModule, deleteModule } from "@/api/module";
-  import { findAllProfession } from "@/api/professions";
+  import { findPlatAdmin, deletePlatAdmin } from "@/api/settings";
   import Edit from "./components/Edit";
 
   export default {
@@ -65,15 +64,15 @@
               label: "用户名",
             },
             {
-              prop: "name",
-              label: "姓名",
+              prop: "account",
+              label: "账号",
             },
             {
-              prop: "name",
+              prop: "mobile",
               label: "电话",
             },
             {
-              prop: "name",
+              prop: "email",
               label: "邮箱",
             },
             {
@@ -136,7 +135,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await deleteModule({ ids: row.id });
+            const { msg } = await deletePlatAdmin({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.tableData.data.splice(
               this.tableData.data.findIndex((item) => item.id === row.id),
@@ -147,7 +146,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await deleteModule({ ids });
+              const { msg } = await deletePlatAdmin({ ids });
               this.$baseMessage(msg, "success");
               this.selectRows.map((item) => {
                 this.tableData.data.splice(
@@ -181,9 +180,9 @@
         this.loading = loading;
         const {
           data: {
-            moduleList: { list, total },
+            admins: { list, total },
           },
-        } = await findModule(this.queryForm);
+        } = await findPlatAdmin(this.queryForm);
         this.tableData.data = list;
         this.total = total;
         setTimeout(() => {

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑模拟考配置表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-03-03 21:05:51
+ * @LastEditTime: 2021-03-03 22:09:19
 -->
 <template>
   <ele-form-dialog
@@ -21,7 +21,7 @@
 
 <script>
   import { mapState } from "vuex";
-  import { addPlan, modifyPlan } from "@/api/mockTest";
+  import { addPlan, modifyPlan } from "@/api/planSum";
   export default {
     props: {
       options: { type: Object, default: () => {} },
@@ -40,15 +40,10 @@
             type: "input",
             label: "项目名称",
           },
-          // time: {
-          //   type: "datetimerange",
-          //   label: "考试时间",
-          //   attrs: {
-          //     clearable: true,
-          //     format: "yyyy-MM-dd HH:mm:ss",
-          //     "value-format": "yyyy-MM-dd HH:mm:ss",
-          //   },
-          // },
+          user_account: {
+            type: "input",
+            label: "用户erp账户",
+          },
         },
         rules: {
           time: { required: true, message: "考试时间必选" },
@@ -56,13 +51,11 @@
           module_id: { required: true, message: "模块必选" },
           prof_id: { required: true, message: "专业必选" },
           company_id: { required: true, message: "专业必选" },
-          time: { required: true, message: "开始时长必填" },
-          judge_count: { required: true, message: "判断题数量必填" },
-          judge_score: { required: true, message: "判断题分数必填" },
-          radio_count: { required: true, message: "单选题数量必填" },
-          radio_score: { required: true, message: "单选题分数必填" },
-          check_count: { required: true, message: "多选题数量必填" },
-          check_score: { required: true, message: "多选题分数必填" },
+          tea_name: { required: true, message: "带教老师必选" },
+          status: { required: true, message: "计划结果必选" },
+          content: { required: true, message: "实操内容必填" },
+          project: { required: true, message: "项目名称必填" },
+          user_account: { required: true, message: "用户erp账号必填" },
         },
       };
     },
@@ -78,10 +71,8 @@
           this.title = "添加计划";
         } else {
           this.title = "编辑计划";
-          row.start_end = [
-            row.start_time.slice(0, 19),
-            row.end_time.slice(0, 19),
-          ];
+          row.time = [row.time_from.slice(0, 19), row.time_to.slice(0, 19)];
+          row.tea_name = row.teas.split(",");
           this.formData = JSON.parse(JSON.stringify(row));
         }
         this.formDesc = { ...this.options.formDesc, ...this.formDesc };
@@ -94,22 +85,23 @@
 
       async handleSubmit(data) {
         const formData = JSON.parse(JSON.stringify(this.formData));
-        formData.start_time = formData.start_end[0];
-        formData.end_time = formData.start_end[1];
+        formData.time_from = formData.time[0];
+        formData.time_to = formData.time[1];
+        formData.teas = formData.tea_name.join();
         if (this.title.includes("添加")) {
           const {
             msg,
-            data: { tests },
+            data: { plan },
           } = await addPlan(formData);
           this.$baseMessage(msg, "success");
           this.$emit("fetchData", false);
         } else {
           const {
             msg,
-            data: { tests },
+            data: { plan },
           } = await modifyPlan(formData);
           this.$baseMessage(msg, "success");
-          this.$emit("update", tests);
+          this.$emit("fetchData", false);
         }
         // 关闭弹窗
         this.dialogFormVisible = false;

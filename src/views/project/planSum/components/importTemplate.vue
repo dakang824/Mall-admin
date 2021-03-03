@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2021-03-03 19:30:51
+ * @LastEditTime: 2021-03-03 22:19:09
 -->
 <template>
   <ele-form-dialog
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import filters from "@/filters";
   import { getPlanTemplate, importPlan } from "@/api/planSum";
   import { fileUpload } from "@/config/settings";
@@ -73,6 +74,11 @@
         },
       };
     },
+    computed: {
+      ...mapState({
+        admin_info: (state) => state.user.admin_info,
+      }),
+    },
     methods: {
       showImport(e) {
         this.dialogFormVisible = true;
@@ -84,7 +90,10 @@
         const {
           msg,
           data: { exceptionFile = null },
-        } = await importPlan({ questionFile: this.file });
+        } = await importPlan({
+          file: this.file,
+          comp_id: this.admin_info.data_pri_company,
+        });
         if (exceptionFile) {
           window.open(filters.imgBaseUrl(exceptionFile), "_parent");
         } else {

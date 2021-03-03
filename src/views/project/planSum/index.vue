@@ -53,7 +53,6 @@
       ref="edit"
       :options="{ formDesc: formConfig.formDesc }"
       @fetchData="fetchData"
-      @update="updateData"
     ></edit>
 
     <import-template ref="import" @fetchData="fetchData" />
@@ -63,7 +62,12 @@
 <script>
   import { mapState } from "vuex";
   import filters from "@/filters";
-  import { findPlan, deletePlan, exportPlan } from "@/api/planSum";
+  import {
+    findPlan,
+    deletePlan,
+    exportPlan,
+    findCompanyTeachers,
+  } from "@/api/planSum";
   import Edit from "./components/Edit";
   import ImportTemplate from "./components/importTemplate";
 
@@ -146,6 +150,17 @@
               label: "实操内容",
             },
             {
+              prop: "status",
+              label: "考核结果",
+              render: (h, scope) => {
+                return (
+                  <el-tag type={scope.row.status === 1 ? "success" : "warning"}>
+                    {scope.row.status === 1 ? "已考核" : "未考核"}
+                  </el-tag>
+                );
+              },
+            },
+            {
               label: "操作",
               width: "230",
               render: (h, scope) => {
@@ -159,14 +174,7 @@
                     >
                       编辑
                     </el-button>
-                    <el-button
-                      type="warning"
-                      onClick={() => {
-                        this.handleLookTests(scope.row);
-                      }}
-                    >
-                      未考核
-                    </el-button>
+
                     <el-button
                       type="danger"
                       onClick={() => {
@@ -218,10 +226,22 @@
               label: "带教老师",
               attrs: {
                 clearable: true,
+                multiple: true,
               },
               options: async () => {
-                await this.$store.dispatch("globalRequest/findAllCompany");
-                return this.companyLists;
+                const company_ids = this.admin_info.companyList
+                  .map((item) => item.id)
+                  .join();
+                const {
+                  data: { teacherList },
+                } = await findCompanyTeachers({
+                  company_ids,
+                });
+                const arr = teacherList.map((item) => item.name);
+                return [...new Set(arr)].map((item) => ({
+                  text: item,
+                  value: item,
+                }));
               },
             },
             time: {
@@ -291,6 +311,7 @@
         moduleListsKeyVal: (state) => state.globalRequest.moduleListsKeyVal,
         companyLists: (state) => state.globalRequest.companyLists,
         companyListsKeyVal: (state) => state.globalRequest.companyListsKeyVal,
+        admin_info: (state) => state.user.admin_info,
       }),
     },
     async created() {
@@ -329,10 +350,7 @@
       addData(e) {
         this.tableData.data.unshift(e);
       },
-      updateData(e) {
-        const index = this.tableData.data.findIndex((item) => item.id === e.id);
-        this.$set(this.tableData.data, index, e);
-      },
+
       handleLookTests(row) {
         this.$refs["testTable"].showEdit(row);
       },
@@ -400,6 +418,7 @@
       async fetchData(loading = true) {
         this.loading = loading;
         const queryForm = JSON.parse(JSON.stringify(this.queryForm));
+        queryForm.tea_name = queryForm.tea_name.join();
         delete queryForm.moduleLists;
         const {
           data: {

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2020-10-03 16:12:52
- * @LastEditTime: 2021-03-03 19:37:38
+ * @LastEditTime: 2021-03-03 22:24:04
  */
 import request from "@/utils/request";
 
@@ -14,17 +14,25 @@ export function addPlatAdmin(data) {
   });
 }
 
-export function doEdit(data) {
+export function findPlatAdmin(data) {
   return request({
-    url: "/storeSet/doEdit",
+    url: "/service/plat/admin/findPlatAdmin",
     method: "post",
     data,
   });
 }
 
-export function doDelete(data) {
+export function deletePlatAdmin(data) {
   return request({
-    url: "/storeSet/doDelete",
+    url: "/service/plat/admin/deletePlatAdmin",
+    method: "post",
+    data,
+  });
+}
+
+export function modifyPlatAdmin(data) {
+  return request({
+    url: "/service/plat/admin/modifyPlatAdmin",
     method: "post",
     data,
   });
