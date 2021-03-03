@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2021-03-01 19:54:16
+ * @LastEditTime: 2021-03-03 19:30:51
 -->
 <template>
   <ele-form-dialog
@@ -23,7 +23,7 @@
 
 <script>
   import filters from "@/filters";
-  import { getQueTemplate, importQuestion } from "@/api/questions";
+  import { getPlanTemplate, importPlan } from "@/api/planSum";
   import { fileUpload } from "@/config/settings";
   export default {
     components: {},
@@ -44,7 +44,7 @@
             click: async () => {
               const {
                 data: { excel_path },
-              } = await getQueTemplate();
+              } = await getPlanTemplate();
               window.open(filters.imgBaseUrl(excel_path), "_parent");
             },
           },
@@ -84,7 +84,7 @@
         const {
           msg,
           data: { exceptionFile = null },
-        } = await importQuestion({ questionFile: this.file });
+        } = await importPlan({ questionFile: this.file });
         if (exceptionFile) {
           window.open(filters.imgBaseUrl(exceptionFile), "_parent");
         } else {

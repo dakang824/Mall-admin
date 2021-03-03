@@ -1,8 +1,8 @@
 /*
  * @Author: yukang 1172248038@qq.com
- * @Description:商品管理
+ * @Description:成绩管理api
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2021-01-17 23:12:24
+ * @LastEditTime: 2021-03-03 19:36:20
  */
 import request from "@/utils/request";
 

@@ -62,7 +62,8 @@
 
 <script>
   import { mapState } from "vuex";
-  import { findTest, deleteTest } from "@/api/mockTest";
+  import filters from "@/filters";
+  import { findPlan, deletePlan, exportPlan } from "@/api/planSum";
   import Edit from "./components/Edit";
   import ImportTemplate from "./components/importTemplate";
 
@@ -87,66 +88,77 @@
               width: "80",
             },
             {
-              prop: "name",
+              prop: "user_name",
               label: "姓名",
               width: "80",
             },
             {
-              prop: "name",
+              prop: "user_account",
               label: "ERP",
             },
             {
-              prop: "name",
+              prop: "company",
               label: "所属公司",
+              render: (h, scope) => {
+                return <span>{scope.row.company.name}</span>;
+              },
             },
             {
-              prop: "prof_id",
+              prop: "profession",
               label: "考核专业",
               render: (h, scope) => {
-                return <span>{this.professionsKeyVal[scope.row.prof_id]}</span>;
+                return <span>{scope.row.profession.name}</span>;
               },
             },
             {
-              prop: "module_id",
+              prop: "module",
               label: "考核模块",
               render: (h, scope) => {
-                return (
-                  <span>{this.moduleListsKeyVal[scope.row.module_id]}</span>
-                );
+                return <span>{scope.row.module.name}</span>;
               },
             },
-
             {
               prop: "start_time",
-              label: "考核时间",
-              width: "140",
+              label: "考核时间从",
+              width: "95",
               render: (h, scope) => {
-                return <span>{scope.row.start_time.substr(0, 16)}</span>;
+                return <span>{scope.row.time_from.substr(0, 10)}</span>;
               },
             },
             {
-              prop: "company_id",
+              prop: "start_time",
+              label: "考核时间至",
+              width: "95",
+              render: (h, scope) => {
+                return <span>{scope.row.time_to.substr(0, 10)}</span>;
+              },
+            },
+            {
+              prop: "project",
               label: "参与工程项目",
-              render: (h, scope) => {
-                return (
-                  <span>{this.companyListsKeyVal[scope.row.company_id]}</span>
-                );
-              },
             },
             {
-              prop: "name",
+              prop: "teas",
               label: "带教老师",
             },
             {
-              prop: "name",
+              prop: "content",
               label: "实操内容",
             },
             {
               label: "操作",
-              width: "90",
+              width: "230",
               render: (h, scope) => {
                 return (
                   <div>
+                    <el-button
+                      type="primary"
+                      onClick={() => {
+                        this.handleEdit(scope.row);
+                      }}
+                    >
+                      编辑
+                    </el-button>
                     <el-button
                       type="warning"
                       onClick={() => {
@@ -154,6 +166,14 @@
                       }}
                     >
                       未考核
+                    </el-button>
+                    <el-button
+                      type="danger"
+                      onClick={() => {
+                        this.handleDelete(scope.row);
+                      }}
+                    >
+                      删除
                     </el-button>
                   </div>
                 );
@@ -193,7 +213,7 @@
               isReloadOptions: true,
               options: [],
             },
-            teacher: {
+            tea_name: {
               type: "select",
               label: "带教老师",
               attrs: {
@@ -205,15 +225,18 @@
               },
             },
             time: {
-              type: "monthrange",
+              type: "daterange",
               label: "考评时间",
+
               attrs: {
                 clearable: true,
-                startPlaceholder: "考评开始月份",
-                endPlaceholder: "考评结束月份",
+                startPlaceholder: "考评开始时间",
+                endPlaceholder: "考评结束时间",
+                format: "yyyy-MM-dd HH:mm:ss",
+                "value-format": "yyyy-MM-dd HH:mm:ss",
               },
             },
-            result: {
+            status: {
               type: "select",
               label: "计划结果",
               attrs: {
@@ -221,12 +244,12 @@
               },
               options: [
                 {
-                  text: "通过",
-                  value: 1,
+                  text: "未考核",
+                  value: 0,
                 },
                 {
-                  text: "未通过",
-                  value: 2,
+                  text: "已考核",
+                  value: 1,
                 },
               ],
             },
@@ -241,7 +264,7 @@
                 return this.companyLists;
               },
             },
-            name: {
+            user_name: {
               type: "input",
               label: "员工姓名",
               attrs: {
@@ -287,7 +310,7 @@
         this.downloadLoading = true;
         const {
           data: { excel_path },
-        } = await exportQuestion(this.queryForm);
+        } = await exportPlan(this.queryForm);
         window.open(filters.imgBaseUrl(excel_path), "_parent");
         // import("@/components/vendor/Export2Excel").then((excel) => {
         //   excel.export_json_to_excel({
@@ -324,7 +347,7 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-            const { msg } = await deleteTest({ ids: row.id });
+            const { msg } = await deletePlan({ ids: row.id });
             this.$baseMessage(msg, "success");
             this.tableData.data.splice(
               this.tableData.data.findIndex((item) => item.id === row.id),
@@ -335,7 +358,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join();
             this.$baseConfirm("你确定要删除选中项吗", null, async () => {
-              const { msg } = await deleteTest({ ids });
+              const { msg } = await deletePlan({ ids });
               this.$baseMessage(msg, "success");
               this.selectRows.map((item) => {
                 this.tableData.data.splice(
@@ -363,15 +386,26 @@
       },
       queryData() {
         this.queryForm.pageNo = 1;
+        if (this.queryForm.time) {
+          this.queryForm.time_from = this.queryForm.time.length
+            ? this.queryForm.time[0]
+            : "";
+          this.queryForm.time_to = this.queryForm.time.length
+            ? this.queryForm.time[1]
+            : "";
+        }
+
         this.fetchData();
       },
       async fetchData(loading = true) {
         this.loading = loading;
+        const queryForm = JSON.parse(JSON.stringify(this.queryForm));
+        delete queryForm.moduleLists;
         const {
           data: {
-            tests: { list, total },
+            feedBacks: { list, total },
           },
-        } = await findTest(this.queryForm);
+        } = await findPlan(queryForm);
         this.tableData.data = list;
         this.total = total;
         setTimeout(() => {

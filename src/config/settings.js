@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:全局变量配置
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2021-02-21 15:23:07
+ * @LastEditTime: 2021-03-03 21:09:15
  */
 
 module.exports = {
@@ -84,7 +84,7 @@ module.exports = {
   //是否显示在页面高亮错误
   errorLog: ["development", "test"],
   //是否开启登录拦截
-  loginInterception: false,
+  loginInterception: true,
   //是否开启登录RSA加密
   loginRSA: false,
   //是否依据mock数据生成webstorm HTTP Request请求文件

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑模拟考配置表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-03-01 21:00:19
+ * @LastEditTime: 2021-03-03 21:05:51
 -->
 <template>
   <ele-form-dialog
@@ -14,14 +14,14 @@
     :title="title"
     width="620px"
     :request-fn="handleSubmit"
-    :order="['name', 'prof_id', 'module_id', 'company_id']"
+    :order="['user_name', 'prof_id', 'module_id', 'company_id']"
     @closed="handleClosed"
   ></ele-form-dialog>
 </template>
 
 <script>
   import { mapState } from "vuex";
-  import { addTest, modifyTest } from "@/api/mockTest";
+  import { addPlan, modifyPlan } from "@/api/mockTest";
   export default {
     props: {
       options: { type: Object, default: () => {} },
@@ -32,106 +32,27 @@
         dialogFormVisible: false,
         formData: {},
         formDesc: {
-          time: {
+          content: {
             type: "input",
-            label: "考试时长",
+            label: "实操内容",
           },
-          start_end: {
-            type: "datetimerange",
-            label: "考试时间",
-            attrs: {
-              clearable: true,
-              format: "yyyy-MM-dd HH:mm:ss",
-              "value-format": "yyyy-MM-dd HH:mm:ss",
-            },
+          project: {
+            type: "input",
+            label: "项目名称",
           },
-          judge_count: {
-            type: "number",
-            label: "判断题数量",
-            layout: 12,
-            attrs: {
-              min: 0,
-            },
-          },
-          judge_score: {
-            type: "number",
-            label: "判断题分数",
-            layout: 12,
-            attrs: {
-              min: 0,
-            },
-          },
-          radio_count: {
-            type: "number",
-            label: "单选题数量",
-            layout: 12,
-            attrs: {
-              min: 0,
-            },
-          },
-          radio_score: {
-            type: "number",
-            label: "单选题分数",
-            layout: 12,
-            attrs: {
-              min: 0,
-            },
-          },
-          check_count: {
-            type: "number",
-            label: "多选题数量",
-            layout: 12,
-            attrs: {
-              min: 0,
-            },
-          },
-          check_score: {
-            type: "number",
-            label: "多选题分数",
-            layout: 12,
-            attrs: {
-              min: 0,
-            },
-          },
-
-          que_orders: {
-            type: "radio",
-            label: "试题随机",
-            isOptions: true,
-            layout: 12,
-            default: 0,
-            options: [
-              {
-                text: "随机",
-                value: 1,
-              },
-              {
-                text: "不随机",
-                value: 0,
-              },
-            ],
-          },
-          answer_orders: {
-            type: "radio",
-            label: "答案随机",
-            isOptions: true,
-            layout: 12,
-            default: 0,
-            options: [
-              {
-                text: "随机",
-                value: 1,
-              },
-              {
-                text: "不随机",
-                value: 0,
-              },
-            ],
-          },
+          // time: {
+          //   type: "datetimerange",
+          //   label: "考试时间",
+          //   attrs: {
+          //     clearable: true,
+          //     format: "yyyy-MM-dd HH:mm:ss",
+          //     "value-format": "yyyy-MM-dd HH:mm:ss",
+          //   },
+          // },
         },
         rules: {
           time: { required: true, message: "考试时间必选" },
-          name: { required: true, message: "考试名称必填" },
+          user_name: { required: true, message: "考试名称必填" },
           module_id: { required: true, message: "模块必选" },
           prof_id: { required: true, message: "专业必选" },
           company_id: { required: true, message: "专业必选" },
@@ -179,14 +100,14 @@
           const {
             msg,
             data: { tests },
-          } = await addTest(formData);
+          } = await addPlan(formData);
           this.$baseMessage(msg, "success");
           this.$emit("fetchData", false);
         } else {
           const {
             msg,
             data: { tests },
-          } = await modifyTest(formData);
+          } = await modifyPlan(formData);
           this.$baseMessage(msg, "success");
           this.$emit("update", tests);
         }
