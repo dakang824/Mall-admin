@@ -96,6 +96,7 @@
 </template>
 
 <script>
+  var sha1 = require("sha1");
   import { isPassword } from "@/utils/validate";
   import { random } from "@/utils";
   import identifyCode from "@/components/identify-code";
@@ -210,8 +211,10 @@
         this.$refs.form.validate((valid) => {
           if (valid) {
             this.loading = true;
+            const form = JSON.parse(JSON.stringify(this.form));
+            // form.pwd = sha1(form.pwd);
             this.$store
-              .dispatch("user/login", this.form)
+              .dispatch("user/login", form)
               .then(() => {
                 const routerPath =
                   this.redirect === "/404" || this.redirect === "/401"

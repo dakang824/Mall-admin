@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2020-12-08 00:34:45
+ * @LastEditTime: 2021-03-03 23:07:37
 -->
 <template>
   <ele-form-dialog
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import { addModule, modifyModule } from "@/api/module";
   export default {
     props: {
@@ -30,16 +31,53 @@
         dialogFormVisible: false,
         formData: {},
         formDesc: {
-          name: {
+          account: {
             type: "input",
-            label: "导航名称",
+            label: "登录账号",
             attrs: {
               clearable: true,
             },
           },
-          prof_id: {
+          pwd: {
+            type: "input",
+            label: "密码",
+            attrs: {
+              clearable: true,
+              type: "password",
+            },
+          },
+          towPwd: {
+            type: "input",
+            label: "重复密码",
+            attrs: {
+              clearable: true,
+              type: "password",
+            },
+          },
+          name: {
+            type: "input",
+            label: "真实姓名",
+            attrs: {
+              clearable: true,
+            },
+          },
+          mobile: {
+            type: "input",
+            label: "电话",
+            attrs: {
+              clearable: true,
+            },
+          },
+          email: {
+            type: "input",
+            label: "邮箱",
+            attrs: {
+              clearable: true,
+            },
+          },
+          fun_pri: {
             type: "select",
-            label: "是否配置专业",
+            label: "功能权限",
             attrs: {
               clearable: true,
             },
@@ -54,19 +92,50 @@
               },
             ],
           },
-          pos: {
-            type: "number",
-            label: "导航排序",
+          data_pri_prof: {
+            type: "select",
+            label: "专业权限",
             attrs: {
               clearable: true,
+              multiple: true,
+            },
+            options: async () => {
+              await this.$store.dispatch("globalRequest/findAllProfession");
+              return this.professions;
+            },
+          },
+          data_pri_company: {
+            type: "select",
+            label: "公司权限",
+            attrs: {
+              clearable: true,
+              multiple: true,
+            },
+            options: async () => {
+              await this.$store.dispatch("globalRequest/findAllCompany");
+              return this.companyLists;
             },
           },
         },
         rules: {
-          name: { required: true, message: "模块名称必填" },
-          prof_id: { required: true, message: "所属专业必选" },
+          account: { required: true, message: "登录账号必填" },
+          pwd: { required: true, message: "密码必填" },
+          towPwd: { required: true, message: "重复密码必填" },
+          name: { required: true, message: "真实姓名必填" },
+          mobile: { required: true, message: "电话必填" },
+          fun_pri: { required: true, message: "功能权限必选" },
+          data_pri_prof: { required: true, message: "专业权限必选" },
+          data_pri_company: { required: true, message: "公司权限必选" },
         },
       };
+    },
+    computed: {
+      ...mapState({
+        professions: (state) => state.globalRequest.professions,
+        professionsKeyVal: (state) => state.globalRequest.professionsKeyVal,
+        companyLists: (state) => state.globalRequest.companyLists,
+        companyListsKeyVal: (state) => state.globalRequest.companyListsKeyVal,
+      }),
     },
     methods: {
       showEdit(row) {
@@ -74,7 +143,20 @@
           this.title = "添加管理员";
         } else {
           this.title = "编辑管理员";
-          row.role = row.roles;
+          row.towPwd = row.pwd;
+          if (!Array.isArray(row.data_pri_company)) {
+            row.data_pri_company = row.data_pri_company
+              .split(",")
+              .map((item) => Number(item));
+          }
+
+          if (!Array.isArray(row.data_pri_prof)) {
+            row.data_pri_prof = row.data_pri_prof
+              .split(",")
+              .map((item) => Number(item));
+          }
+
+          console.log(row);
           this.formData = JSON.parse(JSON.stringify(row));
         }
         this.dialogFormVisible = true;
