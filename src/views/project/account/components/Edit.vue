@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-03-03 23:07:37
+ * @LastEditTime: 2021-03-04 22:48:58
 -->
 <template>
   <ele-form-dialog
@@ -19,14 +19,18 @@
 </template>
 
 <script>
-  import { mapState } from "vuex";
-  import { addModule, modifyModule } from "@/api/module";
+  import { mapState, mapGetters } from "vuex";
+  import { addPlatAdmin, modifyPlatAdmin } from "@/api/settings";
+  var sha1 = require("sha1");
   export default {
     props: {
       options: { type: Object, default: () => {} },
     },
     data() {
       return {
+        arrRoute: [],
+        oldPwd: "",
+        route: [], //所有栏目集合
         title: "添加",
         dialogFormVisible: false,
         formData: {},
@@ -76,21 +80,12 @@
             },
           },
           fun_pri: {
-            type: "select",
+            type: "checkbox",
             label: "功能权限",
             attrs: {
               clearable: true,
             },
-            options: [
-              {
-                text: "是",
-                value: 1,
-              },
-              {
-                text: "否",
-                value: 2,
-              },
-            ],
+            options: [],
           },
           data_pri_prof: {
             type: "select",
@@ -130,6 +125,9 @@
       };
     },
     computed: {
+      ...mapGetters({
+        routes: "routes/routes",
+      }),
       ...mapState({
         professions: (state) => state.globalRequest.professions,
         professionsKeyVal: (state) => state.globalRequest.professionsKeyVal,
@@ -137,13 +135,48 @@
         companyListsKeyVal: (state) => state.globalRequest.companyListsKeyVal,
       }),
     },
+    created() {
+      this.handleChildren(this.routes);
+      let router = this.arrRoute
+        .map((item) => {
+          return item.children.map((i) => i.meta.title);
+        })
+        .flat(Infinity);
+      router.shift();
+      this.formDesc.fun_pri.options = router;
+    },
     methods: {
+      handleChildren(children = [], parent) {
+        if (children === null) children = [];
+        const showChildren = children.filter((item) => {
+          if (item.hidden) {
+            return false;
+          } else {
+            this.arrRoute.push(item);
+            return true;
+          }
+        });
+        if (showChildren.length === 1) {
+          return true;
+        }
+
+        if (showChildren.length === 0) {
+          this.arrRoute.push({
+            ...parent,
+            path: "",
+            notShowChildren: true,
+          });
+          return true;
+        }
+        return false;
+      },
       showEdit(row) {
         if (!row) {
           this.title = "添加管理员";
         } else {
           this.title = "编辑管理员";
           row.towPwd = row.pwd;
+          this.oldPwd = row.pwd;
           if (!Array.isArray(row.data_pri_company)) {
             row.data_pri_company = row.data_pri_company
               .split(",")
@@ -156,7 +189,10 @@
               .map((item) => Number(item));
           }
 
-          console.log(row);
+          if (!Array.isArray(row.fun_pri)) {
+            row.fun_pri = row.fun_pri.split(",").map((item) => item);
+          }
+
           this.formData = JSON.parse(JSON.stringify(row));
         }
         this.dialogFormVisible = true;
@@ -166,19 +202,35 @@
       },
 
       async handleSubmit(data) {
+        if (this.formData.pwd !== this.formData.towPwd) {
+          this.$baseMessage("两次密码不匹配,请重新输入", "error");
+          return false;
+        }
+        const formData = JSON.parse(JSON.stringify(this.formData));
+        formData.fun_pri.unshift("首页");
+        formData.fun_pri = formData.fun_pri.join();
+        formData.data_pri_prof = formData.data_pri_prof.join();
+        formData.data_pri_company = formData.data_pri_company.join();
+
+        const { oldPwd } = this;
+        if (oldPwd === formData.pwd) {
+          delete formData.pwd;
+          delete formData.towPwd;
+        } else {
+          // formData.pwd = sha1(formData.pwd);
+        }
         if (this.title.includes("添加")) {
           const {
             msg,
-            data: { module },
-          } = await addModule(this.formData);
+            data: { admin_info },
+          } = await addPlatAdmin(formData);
           this.$baseMessage(msg, "success");
-          // this.$emit("add", module);
           this.$emit("fetchData", false);
         } else {
           const {
             msg,
-            data: { module },
-          } = await modifyModule(this.formData);
+            data: { admin_info },
+          } = await modifyPlatAdmin(formData);
           this.$baseMessage(msg, "success");
           this.$emit("fetchData", false);
         }

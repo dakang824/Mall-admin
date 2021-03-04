@@ -10,7 +10,6 @@
         </el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
-
     <lb-table
       v-loading="loading"
       border
@@ -110,6 +109,7 @@
         },
       };
     },
+
     async created() {
       this.fetchData();
     },
