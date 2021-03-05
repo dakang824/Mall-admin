@@ -321,63 +321,6 @@ export const asyncRoutes = [
   },
 
   {
-    path: "/order",
-    component: Layout,
-    redirect: "noRedirect",
-    name: "Order",
-    hidden: true,
-    meta: {
-      title: "订单管理",
-      icon: "shopping-cart",
-    },
-    children: [
-      {
-        path: "/recharge",
-        name: "Recharge",
-        hidden: true,
-        component: () => import("@/views/project/order/recharge"),
-        meta: {
-          title: "充值订单",
-          icon: "funnel-dollar",
-          noKeepAlive: true,
-        },
-      },
-      {
-        path: "/orderGoods",
-        name: "OrderGoods",
-        component: () => import("@/views/project/order/goods"),
-        meta: {
-          title: "订单管理",
-          icon: "shopping-bag",
-          noKeepAlive: true,
-        },
-      },
-      {
-        path: "/remittance",
-        name: "Remittance",
-        hidden: true,
-        component: () => import("@/views/project/order/remittance"),
-        meta: {
-          title: "汇款订单",
-          icon: "file-invoice-dollar",
-          noKeepAlive: true,
-        },
-      },
-      {
-        path: "/businessGoods",
-        name: "BusinessGoods",
-        hidden: true,
-        component: () => import("@/views/project/order/business-goods"),
-        meta: {
-          title: "商家订单查询",
-          icon: "shopping-bag",
-          noKeepAlive: true,
-        },
-      },
-    ],
-  },
-
-  {
     path: "/personnelManagement",
     component: Layout,
     hidden: true,
