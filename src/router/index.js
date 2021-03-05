@@ -52,6 +52,7 @@ export const asyncRoutes = [
           icon: "home",
           affix: true,
           noKeepAlive: true,
+          permissions: ["首页"],
         },
       },
     ],
@@ -68,6 +69,7 @@ export const asyncRoutes = [
         meta: {
           title: "用户管理",
           icon: "user-cog",
+          permissions: ["用户管理"],
         },
       },
     ],
@@ -84,6 +86,7 @@ export const asyncRoutes = [
         meta: {
           title: "单位管理",
           icon: "school",
+          permissions: ["单位管理"],
         },
       },
     ],
@@ -100,6 +103,7 @@ export const asyncRoutes = [
         meta: {
           title: "专业管理",
           icon: "sitemap",
+          permissions: ["专业管理"],
         },
       },
     ],
@@ -116,6 +120,7 @@ export const asyncRoutes = [
         meta: {
           title: "模块管理",
           icon: "boxes",
+          permissions: ["模块管理"],
         },
       },
     ],
@@ -132,6 +137,7 @@ export const asyncRoutes = [
         meta: {
           title: "专业组管理",
           icon: "layer-group",
+          permissions: ["专业组管理"],
         },
       },
     ],
@@ -148,6 +154,7 @@ export const asyncRoutes = [
         meta: {
           title: "题库管理",
           icon: "question-circle",
+          permissions: ["题库管理"],
         },
       },
     ],
@@ -164,6 +171,7 @@ export const asyncRoutes = [
         meta: {
           title: "模拟考配置",
           icon: "pen-nib",
+          permissions: ["模拟考配置"],
         },
       },
     ],
@@ -180,6 +188,7 @@ export const asyncRoutes = [
         meta: {
           title: "成绩管理",
           icon: "marker",
+          permissions: ["成绩管理"],
         },
       },
     ],
@@ -193,6 +202,7 @@ export const asyncRoutes = [
     meta: {
       title: "文章管理",
       icon: "users-cog",
+      permissions: ["文章管理"],
     },
     children: [
       {
@@ -200,20 +210,21 @@ export const asyncRoutes = [
         name: "List",
         component: () => import("@/views/project/article/list.vue"),
         meta: {
-          title: "文章管理",
-          icon: "list-ul",
-        },
-      },
-
-      {
-        path: "editor",
-        hidden: true,
-        component: () => import("@/views/project/article/editor.vue"),
-        meta: {
           title: "编辑文章",
-          noKeepAlive: true,
+          icon: "list-ul",
+          permissions: ["编辑文章"],
         },
       },
+      // {
+      //   path: "editor",
+      //   hidden: true,
+      //   component: () => import("@/views/project/article/editor.vue"),
+      //   meta: {
+      //     title: "编辑文章",
+      //     noKeepAlive: true,
+      //     permissions: ["编辑文章"],
+      //   },
+      // },
     ],
   },
   {
@@ -228,6 +239,7 @@ export const asyncRoutes = [
         meta: {
           title: "文章审核",
           icon: "gavel",
+          permissions: ["文章审核"],
         },
       },
     ],
@@ -244,6 +256,7 @@ export const asyncRoutes = [
         meta: {
           title: "计划汇总(总公司)",
           icon: "volleyball-ball",
+          permissions: ["计划汇总(总公司)"],
         },
       },
     ],
@@ -265,6 +278,7 @@ export const asyncRoutes = [
         meta: {
           title: "技能树维护",
           icon: "tree",
+          permissions: ["技能树维护"],
         },
       },
       {
@@ -274,6 +288,7 @@ export const asyncRoutes = [
         meta: {
           title: "技能树成绩",
           icon: "coins",
+          permissions: ["技能树成绩"],
         },
       },
     ],
@@ -295,6 +310,7 @@ export const asyncRoutes = [
         meta: {
           title: "导航管理",
           icon: "location-arrow",
+          permissions: ["导航管理"],
         },
       },
       {
@@ -304,6 +320,7 @@ export const asyncRoutes = [
         meta: {
           title: "意见反馈",
           icon: "envelope",
+          permissions: ["意见反馈"],
         },
       },
       {
@@ -313,6 +330,7 @@ export const asyncRoutes = [
         meta: {
           title: "后台账号管理",
           icon: "cog",
+          permissions: ["后台账号管理"],
         },
       },
     ],

@@ -1,3 +1,9 @@
+/*
+ * @Author: yukang 1172248038@qq.com
+ * @Description:
+ * @Date: 2021-03-04 23:03:04
+ * @LastEditTime: 2021-03-05 22:14:06
+ */
 /**
  * @copyright chuzhixin 1204505056@qq.com
  * @description 路由拦截状态管理，目前两种模式：all模式与intelligence模式，其中partialRoutes是菜单暂未使用

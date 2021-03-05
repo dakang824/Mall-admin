@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-03-04 22:48:58
+ * @LastEditTime: 2021-03-05 22:17:20
 -->
 <template>
   <ele-form-dialog
@@ -19,7 +19,8 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from "vuex";
+  import { asyncRoutes } from "@/router";
+  import { mapState } from "vuex";
   import { addPlatAdmin, modifyPlatAdmin } from "@/api/settings";
   var sha1 = require("sha1");
   export default {
@@ -125,9 +126,6 @@
       };
     },
     computed: {
-      ...mapGetters({
-        routes: "routes/routes",
-      }),
       ...mapState({
         professions: (state) => state.globalRequest.professions,
         professionsKeyVal: (state) => state.globalRequest.professionsKeyVal,
@@ -136,7 +134,7 @@
       }),
     },
     created() {
-      this.handleChildren(this.routes);
+      this.handleChildren(asyncRoutes);
       let router = this.arrRoute
         .map((item) => {
           return item.children.map((i) => i.meta.title);

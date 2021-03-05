@@ -18,7 +18,6 @@
 </template>
 
 <script>
-  import { mapGetters } from "vuex";
   import Submenu from "./Submenu";
   import MenuItem from "./MenuItem";
   import { isExternal } from "@/utils/validate";
@@ -42,27 +41,16 @@
       return {};
     },
     computed: {
-      ...mapGetters({
-        fun_pri: "user/fun_pri",
-      }),
       menuComponent() {
         if (
           this.handleChildren(this.item.children, this.item) &&
           (!this.routeChildren.children ||
             this.routeChildren.notShowChildren) &&
-          !this.item.alwaysShow &&
-          this.fun_pri.includes(this.routeChildren.meta.title)
+          !this.item.alwaysShow
         ) {
           return "MenuItem";
         } else {
-          let hidden = false;
-          try {
-            hidden = this.item.children.some((i) =>
-              this.fun_pri.includes(i.meta.title)
-            );
-          } catch (error) {}
-
-          return hidden ? "Submenu" : false;
+          return "Submenu";
         }
       },
     },
