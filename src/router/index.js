@@ -195,36 +195,20 @@ export const asyncRoutes = [
   },
 
   {
-    path: "/article",
+    path: "/list",
     component: Layout,
-    redirect: "noRedirect",
-    name: "Article",
-    meta: {
-      title: "文章管理",
-      icon: "users-cog",
-      permissions: ["文章管理"],
-    },
+    redirect: "/List",
     children: [
       {
-        path: "list",
+        path: "/list",
         name: "List",
         component: () => import("@/views/project/article/list.vue"),
         meta: {
-          title: "编辑文章",
+          title: "文章管理",
           icon: "list-ul",
-          permissions: ["编辑文章"],
+          permissions: ["文章管理"],
         },
       },
-      // {
-      //   path: "editor",
-      //   hidden: true,
-      //   component: () => import("@/views/project/article/editor.vue"),
-      //   meta: {
-      //     title: "编辑文章",
-      //     noKeepAlive: true,
-      //     permissions: ["编辑文章"],
-      //   },
-      // },
     ],
   },
   {
