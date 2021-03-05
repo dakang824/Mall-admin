@@ -103,6 +103,7 @@
             {
               prop: "company",
               label: "所属公司",
+              showOverflowTooltip: true,
               render: (h, scope) => {
                 return <span>{scope.row.company.name}</span>;
               },
@@ -110,6 +111,8 @@
             {
               prop: "profession",
               label: "考核专业",
+              width: "90",
+              showOverflowTooltip: true,
               render: (h, scope) => {
                 return <span>{scope.row.profession.name}</span>;
               },
@@ -140,6 +143,8 @@
             {
               prop: "project",
               label: "参与工程项目",
+              width: "120",
+              showOverflowTooltip: true,
             },
             {
               prop: "teas",
@@ -152,6 +157,7 @@
             {
               prop: "status",
               label: "考核结果",
+              width: "80",
               render: (h, scope) => {
                 return (
                   <el-tag type={scope.row.status === 1 ? "success" : "warning"}>
@@ -162,7 +168,7 @@
             },
             {
               label: "操作",
-              width: "230",
+              width: "150",
               render: (h, scope) => {
                 return (
                   <div>

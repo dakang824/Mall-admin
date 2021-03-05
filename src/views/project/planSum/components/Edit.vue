@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑模拟考配置表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-03-03 22:09:19
+ * @LastEditTime: 2021-03-05 22:58:01
 -->
 <template>
   <ele-form-dialog
@@ -75,6 +75,7 @@
           row.tea_name = row.teas.split(",");
           this.formData = JSON.parse(JSON.stringify(row));
         }
+        delete this.options.formDesc.status;
         this.formDesc = { ...this.options.formDesc, ...this.formDesc };
         this.formData.moduleLists = this.moduleLists;
         this.dialogFormVisible = true;
