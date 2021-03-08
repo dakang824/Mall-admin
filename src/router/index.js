@@ -193,6 +193,23 @@ export const asyncRoutes = [
       },
     ],
   },
+  {
+    path: "/userScoreSearch",
+    component: Layout,
+    redirect: "/userScoreSearch",
+    children: [
+      {
+        path: "/userScoreSearch",
+        name: "userScoreSearch",
+        component: () => import("@/views/project/userScoreSearch"),
+        meta: {
+          title: "成绩查询",
+          icon: "search-dollar",
+          permissions: ["成绩查询"],
+        },
+      },
+    ],
+  },
 
   {
     path: "/list",
@@ -245,6 +262,40 @@ export const asyncRoutes = [
       },
     ],
   },
+  {
+    path: "/planSumSelf",
+    component: Layout,
+    redirect: "/planSumSelf",
+    children: [
+      {
+        path: "/planSumSelf",
+        name: "planSumSelf",
+        component: () => import("@/views/project/planSumSelf/index"),
+        meta: {
+          title: "计划汇总(分公司)",
+          icon: "volleyball-ball",
+          permissions: ["计划汇总(分公司)"],
+        },
+      },
+    ],
+  },
+  {
+    path: "/PlanSumSearch",
+    component: Layout,
+    redirect: "/PlanSumSearch",
+    children: [
+      {
+        path: "/PlanSumSearch",
+        name: "PlanSumSearch",
+        component: () => import("@/views/project/planSumSearch/index"),
+        meta: {
+          title: "计划查询",
+          icon: "search-plus",
+          permissions: ["计划查询"],
+        },
+      },
+    ],
+  },
 
   {
     path: "/skills",
@@ -263,6 +314,16 @@ export const asyncRoutes = [
           title: "技能树维护",
           icon: "tree",
           permissions: ["技能树维护"],
+        },
+      },
+      {
+        path: "skillsSearch",
+        name: "skillsSearch",
+        component: () => import("@/views/project/skillsSearch"),
+        meta: {
+          title: "技能树查询",
+          icon: "search",
+          permissions: ["技能树查询"],
         },
       },
       {

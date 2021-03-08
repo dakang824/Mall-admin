@@ -95,7 +95,7 @@
         formConfig: {
           formDesc: {
             time: {
-              type: "datetimerange",
+              type: "daterange",
               label: "范围1",
               attrs: {
                 clearable: true,
@@ -108,6 +108,7 @@
                         const end = new Date();
                         const start = new Date();
                         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                        end.setTime(end.getTime() + 3600 * 1000 * 24);
                         picker.$emit("pick", [start, end]);
                       },
                     },
@@ -117,6 +118,7 @@
                         const end = new Date();
                         const start = new Date();
                         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                        end.setTime(end.getTime() + 3600 * 1000 * 24);
                         picker.$emit("pick", [start, end]);
                       },
                     },
@@ -126,6 +128,7 @@
                         const end = new Date();
                         const start = new Date();
                         start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                        end.setTime(end.getTime() + 3600 * 1000 * 24);
                         picker.$emit("pick", [start, end]);
                       },
                     },
@@ -135,6 +138,7 @@
                         const end = new Date();
                         const start = new Date();
                         start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
+                        end.setTime(end.getTime() + 3600 * 1000 * 24);
                         picker.$emit("pick", [start, end]);
                       },
                     },
@@ -154,7 +158,8 @@
     async created() {
       const end = new Date();
       const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+      end.setTime(end.getTime() + 3600 * 1000 * 24);
       this.queryForm.time = [start, end];
       this.fetchData();
     },
