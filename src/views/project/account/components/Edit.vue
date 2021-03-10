@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-03-05 22:17:20
+ * @LastEditTime: 2021-03-10 22:10:11
 -->
 <template>
   <ele-form-dialog
@@ -175,6 +175,8 @@
           this.title = "编辑管理员";
           row.towPwd = row.pwd;
           this.oldPwd = row.pwd;
+
+          this.oldAccount = row.account;
           if (!Array.isArray(row.data_pri_company)) {
             row.data_pri_company = row.data_pri_company
               .split(",")
@@ -210,12 +212,15 @@
         formData.data_pri_prof = formData.data_pri_prof.join();
         formData.data_pri_company = formData.data_pri_company.join();
 
-        const { oldPwd } = this;
+        const { oldPwd, oldAccount } = this;
         if (oldPwd === formData.pwd) {
           delete formData.pwd;
           delete formData.towPwd;
         } else {
           // formData.pwd = sha1(formData.pwd);
+        }
+        if (oldAccount === formData.account) {
+          delete formData.account;
         }
         if (this.title.includes("添加")) {
           const {
