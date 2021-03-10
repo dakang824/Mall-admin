@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:
  * @Date: 2021-01-30 19:52:51
- * @LastEditTime: 2021-01-30 19:53:38
+ * @LastEditTime: 2021-03-10 21:28:43
  */
 let id = 1000;
 
@@ -65,6 +65,7 @@ export let addItem = (data, payload) => {
         name: payload.name,
         level: data[i].level + 1,
         child: [],
+        ...payload,
       };
       data[i].child.unshift(addObj);
       break;

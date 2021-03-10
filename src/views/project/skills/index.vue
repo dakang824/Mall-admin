@@ -130,7 +130,7 @@
           this.tableData.data.splice(ind, 1);
         }
         this.$baseMessage(msg, "success");
-        this.fetchData(false);
+        // this.fetchData(false);
       },
       async clickModify(e) {
         const {
@@ -138,7 +138,7 @@
           data: { skillTree },
         } = await modifySkillTree(e);
         this.$baseMessage(msg, "success");
-        this.fetchData(false);
+        // this.fetchData(false);
       },
       async clickAddData(e, callback) {
         const {
@@ -147,7 +147,7 @@
         } = await addSkillTree(e);
         callback(skillTree);
         this.$baseMessage(msg, "success");
-        this.fetchData(false);
+        // this.fetchData(false);
       },
       async clickPublish(ids, e) {
         const { msg } = await (e.status == 0

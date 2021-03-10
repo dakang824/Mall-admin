@@ -164,6 +164,7 @@
         if (this.edit_name.replace(/^\s+|\s+$/g, "")) {
           if (!data.id) {
             let virtualNode = node.parent;
+
             let params = {
               name: this.edit_name,
               id: virtualNode.data.id,
@@ -176,6 +177,7 @@
                 up_id: params.id,
               },
               (res) => {
+                console.log(virtualNode, this.treeData, res);
                 params.id = res.up_id;
                 this.id = res.id;
                 node.parent.data.id = res.id;
