@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-03-10 22:10:11
+ * @LastEditTime: 2021-03-22 22:06:38
 -->
 <template>
   <ele-form-dialog
@@ -64,6 +64,9 @@
             label: "真实姓名",
             attrs: {
               clearable: true,
+            },
+            disabled(data) {
+              return data.name === "超级管理员";
             },
           },
           mobile: {

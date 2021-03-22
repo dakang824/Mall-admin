@@ -56,6 +56,7 @@
       @update="updateData"
     ></edit>
     <import-template ref="import" @fetchData="fetchData" />
+    <view-detail ref="viewDdit" />
   </div>
 </template>
 
@@ -64,11 +65,12 @@
   import { mapState } from "vuex";
   import filters from "@/filters";
   import Edit from "./components/Edit";
+  import viewDetail from "./components/viewDetail";
   import ImportTemplate from "./components/importTemplate";
 
   export default {
     name: "UserManagement",
-    components: { Edit, ImportTemplate },
+    components: { Edit, ImportTemplate, viewDetail },
     data() {
       return {
         loading: true,
@@ -160,6 +162,22 @@
                       ? "已绑定"
                       : "未绑定"}{" "}
                   </el-tag>
+                );
+              },
+            },
+            {
+              prop: "prof_group",
+              label: "档案",
+              render: (h, scope) => {
+                return (
+                  <el-button
+                    type="text"
+                    onClick={() => {
+                      this.handleViewEdit(scope.row);
+                    }}
+                  >
+                    查看
+                  </el-button>
                 );
               },
             },
@@ -351,6 +369,9 @@
       },
       handleImport() {
         this.$refs["import"].showImport(this.formConfig.formDesc);
+      },
+      handleViewEdit(row) {
+        this.$refs["viewDdit"].showEdit(row);
       },
       handleEdit(row) {
         if (row.id) {

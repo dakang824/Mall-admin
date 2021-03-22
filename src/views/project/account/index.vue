@@ -93,6 +93,7 @@
                       onClick={() => {
                         this.handleDelete(scope.row);
                       }}
+                      v-show={scope.row.name !== "超级管理员"}
                     >
                       删除
                     </el-button>

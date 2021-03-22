@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2021-02-24 19:42:53
+ * @LastEditTime: 2021-03-22 21:55:32
 -->
 <template>
   <ele-form-dialog
@@ -89,7 +89,13 @@
           data: { exceptionFile = null },
         } = await importSkillTreeScore({ file: this.file });
         if (exceptionFile) {
-          window.open(filters.imgBaseUrl(exceptionFile), "_parent");
+          this.$baseConfirm(
+            "上传文件中存在错误，是否确定下载错误信息文件？",
+            null,
+            async () => {
+              window.open(filters.imgBaseUrl(exceptionFile), "_parent");
+            }
+          );
         } else {
           this.$baseMessage(msg, "success");
           this.$emit("fetchData");

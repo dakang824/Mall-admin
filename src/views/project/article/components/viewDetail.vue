@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 确认汇款订单
  * @Date: 2020-10-30 21:33:18
- * @LastEditTime: 2021-02-21 11:11:38
+ * @LastEditTime: 2021-03-22 21:30:44
 -->
 <template>
   <div>
@@ -37,6 +37,7 @@
             :src="item.path | imgBaseUrl"
             lazy-load
           >
+            {{ item.path }}
             <div slot="placeholder" class="image-slot">
               拼命加载中
               <span class="loader-15"></span>

@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:用户管理
  * @Date: 2020-12-06 18:25:36
- * @LastEditTime: 2021-02-04 17:24:11
+ * @LastEditTime: 2021-03-22 22:32:08
  */
 import request from "@/utils/request";
 
@@ -17,6 +17,14 @@ export function findUsers(data) {
 export function addUser(data) {
   return request({
     url: "/service/plat/admin/addUser",
+    method: "post",
+    data,
+  });
+}
+
+export function findMyResume(data) {
+  return request({
+    url: "/service/front/findMyResume",
     method: "post",
     data,
   });
