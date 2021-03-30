@@ -39,12 +39,12 @@ export const constantRoutes = [
 /*当settings.js里authentication配置的是intelligence时，views引入交给前端配置*/
 export const asyncRoutes = [
   {
-    path: "/userManagement",
+    path: "/",
     component: Layout,
-    redirect: "/userManagement",
+    redirect: "/index",
     children: [
       {
-        path: "/userManagement",
+        path: "/index",
         name: "UserManagement",
         component: () => import("@/views/project/userManagement"),
         meta: {

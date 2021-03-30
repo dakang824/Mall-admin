@@ -117,6 +117,10 @@ instance.interceptors.response.use(
     if (codeVerificationArray.includes(code)) {
       return data;
     } else {
+      if (code === 0 || msg === "无效的token") {
+        window.location.href = location.origin;
+        return;
+      }
       handleCode(code, msg);
       return Promise.reject(
         "vue-admin-beautiful请求异常拦截:" +

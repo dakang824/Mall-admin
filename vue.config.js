@@ -153,20 +153,20 @@ module.exports = {
         .plugin("banner")
         .use(Webpack.BannerPlugin, [`${webpackBanner}${time}`])
         .end();
-      config
-        .plugin("compression")
-        .use(CompressionWebpackPlugin, [
-          {
-            filename: "[path].gz[query]",
-            algorithm: "gzip",
-            test: new RegExp(
-              "\\.(" + productionGzipExtensions.join("|") + ")$"
-            ),
-            threshold: 8192,
-            minRatio: 0.8,
-          },
-        ])
-        .end();
+      // config
+      //   .plugin("compression")
+      //   .use(CompressionWebpackPlugin, [
+      //     {
+      //       filename: "[path].gz[query]",
+      //       algorithm: "gzip",
+      //       test: new RegExp(
+      //         "\\.(" + productionGzipExtensions.join("|") + ")$"
+      //       ),
+      //       threshold: 8192,
+      //       minRatio: 0.8,
+      //     },
+      //   ])
+      //   .end();
       config.module
         .rule("images")
         .use("image-webpack-loader")
