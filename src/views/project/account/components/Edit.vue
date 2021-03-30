@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-03-22 22:06:38
+ * @LastEditTime: 2021-03-30 21:45:17
 -->
 <template>
   <ele-form-dialog
@@ -220,7 +220,7 @@
           delete formData.pwd;
           delete formData.towPwd;
         } else {
-          // formData.pwd = sha1(formData.pwd);
+          formData.pwd = sha1(formData.pwd);
         }
         if (oldAccount === formData.account) {
           delete formData.account;

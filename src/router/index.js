@@ -39,25 +39,6 @@ export const constantRoutes = [
 /*当settings.js里authentication配置的是intelligence时，views引入交给前端配置*/
 export const asyncRoutes = [
   {
-    path: "/",
-    component: Layout,
-    redirect: "/index",
-    children: [
-      {
-        path: "/index",
-        name: "Index",
-        component: () => import("@/views/index/index"),
-        meta: {
-          title: "首页",
-          icon: "home",
-          affix: true,
-          noKeepAlive: true,
-          permissions: ["首页"],
-        },
-      },
-    ],
-  },
-  {
     path: "/userManagement",
     component: Layout,
     redirect: "/userManagement",
@@ -377,31 +358,6 @@ export const asyncRoutes = [
           icon: "cog",
           permissions: ["后台账号管理"],
         },
-      },
-    ],
-  },
-
-  {
-    path: "/personnelManagement",
-    component: Layout,
-    hidden: true,
-    redirect: "noRedirect",
-    name: "PersonnelManagement",
-    meta: { title: "权限管理", icon: "users-cog", permissions: ["admin"] },
-    children: [
-      {
-        path: "roleManagement",
-        name: "RoleManagement",
-        component: () =>
-          import("@/views/project/personnelManagement/roleManagement/index"),
-        meta: { title: "角色管理" },
-      },
-      {
-        path: "menuManagement",
-        name: "MenuManagement",
-        component: () =>
-          import("@/views/project/personnelManagement/menuManagement/index"),
-        meta: { title: "菜单管理" },
       },
     ],
   },

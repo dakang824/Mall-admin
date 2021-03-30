@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 编辑用户信息表单
  * @Date: 2020-12-06 18:40:37
- * @LastEditTime: 2021-02-19 11:42:48
+ * @LastEditTime: 2021-03-30 22:29:01
 -->
 <template>
   <ele-form-dialog
@@ -68,16 +68,16 @@
           } = await addProfGroup(formData);
           const { group_id } = profGroup.itemList[0];
           profGroup.prof_ids = formData.prof_ids.split(",").map(Number);
-          profGroup.itemList.map(async (item) => {
-            const {
-              msg,
-              data: { profGroupItem },
-            } = await addProfToGroup({
-              group_id: item.group_id,
-              prof_id: item.prof_id,
-            });
-            this.$baseMessage(msg, "success");
-          });
+          // profGroup.itemList.map(async (item) => {
+          //   const {
+          //     msg,
+          //     data: { profGroupItem },
+          //   } = await addProfToGroup({
+          //     group_id: item.group_id,
+          //     prof_id: item.prof_id,
+          //   });
+          //   this.$baseMessage(msg, "success");
+          // });
 
           this.$emit("add", profGroup);
         } else {

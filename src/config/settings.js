@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:全局变量配置
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2021-03-22 22:01:10
+ * @LastEditTime: 2021-03-30 22:17:44
  */
 
 module.exports = {
@@ -34,7 +34,7 @@ module.exports = {
   //版本号
   version: process.env.VUE_APP_VERSION,
   //烦请保留package.json作者信息 保留版权可免费商用 如需去除并自定义为自己企业的版权请联系群主QQ 1204505056 需支付299元 恶意修改发生纠纷及出现任何问题 由修改人自行承担
-  copyright: "摩耳科技",
+  copyright: "趣意科技",
   //是否显示页面底部版权信息，建议您显示，当然您也可以选择不显示，不管您是付费用户还是未付费用户您都有选择显示或者不显示的权利
   footerCopyright: true,
   //是否显示右上角github图标

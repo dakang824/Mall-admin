@@ -202,7 +202,7 @@ module.exports = {
   productionSourceMap: false,
   css: {
     requireModuleExtension: true,
-    sourceMap: true,
+    sourceMap: false,
     loaderOptions: {
       scss: {
         /*sass-loader 8.0语法 */
