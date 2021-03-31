@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 导入文件模板
  * @Date: 2020-12-07 15:16:44
- * @LastEditTime: 2021-03-22 21:55:17
+ * @LastEditTime: 2021-04-01 00:08:28
 -->
 <template>
   <ele-form-dialog
@@ -10,7 +10,11 @@
     label-position="left"
     :form-desc="formDesc"
     :rules="rules"
-    :dialog-attrs="{ destroyOnClose: true }"
+    :dialog-attrs="{
+      destroyOnClose: true,
+      closeOnClickModal: false,
+      closeOnPressEscape: false,
+    }"
     :visible.sync="dialogFormVisible"
     :title="title"
     width="620px"
@@ -86,13 +90,10 @@
           data: { exceptionFile = null },
         } = await importSkillTree({ file: this.file });
         if (exceptionFile) {
-          this.$baseConfirm(
-            "上传文件中存在错误，是否确定下载错误信息文件？",
-            null,
-            async () => {
-              window.open(filters.imgBaseUrl(exceptionFile), "_parent");
-            }
-          );
+          const res = confirm("上传文件中存在错误，是否确定下载错误信息文件？");
+          if (res) {
+            window.open(filters.imgBaseUrl(exceptionFile), "_parent");
+          }
         } else {
           this.$baseMessage(msg, "success");
           this.$emit("fetchData");

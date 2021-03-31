@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description:全局变量配置
  * @Date: 2020-09-13 15:34:56
- * @LastEditTime: 2021-03-30 22:17:44
+ * @LastEditTime: 2021-03-31 00:19:33
  */
 
 module.exports = {
