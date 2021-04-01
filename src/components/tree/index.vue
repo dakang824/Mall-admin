@@ -56,8 +56,8 @@
       },
 
       publish(node, data, e) {
-        // this.processingData(node);
-        // this.ids.splice(0, 1);
+        this.processingData(node);
+        this.ids.splice(0, 1);
         if (this.ids.length < 3) {
           this.$notify({
             type: "error",
