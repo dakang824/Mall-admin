@@ -246,7 +246,7 @@
             return false;
           }
         }
-        this.$refs["edit"].showEdit(ids);
+        this.$refs["edit"].showEdit(ids, row);
       },
       handleSizeChange(val) {
         this.queryForm.pageSize = val;
