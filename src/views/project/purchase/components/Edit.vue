@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-12-13 18:47:13
- * @LastEditTime: 2020-12-19 17:05:54
+ * @LastEditTime: 2021-04-22 21:28:40
 -->
 <template>
   <el-dialog
@@ -51,10 +51,15 @@
         <td colspan="2">{{ v }}</td>
       </tr>
     </table>
-
     <div slot="footer" class="dialog-footer">
       <el-button @click="handleExport">导出菜品明细</el-button>
-      <el-button type="primary" @click="save">确认采购</el-button>
+      <el-button
+        :type="row.buy_status === 1 ? '' : 'primary'"
+        :disabled="row.buy_status === 1"
+        @click="save"
+      >
+        确认采购
+      </el-button>
     </div>
   </el-dialog>
 </template>
@@ -82,7 +87,7 @@
     },
     created() {},
     methods: {
-      async showEdit(ids) {
+      async showEdit(ids, row) {
         this.ids = ids;
         const { data } = await getOrderBill({ ids });
         this.caipinList = data.caipinList;
@@ -90,6 +95,7 @@
         this.billMap = data.billMap;
         this.keys = Object.keys(data.billMap);
         this.dialogFormVisible = true;
+        this.row = row;
       },
       handleExport() {
         let table = XLSX.utils.table_to_book(document.querySelector("#table"));
