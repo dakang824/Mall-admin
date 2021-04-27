@@ -2,7 +2,7 @@
  * @Author: yukang 1172248038@qq.com
  * @Description: 
  * @Date: 2020-10-03 11:27:37
- * @LastEditTime: 2020-12-22 21:53:38
+ * @LastEditTime: 2021-04-27 21:54:15
 -->
 <template>
   <el-drawer
@@ -433,7 +433,7 @@
         this.$refs.form.clearValidate("pics");
       },
       handleIntroPicsSuccess(e) {
-        this.form.introPics = e.data.tempUrl;
+        this.form.introPics = e.data.tempUrl.replace(/\"/g, "");
         if (e.code === 500) {
           this.$baseAlert(e.msg, "温馨提示");
         }
@@ -518,8 +518,14 @@
               // this.$emit("fetchData", false);
               this.close();
             } else {
-              form.pics = JSON.stringify(form.pics);
-              form.introPics = JSON.stringify(form.introPics);
+              Array.isArray(form.pics)
+                ? delete form.pics
+                : (form.pics = form.pics);
+
+              Array.isArray(form.introPics)
+                ? delete form.introPics
+                : (form.introPics = form.introPics);
+
               const {
                 msg,
                 data: { product },
