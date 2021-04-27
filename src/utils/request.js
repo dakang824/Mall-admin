@@ -90,7 +90,6 @@ instance.interceptors.request.use(
       contentType === "application/x-www-form-urlencoded;charset=UTF-8" &&
       config.data
     ) {
-      console.log(config.data);
       config.data = qs.stringify(config.data);
     }
 
