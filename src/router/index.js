@@ -277,7 +277,23 @@ export const asyncRoutes = [
       },
     ],
   },
-
+  {
+    path: "/PageStat",
+    component: Layout,
+    redirect: "/PageStat",
+    children: [
+      {
+        path: "/PageStat",
+        name: "PageStat",
+        component: () => import("@/views/project/pageStat/index"),
+        meta: {
+          title: "页面统计",
+          icon: "search-plus",
+          permissions: ["页面统计"],
+        },
+      },
+    ],
+  },
   {
     path: "/skills",
     component: Layout,

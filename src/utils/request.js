@@ -118,7 +118,7 @@ instance.interceptors.response.use(
       return data;
     } else {
       if (code === 0 || msg === "无效的token") {
-        window.location.href = location.origin;
+        // window.location.href = location.origin;
         return;
       }
       handleCode(code, msg);
