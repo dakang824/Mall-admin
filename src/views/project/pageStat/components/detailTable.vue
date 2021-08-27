@@ -57,16 +57,6 @@
             },
           ],
         },
-        queryForm: {
-          pageNo: 1,
-          pageSize: 10,
-          test_id: "",
-        },
-        type: {
-          1: "单选",
-          2: "多选",
-          3: "判断",
-        },
       };
     },
     methods: {
