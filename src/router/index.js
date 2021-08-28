@@ -45,6 +45,24 @@ export const asyncRoutes = [
     children: [
       {
         path: "/index",
+        name: "PageStat",
+        component: () => import("@/views/project/pageStat/index"),
+        meta: {
+          title: "首页",
+          icon: "home",
+          affix: true,
+          noKeepAlive: true,
+          permissions: ["首页"],
+        },
+      },
+    ],
+  },
+  {
+    path: "/userManagement",
+    component: Layout,
+    children: [
+      {
+        path: "/userManagement",
         name: "UserManagement",
         component: () => import("@/views/project/userManagement"),
         meta: {
@@ -273,23 +291,6 @@ export const asyncRoutes = [
           title: "计划查询",
           icon: "search-plus",
           permissions: ["计划查询"],
-        },
-      },
-    ],
-  },
-  {
-    path: "/PageStat",
-    component: Layout,
-    redirect: "/PageStat",
-    children: [
-      {
-        path: "/PageStat",
-        name: "PageStat",
-        component: () => import("@/views/project/pageStat/index"),
-        meta: {
-          title: "页面统计",
-          icon: "search-plus",
-          permissions: ["页面统计"],
         },
       },
     ],

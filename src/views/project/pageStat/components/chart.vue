@@ -37,6 +37,19 @@
             axisPointer: {
               type: "shadow",
             },
+            formatter: (params) => {
+              var tar = params[0];
+              let value = tar.value;
+              if (tar.name !== "用户总数") {
+                value = this.GetDateTime(tar.value);
+              }
+              return (
+                tar.axisValue +
+                "<br/>" +
+                value +
+                `${tar.name === "用户总数" ? "人" : ""}`
+              );
+            },
           },
           yAxis: {
             type: "category",
@@ -44,6 +57,7 @@
           },
           xAxis: {
             type: "value",
+            name: "秒",
           },
           series: [
             {
@@ -68,7 +82,31 @@
           data: { data },
         } = await getPageStatDetail(this.mode);
         this.dialogVisible = true;
-        this.list = data;
+        this.list = data.map((item) => {
+          item.time_count = `${this.GetDateTime(
+            parseInt(item.time_count / 1000)
+          )}`;
+          return item;
+        });
+      },
+
+      GetDateTime(time) {
+        if (time >= 60 && time <= 3600) {
+          time = parseInt(time / 60) + "分" + (time % 60) + "秒";
+        } else {
+          if (time > 3600) {
+            time =
+              parseInt(time / 3600) +
+              "小时" +
+              parseInt((time % 3600) / 60) +
+              "分" +
+              (time % 60) +
+              "秒";
+          } else {
+            time = time + "秒";
+          }
+        }
+        return time;
       },
     },
   };
@@ -79,6 +117,7 @@
     &__title {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       span {
         font-size: 14px;
         font-weight: bold;
@@ -86,6 +125,9 @@
         display: block;
         text-align: center;
       }
+    }
+    .echarts {
+      width: 100%;
     }
   }
 </style>

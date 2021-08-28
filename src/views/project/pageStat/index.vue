@@ -15,7 +15,17 @@
     </vab-query-form>
     <el-row :gutter="20">
       <div :key="key" v-loading="loading" class="pageStat-container__box">
-        <chart v-for="(item, index) in list" :key="index" :mode="item"></chart>
+        <el-row v-for="(item, ind) in 3" :key="item + ind" :gutter="20">
+          <el-col
+            v-for="(it, index) in list.slice(ind * 2, (ind + 1) * 2)"
+            :key="index"
+            :xs="24"
+            :sm="24"
+            :md="12"
+          >
+            <chart :mode="it"></chart>
+          </el-col>
+        </el-row>
       </div>
     </el-row>
   </div>
@@ -111,7 +121,10 @@
           } = await queryPageStat(params);
 
           list.push({
-            data: [Number(data.time_stat), Number(data.user_count)],
+            data: [
+              parseInt(Number(data.time_stat) / 1000),
+              Number(data.user_count),
+            ],
             title,
             ...params,
             color: [
@@ -141,9 +154,15 @@
 <style lang="scss" scoped>
   .pageStat-container {
     &__box {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
+      .el-row {
+        &:nth-child(3) {
+          .el-col {
+            &:nth-child(2) {
+              visibility: hidden;
+            }
+          }
+        }
+      }
     }
   }
 
