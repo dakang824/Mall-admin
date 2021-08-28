@@ -116,14 +116,18 @@
   .chart {
     &__title {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
+      position: relative;
       span {
         font-size: 14px;
         font-weight: bold;
-        flex: 1;
         display: block;
         text-align: center;
+      }
+      .el-button {
+        position: absolute;
+        right: 60px;
       }
     }
     .echarts {

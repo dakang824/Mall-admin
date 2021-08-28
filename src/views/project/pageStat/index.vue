@@ -13,7 +13,7 @@
         />
       </vab-query-form-left-panel>
     </vab-query-form>
-    <el-row :gutter="20">
+    <el-row>
       <div :key="key" v-loading="loading" class="pageStat-container__box">
         <el-row v-for="(item, ind) in 3" :key="item + ind" :gutter="20">
           <el-col
